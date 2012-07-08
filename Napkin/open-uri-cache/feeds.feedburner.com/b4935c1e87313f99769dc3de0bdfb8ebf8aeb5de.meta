@@ -1,0 +1,26 @@
+--- 
+content-type: text/xml; charset=UTF-8
+etag: Lw47VUOo1Y6FZKViwoFK71alb74
+last-modified: Sun, 01 Jul 2012 21:10:58 GMT
+date: Sun, 01 Jul 2012 21:36:35 GMT
+expires: Sun, 01 Jul 2012 21:36:35 GMT
+cache-control: private, max-age=0
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+server: GSE
+transfer-encoding: chunked
+:status: 
+  - "200"
+  - OK
+:content_type: text/xml
+:base_uri: !ruby/object:URI::HTTP 
+  fragment: 
+  host: feeds.feedburner.com
+  opaque: 
+  password: 
+  path: /zerohedge/feed
+  port: 80
+  query: format=xml
+  registry: 
+  scheme: http
+  user: 

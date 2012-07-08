@@ -1,0 +1,33 @@
+--- 
+server: Apache/2.2.3 (CentOS)
+x-powered-by: PHP/5.3.6
+x-drupal-cache: HIT
+etag: "\"1341178387-0\""
+cache-control: public, max-age=0
+last-modified: Sun, 01 Jul 2012 21:33:07 +0000
+vary: Cookie,Accept-Encoding
+x-pf-uncompressing: "1"
+content-type: application/rss+xml; charset=utf-8
+content-length: "49650"
+x-cacheable: "YES"
+date: Sun, 01 Jul 2012 21:33:42 GMT
+x-varnish: "1453076147"
+via: 1.1 varnish
+connection: keep-alive
+age: "0"
+x-cache: MISS
+:status: 
+  - "200"
+  - OK
+:content_type: application/rss+xml
+:base_uri: !ruby/object:URI::HTTP 
+  fragment: 
+  host: www.zerohedge.com
+  opaque: 
+  password: 
+  path: /fullrss2.xml
+  port: 80
+  query: 
+  registry: 
+  scheme: http
+  user: 

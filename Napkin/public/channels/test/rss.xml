@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>test</title>
+    <link>http://localhost:4567/channels/test</link>
+    <description>Feed description</description>
+    <item>
+      <title>item0</title>
+      <link>http://localhost:4567/channels/test/item0.rb</link>
+    </item>
+    <item>
+      <title>item1</title>
+      <link>http://localhost:4567/channels/test/item1.rb</link>
+    </item>
+    <item>
+      <title>item2</title>
+      <link>http://localhost:4567/channels/test/item2.rb</link>
+    </item>
+  </channel>
+</rss>
