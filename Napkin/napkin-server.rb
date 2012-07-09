@@ -1,5 +1,12 @@
 require 'rubygems'
 require 'sinatra'
+require 'neo4j'
+
+Neo4j::Config[:storage_path] = "../Napkin-Data/neo4j-db"
+  
+require 'open-uri/cached'
+
+OpenURI::Cache.cache_path = '../Napkin-Data/open-uri-cache'
 
 #
 require 'napkin-server-helpers'

@@ -9,7 +9,7 @@ def put_feed(id, feed_hash)
   yaml = YAML.dump(feed_hash)
   puts "Outgoing:\n#{yaml}"
   
-  response = RestClient.put("http://localhost:4567/feed/#{id}", yaml)
+  response = RestClient.put("http://fred:fred@localhost:4567/feed/#{id}", yaml)
   puts "Incoming:"
   puts response.to_s()
 end

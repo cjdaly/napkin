@@ -6,8 +6,6 @@ require 'rubygems'
 require 'neo4j'
 require 'open-uri/cached'
 
-OpenURI::Cache.cache_path = 'open-uri-cache'
-
 #
 #
 class PropertyMapper
