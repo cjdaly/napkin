@@ -79,6 +79,12 @@ end
 
 class FeedRefresher
   def initialize
+    @code_dir = OpenURI::Cache.cache_path
+    @loop_count=0
+
+    git_command("config --file #{@code_dir}/.git/config user.name Fred")
+    git_command("config --file #{@code_dir}/.git/config user.email fred@example.com")
+
     @enabled = true
     @exit = false
     @delay = 5
@@ -94,11 +100,30 @@ class FeedRefresher
           else
             puts "FeedReaderThread disabled..."
           end
+          do_git_stuff()
+
+          @loop_count += 1
         end
         puts "FeedReaderThread stopped..."
       rescue StandardError => err
         puts "Error in FeedRefresher thread: #{err}\n#{err.backtrace}"
       end
     end
+  end
+
+  def do_git_stuff()
+    git_command("init")
+    git_command("status -s")
+    git_command("add .")
+    git_command("commit -m \"...\"")
+    git_command("status -s")
+    git_command("tag -a loop-#{@loop_count} -m \"...\"")
+  end
+
+  def git_command(command, code_dir=@code_dir, git_dir=@code_dir + "/.git")
+    command_text = "git --git-dir=#{git_dir} --work-tree=#{code_dir} #{command}"
+    result_text = `#{command_text}`
+    result_status = $?
+    puts "[exec] git ... #{command}\n  -> #{result_status}\n#{result_text}"
   end
 end
