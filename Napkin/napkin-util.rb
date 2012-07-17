@@ -82,103 +82,181 @@ end
 
 #
 #
-class RssReader
-  def refresh_feeds(delay)
-    nf = NodeFinder.new
-    node = nf.get_sub('feed')
-    if (!node.nil?)
-      node.outgoing(:sub).each do |sub|
-        if sub['refresh_enabled']
-          puts "Feed: #{sub[:id]} / #{sub['name']} refreshing..."
-          refresh_feed(sub)
-          puts "Feed: #{sub[:id]} / #{sub['name']} refreshed..."
-        else
-          puts "Feed: #{sub[:id]} / #{sub['name']} refresh disabled..."
-        end
-        sleep delay
-      end
-    end
-  end
+#class NodeNav
+#  def initialize(node = Neo4j.ref_node)
+#    @node = node
+#  end
+#
+#  #  def node
+#  #    return @node
+#  #  end
+#
+#  def go_sub(id)
+#    sub = @node.outgoing(:sub).find{|sub| sub[:id] == id}
+#    if (sub.nil?) then
+#      return false
+#    else
+#      @node = sub
+#      return true
+#    end
+#  end
+#
+#  def go_sub!(id)
+#    if (!go_sub(id)) then
+#      Neo4j::Transaction.run do
+#        sub = @node.outgoing(:sub).find{|sub| sub[:id] == id}
+#        if (sub.nil?) then
+#          sub = Neo4j::Node.new :id => id
+#          @node.outgoing(:sub) << sub
+#          return true;
+#        end
+#        @node = sub
+#      end
+#    end
+#    return false;
+#  end
+#
+#  def go_sub_path(path)
+#    path_segments = path.split('/')
+#    sub_exists = true
+#
+#    path_segments.each do |segment|
+#      if (!go_sub(segment))
+#        sub_exists = false
+#        break;
+#      end
+#    end
+#
+#    return sub_exists
+#  end
+#
+#  def go_sub_path!(path)
+#
+#  end
+#
+#  def go_sup()
+#    sup = @node.incoming(:sub).first
+#    if (sup.nil?) then
+#      return false
+#    else
+#      @node = sup
+#      return true
+#    end
+#  end
+#
+#  def get_path
+#    path_array = [@node[:id]]
+#    while (go_sup())
+#      path_array.push(@node[:id])
+#    end
+#    return path_array
+#  end
+#
+#  def handle(path, method, request, segments, segment, i)
+#
+#  end
+#
+#end
 
-  def refresh_feed(feed_node)
-    feed_url=feed_node['url']
-    rss_file_meta_hash = nil
-    open(feed_url) do |rss_file|
-      rss_file_meta_hash = file_meta_to_hash(rss_file.meta)
-    end
-    puts YAML.dump(rss_file_meta_hash)
-  end
-
-  def refresh_feep(feed_id)
-    begin
-
-      # TODO: get file meta info, get refresh info, ... time to refresh?
-
-      # TODO:
-      feed_url=nil
-
-      rss_file_meta_hash = nil
-      rss_text = nil
-      open(feed_url) do |rss_file|
-        rss_file_meta_hash = file_meta_to_hash(rss_file.meta)
-        rss_text = rss_file.read
-      end
-
-      # TODO:
-      # invalidate cache at refresh time
-      #   OpenURI::Cache.invalidate(@feed_url)
-      # ... and open/read again
-      # ... update file meta in db
-
-      rss = RSS::Parser.parse(rss_text, false)
-
-      rss_channel_hash = channel_to_hash(rss.channel)
-      # TODO: compare with existing / update
-
-      rss.items.each do |item|
-        rss_item_hash = item_to_hash(item)
-        # TODO: compare with existing / update
-      end
-    rescue StandardError => err
-      puts "Error in refresh_feed: #{err}\n#{err.backtrace}"
-    end
-  end
-
-  def file_meta_to_hash(file_meta)
-    return {
-      'etag' => file_meta['etag'],
-      'last-modified' => file_meta['last-modified'],
-      'date' => file_meta['date'],
-      'expires' => file_meta['expires'],
-    }
-  end
-
-  def channel_to_hash(rss_channel)
-    return {
-      'title' => rss_channel.title,
-      'link'=> rss_channel.link,
-      'description' => rss_channel.description,
-      'pubDate' => rss_channel.pubDate,
-      'lastBuildDate' => rss_channel.pubDate
-    }
-  end
-
-  def item_to_hash(rss_item)
-    return {
-      'title' => rss_item.title,
-      'link'=> rss_item.link,
-      'description' => rss_item.description,
-      'guid' => rss_item.guid.content,
-      'pubDate' => rss_item.pubDate
-    }
-  end
-
-  #  def puts_meta(meta, attr)
-  #    # pd = ParseDate.parsedate(meta[attr])
-  #    # puts pd
-  #    d = DateTime.parse(meta[attr])
-  #    d2 = DateTime.now - d
-  #    puts attr + ": " + meta[attr]
-  #    puts (d2 * 24 * 60).to_i
-  #  end
-end
+#
+#
+#class RssReader
+#  def refresh_feeds(delay)
+#    nf = NodeFinder.new
+#    node = nf.get_sub('feed')
+#    if (!node.nil?)
+#      node.outgoing(:sub).each do |sub|
+#        if sub['refresh_enabled']
+#          puts "Feed: #{sub[:id]} / #{sub['name']} refreshing..."
+#          refresh_feed(sub)
+#          puts "Feed: #{sub[:id]} / #{sub['name']} refreshed..."
+#        else
+#          puts "Feed: #{sub[:id]} / #{sub['name']} refresh disabled..."
+#        end
+#        sleep delay
+#      end
+#    end
+#  end
+#
+#  def refresh_feed(feed_node)
+#    feed_url=feed_node['url']
+#    rss_file_meta_hash = nil
+#    open(feed_url) do |rss_file|
+#      rss_file_meta_hash = file_meta_to_hash(rss_file.meta)
+#    end
+#    puts YAML.dump(rss_file_meta_hash)
+#  end
+#
+#  def refresh_feep(feed_id)
+#    begin
+#
+#      # TODO: get file meta info, get refresh info, ... time to refresh?
+#
+#      # TODO:
+#      feed_url=nil
+#
+#      rss_file_meta_hash = nil
+#      rss_text = nil
+#      open(feed_url) do |rss_file|
+#        rss_file_meta_hash = file_meta_to_hash(rss_file.meta)
+#        rss_text = rss_file.read
+#      end
+#
+#      # TODO:
+#      # invalidate cache at refresh time
+#      #   OpenURI::Cache.invalidate(@feed_url)
+#      # ... and open/read again
+#      # ... update file meta in db
+#
+#      rss = RSS::Parser.parse(rss_text, false)
+#
+#      rss_channel_hash = channel_to_hash(rss.channel)
+#      # TODO: compare with existing / update
+#
+#      rss.items.each do |item|
+#        rss_item_hash = item_to_hash(item)
+#        # TODO: compare with existing / update
+#      end
+#    rescue StandardError => err
+#      puts "Error in refresh_feed: #{err}\n#{err.backtrace}"
+#    end
+#  end
+#
+#  def file_meta_to_hash(file_meta)
+#    return {
+#      'etag' => file_meta['etag'],
+#      'last-modified' => file_meta['last-modified'],
+#      'date' => file_meta['date'],
+#      'expires' => file_meta['expires'],
+#    }
+#  end
+#
+#  def channel_to_hash(rss_channel)
+#    return {
+#      'title' => rss_channel.title,
+#      'link'=> rss_channel.link,
+#      'description' => rss_channel.description,
+#      'pubDate' => rss_channel.pubDate,
+#      'lastBuildDate' => rss_channel.pubDate
+#    }
+#  end
+#
+#  def item_to_hash(rss_item)
+#    return {
+#      'title' => rss_item.title,
+#      'link'=> rss_item.link,
+#      'description' => rss_item.description,
+#      'guid' => rss_item.guid.content,
+#      'pubDate' => rss_item.pubDate
+#    }
+#  end
+#
+#  #  def puts_meta(meta, attr)
+#  #    # pd = ParseDate.parsedate(meta[attr])
+#  #    # puts pd
+#  #    d = DateTime.parse(meta[attr])
+#  #    d2 = DateTime.now - d
+#  #    puts attr + ": " + meta[attr]
+#  #    puts (d2 * 24 * 60).to_i
+#  #  end
+#end
