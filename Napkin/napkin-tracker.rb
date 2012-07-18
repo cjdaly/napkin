@@ -7,7 +7,7 @@ require 'neo4j'
 require 'open-uri/cached'
 
 #
-require 'napkin-nodewrapper'
+require 'napkin-nodenav'
 
 module Napkin
   class Tracker

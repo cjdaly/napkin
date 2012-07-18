@@ -10,7 +10,6 @@ require 'sinatra'
 require 'napkin-server-helpers'
 require 'napkin-tracker'
 
-# FeedRefresher.new
 Napkin::Tracker.new
 
 helpers Napkin::ServerUtils

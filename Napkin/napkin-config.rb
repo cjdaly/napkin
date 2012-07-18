@@ -1,11 +1,11 @@
 module Napkin
   module Config
     DATA_PATH = File.expand_path("../../Napkin-Data")
+
+    ROOT_URL = "http://localhost:4567"
   end
 end
 
-#NAPKIN_DATA_PATH=File.expand_path("../../Napkin-Data")
-#puts "NAPKIN_DATA_PATH=#{NAPKIN_DATA_PATH}"
 #
 require 'rubygems'
 
