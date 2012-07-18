@@ -7,10 +7,15 @@ require 'neo4j'
 require 'open-uri/cached'
 
 #
-require 'napkin-nodenav'
+require 'napkin-config'
+require 'napkin-node-util'
 
 module Napkin
   class Tracker
+    def init_nodes
+
+    end
+
     def initialize
       @code_dir = OpenURI::Cache.cache_path
       @loop_count=0
@@ -65,7 +70,7 @@ module Napkin
   #
   class RssReader
     def refresh_feeds(delay)
-      nf = NodeFinder.new
+      nf = Napkin::NodeUtil::NodeFinder.new
       node = nf.get_sub('feed')
       if (!node.nil?)
         node.outgoing(:sub).each do |sub|

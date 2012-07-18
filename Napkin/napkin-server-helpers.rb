@@ -6,20 +6,18 @@ require 'rubygems'
 require 'neo4j'
 
 #
-require 'napkin-util'
-require 'napkin-common'
-require 'napkin-nodenav'
 require 'napkin-config'
+require 'napkin-node-util'
 
 module Napkin
   module ServerUtils
 
-    NF = NodeFinder.new
+    NF = Napkin::NodeUtil::NodeFinder.new
     #
     # Feed
     #
     def get_feed(id)
-      fp = NapkinCommon::FEED_PROPS
+      fp = Napkin::NodeUtil::Props::FEED_PROPS
       node = NF.get_sub_path(['feed', id])
       if (node.nil?) then
         halt 404, "Node not found: /feed/#{id}"
@@ -29,7 +27,7 @@ module Napkin
     end
 
     def put_feed(id, yaml_text)
-      fp = NapkinCommon::FEED_PROPS
+      fp = Napkin::NodeUtil::Props::FEED_PROPS
       node = NF.get_sub_path(['feed', id], true)
       yaml_hash = fp.yaml_to_hash(yaml_text)
       fp.adorn_node(node, yaml_hash)
@@ -65,7 +63,7 @@ module Napkin
 
     def handle_request (path, method, request)
       content_type 'text/plain'
-      nn = NodeNav.new
+      nn = Napkin::NodeUtil::NodeNav.new
       segments = path.split('/')
 
       response_text = "[#{segments.length}] "
@@ -99,7 +97,7 @@ module Napkin
     def get_node(path)
       content_type 'text/plain'
 
-      nn = NodeNav.new
+      nn = Napkin::NodeUtil::NodeNav.new
       if (nn.go_sub_path(path))
         "found: #{nn.get_path()}"
       else
@@ -110,7 +108,7 @@ module Napkin
     def post_node(path, content)
       content_type 'text/plain'
 
-      nn = NodeNav.new
+      nn = Napkin::NodeUtil::NodeNav.new
 
       "POST not implemented"
     end
@@ -132,7 +130,7 @@ module Napkin
     end
 
     class Authenticator
-      NF = NodeFinder.new
+      NF = Napkin::NodeUtil::NodeFinder.new
       def check(username, password)
         node = NF.get_sub('user')
         if (node.nil?) then
