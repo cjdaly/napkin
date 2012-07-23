@@ -2,18 +2,61 @@ require 'yaml'
 require 'rubygems'
 require 'neo4j'
 
+#
+require 'napkin-config'
+
 module Napkin
   module NodeUtil
     #
     #
     class NodeNav
+      attr_accessor :node
       def initialize(node = Neo4j.ref_node)
         @node = node
       end
 
-      #  def node
-      #    return @node
-      #  end
+      def reset(node = Neo4j.ref_node)
+        @node = node
+      end
+
+      def [](key)
+        return @node[key]
+      end
+
+      def []=(key, value)
+        old_value = nil
+        Neo4j::Transaction.run do
+          old_value = @node[key]
+          @node[key] = value
+        end
+        return old_value
+      end
+
+      def init_property(key, default)
+        property_initialized = true
+        Neo4j::Transaction.run do
+          if (@node[key].nil?) then
+            @node[key] = default
+          else
+            property_initialized = false
+          end
+        end
+        return property_initialized
+      end
+
+      def get_or_init(key, default)
+        value = @node[key]
+        if (value.nil?) then
+          Neo4j::Transaction.run do
+            value = @node[key]
+            if (value.nil?) then
+              @node[key] = default
+              value = default
+            end
+          end
+        end
+        return value
+      end
 
       def go_sub(id)
         sub = @node.outgoing(:sub).find{|sub| sub[:id] == id}
@@ -26,40 +69,52 @@ module Napkin
       end
 
       def go_sub!(id)
+        created_node = false
         if (!go_sub(id)) then
           Neo4j::Transaction.run do
             sub = @node.outgoing(:sub).find{|sub| sub[:id] == id}
             if (sub.nil?) then
               sub = Neo4j::Node.new :id => id
               @node.outgoing(:sub) << sub
-              return true;
+              created_node = true
             end
             @node = sub
           end
         end
-        return false;
+        return created_node;
       end
 
       def go_sub_path(path)
         path_segments = path.split('/')
-        sub_exists = true
 
+        missed_count = path_segments.length
         path_segments.each do |segment|
-          if (!go_sub(segment))
-            sub_exists = false
+          if (go_sub(segment)) then
+            missed_count -= 1
+          else
             break;
           end
         end
 
-        return sub_exists
+        return missed_count
       end
 
       def go_sub_path!(path)
+        path_segments = path.split('/')
+        sub_exists = true
 
+        created_count = 0
+        path_segments.each do |segment|
+          if(go_sub!(segment)) then
+            created_count += 1
+          end
+        end
+
+        return created_count
       end
 
-      def go_sup()
-        sup = @node.incoming(:sub).first
+      def go_sup
+        sup = @node.incoming(:sub).first()
         if (sup.nil?) then
           return false
         else
@@ -69,11 +124,17 @@ module Napkin
       end
 
       def get_path
-        path_array = [@node[:id]]
-        while (go_sup())
-          path_array.push(@node[:id])
+        nn = dup
+        path = "#{nn.get_segment}"
+        while (nn.go_sup())
+          path = "#{nn.get_segment}/" + path
         end
-        return path_array
+        return path
+      end
+
+      def get_segment
+        segment = @node[:id]
+        segment.nil? ? 'nil' : segment
       end
 
       def handle(path, method, request, segments, segment, i)

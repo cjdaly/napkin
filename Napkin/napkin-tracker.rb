@@ -13,15 +13,38 @@ require 'napkin-node-util'
 module Napkin
   class Tracker
     def init_nodes
+      @n = Napkin::NodeUtil::NodeNav.new
+      @n.go_sub_path!('tracker/feed')
+      @n.reset
 
+      @n.go_sub_path!('tracker/cycle')
+      @n.get_or_init('cycle_count',0)
+      @n.get_or_init('pre_cycle_delay_seconds',60*5)
+      @n.get_or_init('post_cycle_delay_seconds',60*5)
+      @n.reset
+    end
+
+    def next_cycle
+      @n.reset
+      @n.go_sub_path('tracker/cycle')
+      Neo4j::Transaction.run do
+        cycle_count = @n['cycle_count']
+        cycle_count += 1
+        @n['cycle_count'] = cycle_count
+      end
+    end
+
+    def init_git
+      @cache_dir = OpenURI::Cache.cache_path
+      git_command("config --file #{@cache_dir}/.git/config user.name Fred")
+      git_command("config --file #{@cache_dir}/.git/config user.email fred@example.com")
     end
 
     def initialize
-      @code_dir = OpenURI::Cache.cache_path
-      @loop_count=0
+      init_nodes
+      init_git
 
-      git_command("config --file #{@code_dir}/.git/config user.name Fred")
-      git_command("config --file #{@code_dir}/.git/config user.email fred@example.com")
+      @loop_count=0
 
       @enabled = true
       @exit = false
@@ -58,8 +81,8 @@ module Napkin
       git_command("tag -a loop-#{@loop_count} -m \"...\"")
     end
 
-    def git_command(command, code_dir=@code_dir, git_dir=@code_dir + "/.git")
-      command_text = "git --git-dir=#{git_dir} --work-tree=#{code_dir} #{command}"
+    def git_command(command, cache_dir=@cache_dir, git_dir=@cache_dir + "/.git")
+      command_text = "git --git-dir=#{git_dir} --work-tree=#{cache_dir} #{command}"
       result_text = `#{command_text}`
       result_status = $?
       puts "[exec] git ... #{command}\n  -> #{result_status}\n#{result_text}"
