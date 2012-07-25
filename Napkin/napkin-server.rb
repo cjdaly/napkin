@@ -10,9 +10,10 @@ require 'sinatra'
 require 'napkin-server-helpers'
 require 'napkin-tracker'
 
-Napkin::Tracker.new
-
 helpers Napkin::ServerUtils
+
+tracker = Napkin::ServerUtils::Tracker2.new
+tracker.cycle
 
 use Rack::Auth::Basic, "authenticate" do |username, password|
   auth = Napkin::ServerUtils::Authenticator.new

@@ -13,25 +13,14 @@ require 'napkin-node-util'
 module Napkin
   class Tracker
     def init_nodes
-      @n = Napkin::NodeUtil::NodeNav.new
-      @n.go_sub_path!('tracker/feed')
-      @n.reset
+      nn = Napkin::NodeUtil::NodeNav.new
+      nn.go_sub_path!('tracker/feed')
+      nn.reset
 
-      @n.go_sub_path!('tracker/cycle')
-      @n.get_or_init('cycle_count',0)
-      @n.get_or_init('pre_cycle_delay_seconds',60*5)
-      @n.get_or_init('post_cycle_delay_seconds',60*5)
-      @n.reset
-    end
-
-    def next_cycle
-      @n.reset
-      @n.go_sub_path('tracker/cycle')
-      Neo4j::Transaction.run do
-        cycle_count = @n['cycle_count']
-        cycle_count += 1
-        @n['cycle_count'] = cycle_count
-      end
+      nn.go_sub_path!('tracker/cycle')
+      nn.get_or_init('cycle_count',0)
+      nn.get_or_init('pre_cycle_delay_seconds',5)
+      nn.get_or_init('post_cycle_delay_seconds',1)
     end
 
     def init_git
@@ -43,27 +32,35 @@ module Napkin
     def initialize
       init_nodes
       init_git
+    end
 
-      @loop_count=0
+    def cycle
+      #      foo = Neo4j.ref_node['foo']
+      #      Neo4j::Transaction.run do
+      #        Neo4j.ref_node['foo'] = "hi ... #{foo}"
+      #      end
+      #      puts "!!!!! #{foo} -> #{Neo4j.ref_node['foo']}"
 
       @enabled = true
-      @exit = false
-      @delay = 5
       @thread = Thread.new do
         begin
           puts "Tracker thread started..."
-          helper = RssReader.new
-          while (!@exit)
-            sleep @delay
+          @n = Napkin::NodeUtil::NodeNav.new
+          # helper = RssReader.new
+          while (next_cycle2)
+            puts "Tracker thread - cycle: #{@cycle_count}, path: #{@n.get_path}"
+
+            # sleep @pre_cycle_delay_seconds
+            sleep 3
             if (@enabled)
-              helper.refresh_feeds(@delay)
+              # helper.refresh_feeds(@delay)
               puts "Tracker thread refreshed..."
             else
               puts "Tracker thread disabled..."
             end
-            do_git_stuff()
+            # do_git_stuff()
 
-            @loop_count += 1
+            # sleep @post_cycle_delay_seconds
           end
           puts "Tracker thread stopped..."
         rescue StandardError => err
@@ -72,13 +69,56 @@ module Napkin
       end
     end
 
+    def next_cycle
+      foo = Neo4j.ref_node['foo']
+
+      Neo4j::Transaction.run do
+        Neo4j.ref_node['foo'] = "next ... #{foo}"
+      end
+
+      puts "!!! #{foo} -> #{Neo4j.ref_node['foo']}"
+
+      return true
+    end
+
+    def next_cycle2
+      @n.reset
+      result = @n.go_sub_path('tracker/cycle')
+      puts "!!! #{result} / #{@n.get_path} / #{@n['cycle_count']}"
+
+      @cycle_count = @n['cycle_count']
+      @cycle_count += 1
+
+      #      Neo4j::Transaction.run do
+      #        # @n.node['cycle_count'] = @cycle_count
+      #      end
+
+      @n['cycle_count']= @cycle_count
+
+      #
+      puts "!!! #{@n.get_path} / #{@n['cycle_count']}"
+
+      #      Neo4j::Transaction.run do
+      #        nn = Napkin::NodeUtil::NodeNav.new
+      #        nn.go_sub_path('tracker/cycle')
+      #        puts "!!! #{nn.get_path}"
+      ##        @cycle_count = nn['cycle_count']
+      ##        @cycle_count += 1
+      ##        nn['cycle_count'] = @cycle_count
+      ##        @pre_cycle_delay_seconds = nn['pre_cycle_delay_seconds']
+      ##        @post_cycle_delay_seconds = nn['post_cycle_delay_seconds']
+      #      end
+
+      return true
+    end
+
     def do_git_stuff()
       git_command("init")
       git_command("status -s")
       git_command("add .")
       git_command("commit -m \"...\"")
       git_command("status -s")
-      git_command("tag -a loop-#{@loop_count} -m \"...\"")
+      git_command("tag -a loop-#{@cycle_count} -m \"...\"")
     end
 
     def git_command(command, cache_dir=@cache_dir, git_dir=@cache_dir + "/.git")

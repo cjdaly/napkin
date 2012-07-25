@@ -67,9 +67,23 @@ def more_stuff
   g = f.sort {|x,y| x[:id] <=> y[:id] }
   g.each do |n|
     puts "!!! #{n[:id]} // #{n['time']} // #{Time.at(n['time'])}"
-
   end
 
 end
 
-more_stuff()
+def double_stuff
+  nn = Napkin::NodeUtil::NodeNav.new
+
+  result = nn.go_sub('tracker')
+  puts "#{result} / #{nn.get_path}"
+
+  nn.reset
+  result = nn.go_sub_path('tracker/cycle')
+  puts "#{result} / #{nn.get_path} // #{nn['cycle_count']}"
+
+  result = nn['cycle_count'] = 1
+  puts "#{result} / #{nn.get_path} // #{nn['cycle_count']}"
+
+end
+
+double_stuff()

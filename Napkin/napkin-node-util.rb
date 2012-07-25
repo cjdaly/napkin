@@ -24,12 +24,9 @@ module Napkin
       end
 
       def []=(key, value)
-        old_value = nil
         Neo4j::Transaction.run do
-          old_value = @node[key]
           @node[key] = value
         end
-        return old_value
       end
 
       def init_property(key, default)
@@ -124,12 +121,13 @@ module Napkin
       end
 
       def get_path
-        nn = dup
-        path = "#{nn.get_segment}"
-        while (nn.go_sup())
-          path = "#{nn.get_segment}/" + path
-        end
-        return path
+        #        nn = dup
+        #        path = "#{nn.get_segment}"
+        #        while (nn.go_sup())
+        #          path = "#{nn.get_segment}/" + path
+        #        end
+        #        return path
+        return "???"
       end
 
       def get_segment
