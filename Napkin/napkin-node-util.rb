@@ -121,13 +121,12 @@ module Napkin
       end
 
       def get_path
-        #        nn = dup
-        #        path = "#{nn.get_segment}"
-        #        while (nn.go_sup())
-        #          path = "#{nn.get_segment}/" + path
-        #        end
-        #        return path
-        return "???"
+        nn = dup
+        path = "#{nn.get_segment}"
+        while (nn.go_sup())
+          path = "#{nn.get_segment}/" + path
+        end
+        return path
       end
 
       def get_segment

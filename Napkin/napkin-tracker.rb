@@ -35,23 +35,19 @@ module Napkin
     end
 
     def cycle
-      #      foo = Neo4j.ref_node['foo']
-      #      Neo4j::Transaction.run do
-      #        Neo4j.ref_node['foo'] = "hi ... #{foo}"
-      #      end
-      #      puts "!!!!! #{foo} -> #{Neo4j.ref_node['foo']}"
-
       @enabled = true
       @thread = Thread.new do
         begin
           puts "Tracker thread started..."
+
+          # This seems to be necessary to avoid strange Neo4J exceptions...
+          sleep 0.1
+
           @n = Napkin::NodeUtil::NodeNav.new
           # helper = RssReader.new
           while (next_cycle2)
             puts "Tracker thread - cycle: #{@cycle_count}, path: #{@n.get_path}"
-
-            # sleep @pre_cycle_delay_seconds
-            sleep 3
+            sleep @pre_cycle_delay_seconds
             if (@enabled)
               # helper.refresh_feeds(@delay)
               puts "Tracker thread refreshed..."
@@ -60,7 +56,7 @@ module Napkin
             end
             # do_git_stuff()
 
-            # sleep @post_cycle_delay_seconds
+            sleep @post_cycle_delay_seconds
           end
           puts "Tracker thread stopped..."
         rescue StandardError => err
@@ -88,26 +84,13 @@ module Napkin
 
       @cycle_count = @n['cycle_count']
       @cycle_count += 1
-
-      #      Neo4j::Transaction.run do
-      #        # @n.node['cycle_count'] = @cycle_count
-      #      end
-
       @n['cycle_count']= @cycle_count
 
       #
       puts "!!! #{@n.get_path} / #{@n['cycle_count']}"
 
-      #      Neo4j::Transaction.run do
-      #        nn = Napkin::NodeUtil::NodeNav.new
-      #        nn.go_sub_path('tracker/cycle')
-      #        puts "!!! #{nn.get_path}"
-      ##        @cycle_count = nn['cycle_count']
-      ##        @cycle_count += 1
-      ##        nn['cycle_count'] = @cycle_count
-      ##        @pre_cycle_delay_seconds = nn['pre_cycle_delay_seconds']
-      ##        @post_cycle_delay_seconds = nn['post_cycle_delay_seconds']
-      #      end
+      @pre_cycle_delay_seconds = @n['pre_cycle_delay_seconds']
+      @post_cycle_delay_seconds = @n['post_cycle_delay_seconds']
 
       return true
     end

@@ -86,4 +86,10 @@ def double_stuff
 
 end
 
-double_stuff()
+def time_stuff
+  t = Time.now
+
+  puts "time: #{t}, to_i: #{t.to_i}"
+end
+
+time_stuff()

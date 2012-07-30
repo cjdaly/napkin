@@ -12,7 +12,9 @@ require 'napkin-tracker'
 
 helpers Napkin::ServerUtils
 
-tracker = Napkin::ServerUtils::Tracker2.new
+Napkin::ServerUtils.init_neo4j
+
+tracker = Napkin::Tracker.new
 tracker.cycle
 
 use Rack::Auth::Basic, "authenticate" do |username, password|
