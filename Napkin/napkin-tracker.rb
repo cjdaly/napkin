@@ -45,7 +45,7 @@ module Napkin
 
           @n = Napkin::NodeUtil::NodeNav.new
           # helper = RssReader.new
-          while (next_cycle2)
+          while (next_cycle)
             puts "Tracker thread - cycle: #{@cycle_count}, path: #{@n.get_path}"
             sleep @pre_cycle_delay_seconds
             if (@enabled)
@@ -66,18 +66,6 @@ module Napkin
     end
 
     def next_cycle
-      foo = Neo4j.ref_node['foo']
-
-      Neo4j::Transaction.run do
-        Neo4j.ref_node['foo'] = "next ... #{foo}"
-      end
-
-      puts "!!! #{foo} -> #{Neo4j.ref_node['foo']}"
-
-      return true
-    end
-
-    def next_cycle2
       @n.reset
       result = @n.go_sub_path('tracker/cycle')
       puts "!!! #{result} / #{@n.get_path} / #{@n['cycle_count']}"
