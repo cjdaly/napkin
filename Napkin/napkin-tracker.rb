@@ -29,19 +29,19 @@ module Napkin
       git_command("config --file #{@cache_dir}/.git/config user.email fred@example.com")
     end
 
-    def initialize
-      init_nodes
-      init_git
-    end
-
     def cycle
       @enabled = true
       @thread = Thread.new do
         begin
           puts "Tracker thread started..."
 
-          # This seems to be necessary to avoid strange Neo4J exceptions...
-          sleep 0.1
+          # Some sleepage seems to be necessary to avoid strange Neo4J exceptions...
+          sleep 1
+
+          init_nodes
+          init_git
+
+          puts "Tracker thread initialized..."
 
           @n = Napkin::NodeUtil::NodeNav.new
           # helper = RssReader.new
