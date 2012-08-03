@@ -9,6 +9,7 @@ require 'neo4j'
 #
 require 'napkin-config'
 require 'napkin-node-util'
+require 'napkin-handlers'
 
 module Napkin
   module ServerUtils
@@ -25,6 +26,8 @@ module Napkin
       nn.go_sub!("#{start_count}")
       nn['start_time'] = "#{start_time}"
       nn['start_time_i'] = start_time.to_i
+
+      nn['HTTP-handler-get'] = "EndpointEchoHandler"
 
       # Some sleepage seems to be necessary to avoid strange Neo4J exceptions...
       sleep 1
@@ -82,70 +85,6 @@ module Napkin
       "puts \"Here is item-#{item_id} from channel #{channel_id}!\""
     end
 
-    class DefaultHandler
-      def initialize(method, request, segments, segment_index)
-        @method = method
-        @request = request
-        @segments = segments
-        @segment_index = segment_index
-      end
-
-      def at_destination?
-        return @segments.length() == @segment_index + 1
-      end
-
-      def get_segment
-        return @segments[@segment_index]
-      end
-
-      def handle()
-        case @method
-        when :get
-          handle_get
-        when :post
-          handle_post
-        when :put
-          handle_put
-        end
-      end
-
-      def handle_get
-        at_destination? ? handle_get_destination : handle_get_journey
-      end
-
-      def handle_get_journey
-        return "... GET #{get_segment}"
-      end
-
-      def handle_get_destination
-        return "!!! GET #{get_segment}"
-      end
-
-      def handle_post
-        at_destination? ? handle_post_destination : handle_post_journey
-      end
-
-      def handle_post_journey
-        return "... POST #{get_segment}"
-      end
-
-      def handle_post_destination
-        return "!!! POST #{get_segment}"
-      end
-
-      def handle_put
-        at_destination? ? handle_put_destination : handle_put_journey
-      end
-
-      def handle_put_journey
-        return "... PUT #{get_segment}"
-      end
-
-      def handle_put_destination
-        return "!!! PUT #{get_segment}"
-      end
-    end
-
     def handle_request (path, method, request)
       content_type 'text/plain'
       nn = Napkin::NodeUtil::NodeNav.new
@@ -155,10 +94,11 @@ module Napkin
       current_segment_index = 0
       segments.each_with_index do |segment, i|
         if (nn.go_sub(segment)) then
-          handler = DefaultHandler.new(method, request, segments, i)
+          handler_class = get_handler_class(nn, method)
+          handler = handler_class.new(nn.dup ,method, request, segments, i)
           result = handler.handle
 
-          response_text += "#{result}\n"
+          response_text += "#{result}"
         else
           break
         end
@@ -170,6 +110,16 @@ module Napkin
         halt 404, "Node not found: #{missing_segment} in #{path}"
       else
         return response_text
+      end
+    end
+
+    def get_handler_class(nn, method)
+      puts "!!! Searching for handler: HTTP-handler-#{method}"
+      handler_class_name = nn["HTTP-handler-#{method}"]
+      if (handler_class_name.nil?) then
+        return Napkin::Handlers::HttpMethodHandler
+      else
+        return Napkin::Handlers.const_get(handler_class_name)
       end
     end
 
