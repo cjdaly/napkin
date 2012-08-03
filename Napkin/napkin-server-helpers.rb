@@ -16,7 +16,7 @@ module Napkin
       start_time = Time.now
 
       nn = Napkin::NodeUtil::NodeNav.new
-      nn.go_sub_path!('napkin/admin/starts')
+      nn.go_sub_path!('napkin/starts')
 
       start_count = nn.get_or_init('start_count',0)
       start_count += 1
@@ -82,25 +82,45 @@ module Napkin
       "puts \"Here is item-#{item_id} from channel #{channel_id}!\""
     end
 
+    class DefaultHandler
+      def handle(method, request, segment, segment_index, path_length)
+        case method
+        when :get
+          handle_get(request,segment,segment_index,path_length)
+        when :post
+          handle_post(request,segment,segment_index,path_length)
+        when :put
+          handle_put(request,segment,segment_index,path_length)
+        end
+      end
+
+      def handle_get(request, segment, segment_index, path_length)
+        return ">>> GET #{segment} : #{segment_index}/#{path_length}"
+      end
+
+      def handle_post(request, segment, segment_index, path_length)
+        return ">>> POST #{segment} : #{segment_index}/#{path_length}"
+      end
+
+      def handle_put(request, segment, segment_index, path_length)
+        return ">>> PUT #{segment} : #{segment_index}/#{path_length}"
+      end
+    end
+
     def handle_request (path, method, request)
       content_type 'text/plain'
       nn = Napkin::NodeUtil::NodeNav.new
       segments = path.split('/')
-
-      response_text = "[#{segments.length}] "
+      response_text = ""
 
       current_segment_index = 0
       segments.each_with_index do |segment, i|
-        if (nn.go_sub(segment)) then
-          #        case method
-          #        when :get
-          #        when :post
-          #        when :put
-          #        else
-          #        end
+        handler = DefaultHandler.new
 
-          # nn.handle(path, method, request, segments, segment, i)
-          response_text += "#{i}:#{segment} / "
+        if (nn.go_sub(segment)) then
+          result = handler.handle(method, request, segment, i, segments.length)
+
+          response_text += "#{result}\n"
         else
           break
         end

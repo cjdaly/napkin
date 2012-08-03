@@ -133,11 +133,6 @@ module Napkin
         segment = @node[:id]
         segment.nil? ? 'nil' : segment
       end
-
-      def handle(path, method, request, segments, segment, i)
-
-      end
-
     end
 
     #
