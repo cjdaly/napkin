@@ -26,8 +26,8 @@ module Napkin
     def init_git
       @cache_dir = OpenURI::Cache.cache_path
       git_command("init")
-      git_command("config --file #{@cache_dir}/.git/config user.name Fred")
-      git_command("config --file #{@cache_dir}/.git/config user.email fred@example.com")
+      git_command("config --file #{@cache_dir}/.git/config user.name #{Napkin::Config::GIT_USER_NAME}")
+      git_command("config --file #{@cache_dir}/.git/config user.email #{Napkin::Config::GIT_USER_EMAIL}")
     end
 
     def cycle
@@ -85,7 +85,6 @@ module Napkin
     end
 
     def do_git_stuff()
-      git_command("init")
       git_command("status -s")
       git_command("add .")
       git_command("commit -m \"...\"")

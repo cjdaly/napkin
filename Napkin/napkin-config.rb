@@ -4,6 +4,9 @@ module Napkin
     NEO4J_PATH = DATA_PATH + "/neo4j-db"
     OPEN_URI_CACHE_PATH = DATA_PATH + "/open-uri-cache"
 
+    GIT_USER_NAME = "Fred"
+    GIT_USER_EMAIL = "fred@example.com"
+
     ROOT_URL = "http://localhost:4567"
   end
 end
