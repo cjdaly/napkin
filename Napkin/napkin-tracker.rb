@@ -24,7 +24,7 @@ module Napkin
     end
 
     def init_git
-      @cache_dir = OpenURI::Cache.cache_path
+      @cache_dir = Napkin::Config::OPEN_URI_CACHE_PATH
       git_command("init")
       git_command("config --file #{@cache_dir}/.git/config user.name #{Napkin::Config::GIT_USER_NAME}")
       git_command("config --file #{@cache_dir}/.git/config user.email #{Napkin::Config::GIT_USER_EMAIL}")
@@ -67,19 +67,25 @@ module Napkin
     end
 
     def next_cycle
+      cycle_start_time = Time.now
+
       @n.reset
-      result = @n.go_sub_path('tracker/cycle')
-      puts "!!! #{result} / #{@n.get_path} / #{@n['cycle_count']}"
+      @n.go_sub_path('tracker/cycle')
 
       @cycle_count = @n['cycle_count']
       @cycle_count += 1
       @n['cycle_count']= @cycle_count
 
-      #
-      puts "!!! #{@n.get_path} / #{@n['cycle_count']}"
-
       @pre_cycle_delay_seconds = @n['pre_cycle_delay_seconds']
       @post_cycle_delay_seconds = @n['post_cycle_delay_seconds']
+
+      @n.go_sub!("#{@cycle_count}")
+
+      @n['cycle_start_time'] = "#{cycle_start_time}"
+      @n['cycle_start_time_i'] = cycle_start_time.to_i
+
+      #
+      puts ">>> CYCLE: #{@n.get_path} / #{@n['cycle_count']}"
 
       return true
     end

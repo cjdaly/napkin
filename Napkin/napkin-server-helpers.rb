@@ -22,7 +22,7 @@ module Napkin
       start_count += 1
       nn['start_count'] = start_count
 
-      nn.go_sub_path!("#{start_count}")
+      nn.go_sub!("#{start_count}")
       nn['start_time'] = "#{start_time}"
       nn['start_time_i'] = start_time.to_i
 
@@ -83,27 +83,66 @@ module Napkin
     end
 
     class DefaultHandler
-      def handle(method, request, segment, segment_index, path_length)
-        case method
+      def initialize(method, request, segments, segment_index)
+        @method = method
+        @request = request
+        @segments = segments
+        @segment_index = segment_index
+      end
+
+      def at_destination?
+        return @segments.length() == @segment_index + 1
+      end
+
+      def get_segment
+        return @segments[@segment_index]
+      end
+
+      def handle()
+        case @method
         when :get
-          handle_get(request,segment,segment_index,path_length)
+          handle_get
         when :post
-          handle_post(request,segment,segment_index,path_length)
+          handle_post
         when :put
-          handle_put(request,segment,segment_index,path_length)
+          handle_put
         end
       end
 
-      def handle_get(request, segment, segment_index, path_length)
-        return ">>> GET #{segment} : #{segment_index}/#{path_length}"
+      def handle_get
+        at_destination? ? handle_get_destination : handle_get_journey
       end
 
-      def handle_post(request, segment, segment_index, path_length)
-        return ">>> POST #{segment} : #{segment_index}/#{path_length}"
+      def handle_get_journey
+        return "... GET #{get_segment}"
       end
 
-      def handle_put(request, segment, segment_index, path_length)
-        return ">>> PUT #{segment} : #{segment_index}/#{path_length}"
+      def handle_get_destination
+        return "!!! GET #{get_segment}"
+      end
+
+      def handle_post
+        at_destination? ? handle_post_destination : handle_post_journey
+      end
+
+      def handle_post_journey
+        return "... POST #{get_segment}"
+      end
+
+      def handle_post_destination
+        return "!!! POST #{get_segment}"
+      end
+
+      def handle_put
+        at_destination? ? handle_put_destination : handle_put_journey
+      end
+
+      def handle_put_journey
+        return "... PUT #{get_segment}"
+      end
+
+      def handle_put_destination
+        return "!!! PUT #{get_segment}"
       end
     end
 
@@ -115,10 +154,9 @@ module Napkin
 
       current_segment_index = 0
       segments.each_with_index do |segment, i|
-        handler = DefaultHandler.new
-
         if (nn.go_sub(segment)) then
-          result = handler.handle(method, request, segment, i, segments.length)
+          handler = DefaultHandler.new(method, request, segments, i)
+          result = handler.handle
 
           response_text += "#{result}\n"
         else
