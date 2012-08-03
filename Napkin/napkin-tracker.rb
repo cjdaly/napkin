@@ -25,6 +25,7 @@ module Napkin
 
     def init_git
       @cache_dir = OpenURI::Cache.cache_path
+      git_command("init")
       git_command("config --file #{@cache_dir}/.git/config user.name Fred")
       git_command("config --file #{@cache_dir}/.git/config user.email fred@example.com")
     end
