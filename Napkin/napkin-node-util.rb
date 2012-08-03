@@ -183,38 +183,5 @@ module Napkin
       ITEM_PROPS = PropertyMapper.new(['title','link', 'description','guid','pubDate'])
     end
 
-    #
-    #
-    class NodeFinder
-      def get_sub(id, node=Neo4j.ref_node, create_if_absent=false)
-        sub = node.outgoing(:sub).find{|sub| sub[:id] == id}
-        if (sub.nil? && create_if_absent) then
-          sub = create_sub(id, node)
-        end
-        return sub
-      end
-
-      def get_sub_path(path, create_if_absent=false)
-        sub=Neo4j.ref_node
-        path.each do |id|
-          sub = get_sub(id, sub, create_if_absent)
-          puts "got #{sub} for #{id}"
-          break if sub.nil?
-        end
-        return sub
-      end
-
-      def create_sub(id, node)
-        sub=nil
-        Neo4j::Transaction.run do
-          sub = node.outgoing(:sub).find{|sub| sub[:id] == id}
-          if (sub.nil?) then
-            sub = Neo4j::Node.new :id => id
-            node.outgoing(:sub) << sub
-          end
-        end
-        return sub
-      end
-    end
   end
 end

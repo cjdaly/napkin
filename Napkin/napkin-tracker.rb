@@ -110,20 +110,20 @@ module Napkin
   #
   class RssReader
     def refresh_feeds(delay)
-      nf = Napkin::NodeUtil::NodeFinder.new
-      node = nf.get_sub('feed')
-      if (!node.nil?)
-        node.outgoing(:sub).each do |sub|
-          if sub['refresh_enabled']
-            puts "Feed: #{sub[:id]} / #{sub['name']} refreshing..."
-            refresh_feed(sub)
-            puts "Feed: #{sub[:id]} / #{sub['name']} refreshed..."
-          else
-            puts "Feed: #{sub[:id]} / #{sub['name']} refresh disabled..."
-          end
-          sleep delay
-        end
-      end
+      #      nf = Napkin::NodeUtil::NodeFinder.new
+      #      node = nf.get_sub('feed')
+      #      if (!node.nil?)
+      #        node.outgoing(:sub).each do |sub|
+      #          if sub['refresh_enabled']
+      #            puts "Feed: #{sub[:id]} / #{sub['name']} refreshing..."
+      #            refresh_feed(sub)
+      #            puts "Feed: #{sub[:id]} / #{sub['name']} refreshed..."
+      #          else
+      #            puts "Feed: #{sub[:id]} / #{sub['name']} refresh disabled..."
+      #          end
+      #          sleep delay
+      #        end
+      #      end
     end
 
     def refresh_feed(feed_node)

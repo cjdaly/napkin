@@ -35,29 +35,29 @@ module Napkin
       puts "!!! init_neo4j: start: #{start_count} ; #{nn.get_path()} ; #{start_time}"
     end
 
-    NF = Napkin::NodeUtil::NodeFinder.new
-
+    #    NF = Napkin::NodeUtil::NodeFinder.new
     #
-    # Feed
+    #    #
+    #    # Feed
+    #    #
+    #    def get_feed(id)
+    #      fp = Napkin::NodeUtil::Props::FEED_PROPS
+    #      node = NF.get_sub_path(['feed', id])
+    #      if (node.nil?) then
+    #        halt 404, "Node not found: /feed/#{id}"
+    #      end
+    #      hash = fp.get_hash_for(node)
+    #      return fp.hash_to_yaml(hash)
+    #    end
     #
-    def get_feed(id)
-      fp = Napkin::NodeUtil::Props::FEED_PROPS
-      node = NF.get_sub_path(['feed', id])
-      if (node.nil?) then
-        halt 404, "Node not found: /feed/#{id}"
-      end
-      hash = fp.get_hash_for(node)
-      return fp.hash_to_yaml(hash)
-    end
-
-    def put_feed(id, yaml_text)
-      fp = Napkin::NodeUtil::Props::FEED_PROPS
-      node = NF.get_sub_path(['feed', id], true)
-      yaml_hash = fp.yaml_to_hash(yaml_text)
-      fp.adorn_node(node, yaml_hash)
-      hash = fp.get_hash_for(node)
-      return fp.hash_to_yaml(hash)
-    end
+    #    def put_feed(id, yaml_text)
+    #      fp = Napkin::NodeUtil::Props::FEED_PROPS
+    #      node = NF.get_sub_path(['feed', id], true)
+    #      yaml_hash = fp.yaml_to_hash(yaml_text)
+    #      fp.adorn_node(node, yaml_hash)
+    #      hash = fp.get_hash_for(node)
+    #      return fp.hash_to_yaml(hash)
+    #    end
 
     #
     # Sketchup
@@ -123,54 +123,9 @@ module Napkin
       end
     end
 
-    def get_node(path)
-      content_type 'text/plain'
-
-      nn = Napkin::NodeUtil::NodeNav.new
-      if (nn.go_sub_path(path))
-        "found: #{nn.get_path()}"
-      else
-        "not found: #{path} (found: #{nn.get_path()})"
-      end
-    end
-
-    def post_node(path, content)
-      content_type 'text/plain'
-
-      nn = Napkin::NodeUtil::NodeNav.new
-
-      "POST not implemented"
-    end
-
-    def put_node(path, content)
-      content_type 'text/plain'
-      "PUT not implemented"
-    end
-
-    def echo_params(path)
-      if (path == nil)
-        "path: NIL"
-      elsif (path =="")
-        "path: ''"
-      else
-        path_segments = path.split('/')
-        "path: #{path} -> #{path_segments.join(' : ')}"
-      end
-    end
-
     class Authenticator
-      NF = Napkin::NodeUtil::NodeFinder.new
       def check(username, password)
-        node = NF.get_sub('user')
-        if (node.nil?) then
-          return username == 'fred' && password == 'fred'
-        end
-        node = NF.get_sub(username, node)
-        if (node.nil?) then
-          return false
-        else
-          return password == 'fred'
-        end
+        return username == 'fred' && password == 'fred'
       end
     end
 
