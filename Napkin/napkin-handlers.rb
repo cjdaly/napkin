@@ -33,7 +33,7 @@ module Napkin
         query_text = @request.query_string
         query_hash = CGI.parse(query_text)
 
-        prefix = query_hash['prefix'] || "."
+        prefix = query_hash['prefix'].first
 
         result = ""
         @nn.node.props.each do |key, value|
