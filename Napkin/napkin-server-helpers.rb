@@ -27,8 +27,6 @@ module Napkin
       nn['start_time'] = "#{start_time}"
       nn['start_time_i'] = start_time.to_i
 
-      nn['HTTP-handler-get'] = "EndpointEchoHandler"
-
       # Some sleepage seems to be necessary to avoid strange Neo4J exceptions...
       sleep 1
 
@@ -118,9 +116,14 @@ module Napkin
       handler_class_name = nn["HTTP-handler-#{method}"]
       if (handler_class_name.nil?) then
         return Napkin::Handlers::HttpMethodHandler
-      else
-        return Napkin::Handlers.const_get(handler_class_name)
       end
+
+      handler_class = Napkin::Handlers.const_get(handler_class_name)
+      if (handler_class.nil?) then
+        return Napkin::Handlers::HttpMethodHandler
+      end
+
+      return handler_class
     end
 
     class Authenticator

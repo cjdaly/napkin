@@ -1,3 +1,5 @@
+require 'cgi'
+
 #
 require 'rubygems'
 require 'neo4j'
@@ -26,13 +28,23 @@ module Napkin
       end
 
       def handle
-        ""
-      end
-    end
+        return "" unless at_destination?
 
-    class EndpointEchoHandler < HttpMethodHandler
-      def handle
-        "!!! HTTP - #{@method}: '#{get_segment}', #{@nn[:id]}"
+        query_text = @request.query_string
+        query_hash = CGI.parse(query_text)
+
+        prefix = query_hash['prefix'] || "."
+
+        result = ""
+        @nn.node.props.each do |key, value|
+          if (key.start_with?(prefix))
+            result += ">>> "
+          else
+            result += "... "
+          end
+          result += "key:#{key}, value:#{value}\n"
+        end
+        return result
       end
     end
 
