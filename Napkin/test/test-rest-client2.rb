@@ -20,6 +20,7 @@ end
 
 props = {
   'name' =>"Hello",
+  'url' => "blah2",
   'quest' => "???"
 }
-post_node('test/a/b', props)
+post_node('tracker/feed', props)

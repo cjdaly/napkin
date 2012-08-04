@@ -138,16 +138,10 @@ module Napkin
     #
     #
     class PropertyMapper
-      def initialize(keys)
-        @keys=keys
-      end
-
-      def get_hash_for(node)
-        hash = {}
-        @keys.each do |key|
-          hash[key] = node[key]
-        end
-        return hash
+      def initialize(prefix, keys, separator = '.')
+        @prefix = prefix
+        @keys = keys
+        @separator = separator
       end
 
       def yaml_to_hash(yaml_text)
@@ -166,22 +160,34 @@ module Napkin
         return YAML.dump(hash)
       end
 
-      def adorn_node(node, hash)
+      def node_to_hash(node)
+        hash = {}
+        @keys.each do |key|
+          hash[key] = node[prefix_key(key)]
+        end
+        return hash
+      end
+
+      def hash_to_node(node, hash)
         Neo4j::Transaction.run do
           @keys.each do |key|
-            node[key] = hash[key]
+            node[prefix_key(key)] = hash[key]
           end
         end
       end
+
+      def prefix_key(key)
+        "#{@prefix}#{@separator}#{key}"
+      end
     end
 
-    module Props
-      FEED_PROPS = PropertyMapper.new(['name','url','refresh_enabled','refresh_in_minutes'])
-
-      FILE_META_PROPS = PropertyMapper.new(['etag', 'last-modified', 'date', 'expires'])
-      CHANNEL_PROPS = PropertyMapper.new(['title', 'link', 'description', 'pubDate', 'lastBuildDate'])
-      ITEM_PROPS = PropertyMapper.new(['title','link', 'description','guid','pubDate'])
-    end
+    #    module Props
+    #      FEED_PROPS = PropertyMapper.new(['name','url','refresh_enabled','refresh_in_minutes'])
+    #
+    #      FILE_META_PROPS = PropertyMapper.new(['etag', 'last-modified', 'date', 'expires'])
+    #      CHANNEL_PROPS = PropertyMapper.new(['title', 'link', 'description', 'pubDate', 'lastBuildDate'])
+    #      ITEM_PROPS = PropertyMapper.new(['title','link', 'description','guid','pubDate'])
+    #    end
 
   end
 end

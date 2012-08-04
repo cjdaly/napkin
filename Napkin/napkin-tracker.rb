@@ -9,12 +9,64 @@ require 'open-uri/cached'
 #
 require 'napkin-config'
 require 'napkin-node-util'
+require 'napkin-handlers'
 
 module Napkin
+  module Handlers
+    FEED_PROPS = Napkin::NodeUtil::PropertyMapper.new(
+    "feed",
+    ['name',
+      'url',
+      'refresh_enabled',
+      'refresh_in_minutes'])
+
+    class FeedHandler < HttpMethodHandler
+      def handle
+        @request.body.rewind
+        body_text = @request.body.read
+        body_hash = FEED_PROPS.yaml_to_hash(body_text)
+
+        output_text = sub_handle(body_hash)
+        if (output_text.nil?)
+          filtered_text = FEED_PROPS.hash_to_yaml(body_hash)
+          "!!! HTTP - #{@method}: '#{get_segment}', #{@nn[:id]}\n#{body_text}\n!-->\n#{filtered_text}"
+        else
+          return output_text
+        end
+      end
+
+      def sub_handle(body_hash)
+        return nil
+      end
+    end
+
+    class FeedPostHandler < FeedHandler
+      def sub_handle(body_hash)
+        name = body_hash['name']
+        return nil if name.nil?
+
+        nn = @nn.dup
+        return nil unless nn.go_sub!(name)
+
+        FEED_PROPS.hash_to_node(nn.node, body_hash)
+
+        rehash = FEED_PROPS.node_to_hash(nn.node)
+        FEED_PROPS.hash_to_yaml(rehash)
+      end
+    end
+
+    class FeedPutHandler < FeedHandler
+      def sub_handle(body_hash)
+        ""
+      end
+    end
+  end
+
   class Tracker
     def init_nodes
       nn = Napkin::NodeUtil::NodeNav.new
       nn.go_sub_path!('tracker/feed')
+      nn['HTTP-handler-post'] = "FeedPostHandler"
       nn.reset
 
       nn.go_sub_path!('tracker/cycle')
