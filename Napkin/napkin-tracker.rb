@@ -63,17 +63,12 @@ module Napkin
   end
 
   class Tracker
-    def init_nodes
-      nn = Napkin::NodeUtil::NodeNav.new
-      nn.go_sub_path!('tracker/feed')
-      nn['HTTP-handler-post'] = "FeedPostHandler"
-      nn.reset
-
-      nn.go_sub_path!('tracker/cycle')
-      nn.get_or_init('cycle_count',0)
-      nn.get_or_init('pre_cycle_delay_seconds',9)
-      nn.get_or_init('mid_cycle_delay_seconds',5)
-      nn.get_or_init('post_cycle_delay_seconds',1)
+    @@initialized_property_groups = false
+    def initialize
+      if (!@@initialized_property_groups)
+        init_property_groups
+        @@initialized_property_groups = true
+      end
     end
 
     def cycle
@@ -160,11 +155,13 @@ module Napkin
         rss_file_meta_hash = nil
         rss_text = nil
         open(feed_url) do |rss_file|
-          rss_file_meta_hash = file_meta_to_hash(rss_file.meta)
+          rss_file_meta_hash = FILE_META_GROUP.
+          construct_hash('file_meta_hash', rss_file.meta)
+
           rss_text = rss_file.read
         end
 
-        puts "RSS file meta:\n#{YAML.dump(rss_file_meta_hash)}"
+        puts "file metadata:\n#{FILE_META_GROUP.dump_hash(rss_file_meta_hash)}\n"
 
         # TODO:
         # invalidate cache at refresh time
@@ -174,13 +171,28 @@ module Napkin
 
         rss = RSS::Parser.parse(rss_text, false)
 
-        rss_channel_hash = channel_to_hash(rss.channel)
+        rss_channel_hash = RSS_CHANNEL_GROUP.
+        construct_hash('rss_channel', rss.channel)
+
+        #rss_channel_hash = channel_to_hash(rss.channel)
+
         # TODO: compare with existing / update
-        puts "RSS Channel:\n#{YAML.dump(rss_channel_hash)}"
+        puts "RSS Channel:\n#{RSS_CHANNEL_GROUP.dump_hash(rss_channel_hash)}\n"
 
         rss.items.each do |item|
-          rss_item_hash = item_to_hash(item)
-          puts "  RSS Item:\n#{YAML.dump(rss_item_hash)}"
+          # rss_item_hash = item_to_hash(item)
+          rss_item_hash = RSS_ITEM_GROUP.
+          construct_hash('rss_item', item)
+
+          nn = Napkin::NodeUtil::NodeNav.new(feed_node)
+          if (nn.go_sub_path("item/#{rss_item_hash['guid']}") > 0) then
+            nn = Napkin::NodeUtil::NodeNav.new(feed_node)
+            nn.go_sub_path!("item/#{rss_item_hash['guid']}")
+            RSS_ITEM_GROUP.hash_to_node(nn.node, rss_item_hash)
+            puts "NEW RSS Item: #{rss_item_hash['title']}"
+          end
+
+          # puts "  RSS Item:\n#{YAML.dump(rss_item_hash)}"
           # TODO: compare with existing / update
         end
       rescue StandardError => err
@@ -188,34 +200,82 @@ module Napkin
       end
     end
 
-    def file_meta_to_hash(file_meta)
-      return {
-        'etag' => file_meta['etag'],
-        'last-modified' => file_meta['last-modified'],
-        'date' => file_meta['date'],
-        'expires' => file_meta['expires'],
-      }
+    FILE_META_GROUP = Napkin::NodeUtil::PropertyGroup.new('file_meta')
+    RSS_CHANNEL_GROUP = Napkin::NodeUtil::PropertyGroup.new('rss_channel')
+    RSS_ITEM_GROUP = Napkin::NodeUtil::PropertyGroup.new('rss_item')
+
+    def init_property_groups
+      FILE_META_GROUP.
+      add_property('etag').
+      add_converter('file_meta_hash',lambda {|fmh|fmh['etag']}).
+      add_property('last-modified').
+      add_converter('file_meta_hash',lambda {|fmh|fmh['last-modified']}).
+      add_property('date').
+      add_converter('file_meta_hash',lambda {|fmh|fmh['date']}).
+      add_property('expires').
+      add_converter('file_meta_hash',lambda {|fmh|fmh['expires']})
+
+      RSS_CHANNEL_GROUP.
+      add_property('title').
+      add_converter('rss_channel',lambda {|ch|ch.title}).
+      add_property('link').
+      add_converter('rss_channel',lambda {|ch|ch.link}).
+      add_property('description').
+      add_converter('rss_channel',lambda {|ch|ch.description}).
+      add_property('pubDate').
+      add_converter('rss_channel',lambda {|ch|ch.pubDate}).
+      add_property('lastBuildDate').
+      add_converter('rss_channel',lambda {|ch|ch.lastBuildDate})
+
+      RSS_ITEM_GROUP.
+      add_property('title').
+      add_converter('rss_item',lambda {|item|item.title}).
+      add_property('link').
+      add_converter('rss_item',lambda {|item|item.link}).
+      add_property('description').
+      add_converter('rss_item',lambda {|item|item.description}).
+      add_property('guid').
+      add_converter('rss_item',lambda {|item|item.guid.content}).
+      add_property('pubDate').
+      add_converter('rss_item',lambda {|item|item.pubDate.to_s})
+
     end
 
-    def channel_to_hash(rss_channel)
-      return {
-        'title' => rss_channel.title,
-        'link'=> rss_channel.link,
-        'description' => rss_channel.description,
-        'pubDate' => rss_channel.pubDate,
-        'lastBuildDate' => rss_channel.pubDate
-      }
-    end
+    #    CHANNEL_PROPS = Napkin::NodeUtil::PropertyMapper.new(
+    #    "channel",
+    #    ['title',
+    #      'link',
+    #      'description',
+    #      'pubDate',
+    #      'lastBuildDate'])
+    #
+    #    def channel_to_hash(rss_channel)
+    #      return {
+    #        'title' => rss_channel.title,
+    #        'link'=> rss_channel.link,
+    #        'description' => rss_channel.description,
+    #        'pubDate' => rss_channel.pubDate,
+    #        'lastBuildDate' => rss_channel.pubDate
+    #      }
+    #    end
 
-    def item_to_hash(rss_item)
-      return {
-        'title' => rss_item.title,
-        'link'=> rss_item.link,
-        # 'description' => rss_item.description,
-        'guid' => rss_item.guid.content,
-        'pubDate' => rss_item.pubDate
-      }
-    end
+    #    ITEM_PROPS = Napkin::NodeUtil::PropertyMapper.new(
+    #    "item",
+    #    ['title',
+    #      'link',
+    #      'description',
+    #      'guid',
+    #      'pubDate'])
+    #
+    #    def item_to_hash(rss_item)
+    #      return {
+    #        'title' => rss_item.title,
+    #        'link'=> rss_item.link,
+    #        'description' => rss_item.description,
+    #        'guid' => rss_item.guid.content,
+    #        'pubDate' => rss_item.pubDate.to_s
+    #      }
+    #    end
 
     #  def puts_meta(meta, attr)
     #    # pd = ParseDate.parsedate(meta[attr])
@@ -225,6 +285,19 @@ module Napkin
     #    puts attr + ": " + meta[attr]
     #    puts (d2 * 24 * 60).to_i
     #  end
+
+    def init_nodes
+      nn = Napkin::NodeUtil::NodeNav.new
+      nn.go_sub_path!('tracker/feed')
+      nn['HTTP-handler-post'] = "FeedPostHandler"
+      nn.reset
+
+      nn.go_sub_path!('tracker/cycle')
+      nn.get_or_init('cycle_count',0)
+      nn.get_or_init('pre_cycle_delay_seconds',9)
+      nn.get_or_init('mid_cycle_delay_seconds',5)
+      nn.get_or_init('post_cycle_delay_seconds',1)
+    end
 
     #
     # Git stuff
