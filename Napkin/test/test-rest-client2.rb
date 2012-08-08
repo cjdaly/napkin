@@ -36,6 +36,13 @@ props = {
   'quest' => "???"
 }
 
+props_foo = {
+  'name' =>"Foo2",
+  'url' => "http://www.foo.com",
+  'refresh_enabled' => false,
+  'refresh_in_minutes' => 20
+}
+
 props_zh = {
   'name' =>"Zerohedge",
   'url' => "http://www.zerohedge.com/fullrss2.xml",
@@ -50,4 +57,4 @@ props_zh2 = {
   'refresh_in_minutes' => 20
 }
 
-post_node('tracker/feed', props_zh)
+post_node('tracker/feed/Foo', props_foo)

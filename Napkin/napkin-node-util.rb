@@ -137,61 +137,6 @@ module Napkin
 
     #
     #
-    class PropertyMapper
-      def initialize(prefix, keys, separator = '.')
-        @prefix = prefix
-        @keys = keys
-        @separator = separator
-      end
-
-      def yaml_to_hash(yaml_text)
-        yaml = YAML.load(yaml_text)
-        out = {}
-        @keys.each do |key|
-          val = yaml[key]
-          if (!val.nil?) then
-            out[key] = val
-          end
-        end
-        return out
-      end
-
-      def hash_to_yaml(hash)
-        return YAML.dump(hash)
-      end
-
-      def node_to_hash(node)
-        hash = {}
-        @keys.each do |key|
-          hash[key] = node[prefix_key(key)]
-        end
-        return hash
-      end
-
-      def hash_to_node(node, hash)
-        Neo4j::Transaction.run do
-          @keys.each do |key|
-            node[prefix_key(key)] = hash[key]
-          end
-        end
-      end
-
-      def prefix_key(key)
-        "#{@prefix}#{@separator}#{key}"
-      end
-
-      def dump_hash(hash)
-        result = ""
-        @keys.each do |key|
-          value = hash[key]
-          result += "~~~ #{key}=[#{value.class}]= #{value}\n"
-        end
-        return result
-      end
-    end
-
-    #
-    #
 
     class PropertyWrapper
       attr_accessor :id, :description, :default, :group
