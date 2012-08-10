@@ -78,7 +78,7 @@ module Napkin
             else
               puts "Tracker thread disabled..."
             end
-            # do_git_stuff()
+            do_git_stuff()
 
             sleep @post_cycle_delay_seconds
           end
@@ -167,9 +167,7 @@ module Napkin
         rss.items.each do |item|
           rss_item_hash = RSS_ITEM_GROUP.construct_hash('rss_item', item)
 
-          # TODO:
-          # a) find the right 'guid' (first by iteration, then use lucene)
-          # b) use incrementing item_count as segment
+          # TODO: use lucene
           guid = rss_item_hash['guid']
           item_node = nn_items.node.outgoing(:sub).find{|sub| sub['rss_item.guid'] == guid}
 
@@ -191,20 +189,6 @@ module Napkin
             puts "OLD RSS Item: #{rss_item_hash['title']} // #{rss_item_hash['guid']}"
           end
 
-          #          nn = Napkin::NodeUtil::NodeNav.new(feed_node)
-          #          if (nn.go_sub_path("item/#{rss_item_hash['guid']}") > 0) then
-          #            nn = Napkin::NodeUtil::NodeNav.new(feed_node)
-          #            nn.go_sub_path!("item/#{rss_item_hash['guid']}")
-          #            RSS_ITEM_GROUP.hash_to_node(nn.node, rss_item_hash)
-          #            puts "NEW RSS Item: #{rss_item_hash['title']} // #{rss_item_hash['guid']}"
-          #          else
-          #            puts "OLD RSS Item: #{rss_item_hash['title']} // #{rss_item_hash['guid']}"
-          #            node_hash = RSS_ITEM_GROUP.node_to_hash(nn.node)
-          #            puts "#{nn.node[:id]} : #{node_hash['title']} // #{node_hash['guid']}"
-          #          end
-
-          # puts "  RSS Item:\n#{YAML.dump(rss_item_hash)}"
-          # TODO: compare with existing / update
         end
       rescue StandardError => err
         puts "Error in refresh_feed: #{err}\n#{err.backtrace}"

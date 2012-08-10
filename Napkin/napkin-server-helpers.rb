@@ -33,30 +33,6 @@ module Napkin
       puts "!!! init_neo4j: start: #{start_count} ; #{nn.get_path()} ; #{start_time}"
     end
 
-    #    NF = Napkin::NodeUtil::NodeFinder.new
-    #
-    #    #
-    #    # Feed
-    #    #
-    #    def get_feed(id)
-    #      fp = Napkin::NodeUtil::Props::FEED_PROPS
-    #      node = NF.get_sub_path(['feed', id])
-    #      if (node.nil?) then
-    #        halt 404, "Node not found: /feed/#{id}"
-    #      end
-    #      hash = fp.get_hash_for(node)
-    #      return fp.hash_to_yaml(hash)
-    #    end
-    #
-    #    def put_feed(id, yaml_text)
-    #      fp = Napkin::NodeUtil::Props::FEED_PROPS
-    #      node = NF.get_sub_path(['feed', id], true)
-    #      yaml_hash = fp.yaml_to_hash(yaml_text)
-    #      fp.adorn_node(node, yaml_hash)
-    #      hash = fp.get_hash_for(node)
-    #      return fp.hash_to_yaml(hash)
-    #    end
-
     #
     # Sketchup
     #
