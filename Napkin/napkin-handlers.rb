@@ -44,8 +44,23 @@ module Napkin
           end
           result += "key:#{key}, value:#{value}\n"
         end
+
+        @nn.node.outgoing(:sub).each do |n|
+          puts "CHECK: #{n[:id]} / #{n['id']} / #{get_keys(n)}"
+          result += "   [sub] --- id:#{n[:id]}, neo_id:#{n.neo_id}\n"
+        end
         return result
       end
+
+      def get_keys(node)
+        result = "("
+        node.props.each do |key, value|
+          result += "#{key},"
+        end
+        result += ")"
+        return result
+      end
+
     end
 
   end

@@ -27,8 +27,8 @@ module Napkin
       nn['start_time'] = "#{start_time}"
       nn['start_time_i'] = start_time.to_i
 
-      # Some sleepage seems to be necessary to avoid strange Neo4J exceptions...
-      sleep 1
+      # let Neo4J warm up...
+      sleep 5
 
       puts "!!! init_neo4j: start: #{start_count} ; #{nn.get_path()} ; #{start_time}"
     end

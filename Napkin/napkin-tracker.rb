@@ -62,8 +62,8 @@ module Napkin
         begin
           puts "Tracker thread started..."
 
-          # Some sleepage seems to be necessary to avoid strange Neo4J exceptions...
-          sleep 1
+          # let Neo4J warm up to this thread...
+          sleep 5
 
           init_nodes
           init_git
@@ -156,26 +156,52 @@ module Napkin
 
         rss = RSS::Parser.parse(rss_text, false)
 
-        rss_channel_hash = RSS_CHANNEL_GROUP.
-        construct_hash('rss_channel', rss.channel)
-
-        #rss_channel_hash = channel_to_hash(rss.channel)
+        rss_channel_hash = RSS_CHANNEL_GROUP.construct_hash('rss_channel', rss.channel)
 
         # TODO: compare with existing / update
         puts "RSS Channel:\n#{RSS_CHANNEL_GROUP.dump_hash(rss_channel_hash)}\n"
 
-        rss.items.each do |item|
-          # rss_item_hash = item_to_hash(item)
-          rss_item_hash = RSS_ITEM_GROUP.
-          construct_hash('rss_item', item)
+        nn_items = Napkin::NodeUtil::NodeNav.new(feed_node)
+        nn_items.go_sub!('items');
 
-          nn = Napkin::NodeUtil::NodeNav.new(feed_node)
-          if (nn.go_sub_path("item/#{rss_item_hash['guid']}") > 0) then
-            nn = Napkin::NodeUtil::NodeNav.new(feed_node)
-            nn.go_sub_path!("item/#{rss_item_hash['guid']}")
-            RSS_ITEM_GROUP.hash_to_node(nn.node, rss_item_hash)
-            puts "NEW RSS Item: #{rss_item_hash['title']}"
+        rss.items.each do |item|
+          rss_item_hash = RSS_ITEM_GROUP.construct_hash('rss_item', item)
+
+          # TODO:
+          # a) find the right 'guid' (first by iteration, then use lucene)
+          # b) use incrementing item_count as segment
+          guid = rss_item_hash['guid']
+          item_node = nn_items.node.outgoing(:sub).find{|sub| sub['rss_item.guid'] == guid}
+
+          if(item_node.nil?) then
+            puts "NEW RSS Item: #{rss_item_hash['title']} // #{rss_item_hash['guid']}"
+            Neo4j::Transaction.run do
+              item_count = nn_items.get_or_init('item_count',0)
+              nn_item = nn_items.dup
+              if (nn_item.go_sub!("#{item_count}"))
+                RSS_ITEM_GROUP.hash_to_node(nn_item.node, rss_item_hash)
+                puts "!!!ITEM ADDED!!!"
+              else
+                puts "!!!ITEM ALREADY EXISTS!!!"
+              end
+              item_count += 1
+              nn_items['item_count'] = item_count
+            end
+          else
+            puts "OLD RSS Item: #{rss_item_hash['title']} // #{rss_item_hash['guid']}"
           end
+
+          #          nn = Napkin::NodeUtil::NodeNav.new(feed_node)
+          #          if (nn.go_sub_path("item/#{rss_item_hash['guid']}") > 0) then
+          #            nn = Napkin::NodeUtil::NodeNav.new(feed_node)
+          #            nn.go_sub_path!("item/#{rss_item_hash['guid']}")
+          #            RSS_ITEM_GROUP.hash_to_node(nn.node, rss_item_hash)
+          #            puts "NEW RSS Item: #{rss_item_hash['title']} // #{rss_item_hash['guid']}"
+          #          else
+          #            puts "OLD RSS Item: #{rss_item_hash['title']} // #{rss_item_hash['guid']}"
+          #            node_hash = RSS_ITEM_GROUP.node_to_hash(nn.node)
+          #            puts "#{nn.node[:id]} : #{node_hash['title']} // #{node_hash['guid']}"
+          #          end
 
           # puts "  RSS Item:\n#{YAML.dump(rss_item_hash)}"
           # TODO: compare with existing / update
