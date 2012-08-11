@@ -1,5 +1,4 @@
 require 'yaml'
-
 require 'rubygems'
 require 'rest-client'
 
@@ -12,7 +11,7 @@ puts x_yaml
 
 module Test
   PROPS = ['feed_name','feed_url','poll_state','refresh_rate']
-    
+
   def Test.yaml_to_hash(yaml_text)
     yaml = YAML.load(yaml_text)
     out = {}
@@ -24,8 +23,11 @@ module Test
     end
     return out
   end
-  
+
 end
 
 puts "Hello!"
 puts Test.yaml_to_hash(x_yaml)
+
+foo = "foo" == "#{:foo}"
+puts "#{foo}"

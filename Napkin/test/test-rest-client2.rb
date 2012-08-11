@@ -30,20 +30,8 @@ def post_node(
   puts "POST Incoming:\n#{response.to_s()}\n"
 end
 
-props = {
-  'name' =>"Hello",
-  'url' => "blah2",
-  'quest' => "???"
-}
-
-props_foo = {
-  'name' =>"Foo2",
-  'url' => "http://www.foo.com",
-  'refresh_enabled' => false,
-  'refresh_in_minutes' => 20
-}
-
 props_zh = {
+  'id' => "zh",
   'name' =>"Zerohedge",
   'url' => "http://www.zerohedge.com/fullrss2.xml",
   'refresh_enabled' => true,
@@ -51,10 +39,19 @@ props_zh = {
 }
 
 props_zh2 = {
+  'id' => "zh2",
   'name' =>"Zerohedge (FeedBurner)",
   'url' => "http://feeds.feedburner.com/zerohedge/feed?format=xml",
   'refresh_enabled' => true,
   'refresh_in_minutes' => 20
 }
 
-post_node('tracker/feed/Foo', props_foo)
+props_jesse = {
+  'id' => "jesse",
+  'name' =>"Jesse's Café Américain",
+  'url' => "http://feeds.feedburner.com/JessesCafeAmericain?format=xml",
+  'refresh_enabled' => true,
+  'refresh_in_minutes' => 20
+}
+
+post_node('tracker/feed', props_jesse)

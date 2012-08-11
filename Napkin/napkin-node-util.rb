@@ -194,8 +194,10 @@ module Napkin
         end
       end
 
-      def yaml_to_hash(yaml_text)
+      def yaml_to_hash(yaml_text, filter = true)
         yaml = YAML.load(yaml_text)
+        return yaml unless filter
+
         out = {}
         @wrapper_id_list.each do |id|
           val = yaml[id]

@@ -17,7 +17,7 @@ module Napkin
       def handle
         @request.body.rewind
         body_text = @request.body.read
-        body_hash = Tracker::FEED_GROUP.yaml_to_hash(body_text)
+        body_hash = Tracker::FEED_GROUP.yaml_to_hash(body_text, filter=false)
 
         output_text = subclass_handle(body_hash)
         if (output_text.nil?)
@@ -35,11 +35,11 @@ module Napkin
 
     class FeedPostHandler < FeedHandler
       def subclass_handle(body_hash)
-        name = body_hash['name']
-        return nil if name.nil?
+        id = body_hash['id']
+        return nil if id.nil?
 
         nn = @nn.dup
-        return nil unless nn.go_sub!(name)
+        return nil unless nn.go_sub!(id)
 
         Tracker::FEED_GROUP.hash_to_node(nn.node, body_hash)
 
