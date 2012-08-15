@@ -123,14 +123,46 @@ module Napkin
       nn_feeds.go_sub_path("tracker/feed")
       nn_feeds.node.outgoing(:sub).each do |sub|
         if sub['feed.refresh_enabled']
-          puts "Feed: #{sub[:id]} / #{sub['name']} refreshing..."
-          refresh_feed(sub)
-          puts "Feed: #{sub[:id]} / #{sub['name']} refreshed..."
-          sleep @mid_cycle_delay_seconds
+          if (time_to_refresh!(sub)) then
+            puts "Feed: #{sub[:id]} / #{sub['name']} refreshing..."
+            refresh_feed(sub)
+            puts "Feed: #{sub[:id]} / #{sub['name']} refreshed..."
+            sleep @mid_cycle_delay_seconds
+          else
+            # puts "Feed: #{sub[:id]} / #{sub['name']} waiting for refresh..."
+          end
         else
           puts "Feed: #{sub[:id]} / #{sub['name']} refresh disabled..."
         end
       end
+    end
+
+    def time_to_refresh!(feed_node)
+      now_time_i = Time.now.to_i
+
+      nn_feed_node = Napkin::NodeUtil::NodeNav.new(feed_node)
+
+      refresh_frequency_minutes = nn_feed_node.
+      get_or_init("feed.refresh_frequency_minutes",60)
+      refresh_frequency_seconds = refresh_frequency_minutes * 60
+
+      last_refresh_time_i = nn_feed_node.
+      get_or_init("feed.last_refresh_time_i",0)
+
+      time_to_refresh_i = last_refresh_time_i + refresh_frequency_seconds
+
+      result = now_time_i > time_to_refresh_i
+      if (result) then
+        nn_feed_node["feed.last_refresh_time_i"] = now_time_i
+
+        # invalidate the open-uri cache
+        feed_url=feed_node['feed.url']
+        OpenURI::Cache.invalidate(feed_url)
+      else
+        seconds_until_refresh = time_to_refresh_i - now_time_i
+        puts "Feed: #{feed_node[:id]} / #{feed_node['name']} waiting for refresh in #{seconds_until_refresh} seconds..."
+      end
+      return result
     end
 
     def refresh_feed(feed_node)
@@ -147,12 +179,6 @@ module Napkin
         end
 
         puts "file metadata:\n#{FILE_META_GROUP.dump_hash(rss_file_meta_hash)}\n"
-
-        # TODO:
-        # invalidate cache at refresh time
-        #   OpenURI::Cache.invalidate(@feed_url)
-        # ... and open/read again
-        # ... update file meta in db
 
         rss = RSS::Parser.parse(rss_text, false)
 
@@ -178,15 +204,12 @@ module Napkin
               nn_item = nn_items.dup
               if (nn_item.go_sub!("#{item_count}"))
                 RSS_ITEM_GROUP.hash_to_node(nn_item.node, rss_item_hash)
-                puts "!!!ITEM ADDED!!!"
               else
-                puts "!!!ITEM ALREADY EXISTS!!!"
+                # TODO: ???
               end
               item_count += 1
               nn_items['item_count'] = item_count
             end
-          else
-            puts "OLD RSS Item: #{rss_item_hash['title']} // #{rss_item_hash['guid']}"
           end
 
         end
@@ -200,7 +223,8 @@ module Napkin
     add_property('name').group.
     add_property('url').group.
     add_property('refresh_enabled').group.
-    add_property('refresh_in_minutes').group
+    add_property('refresh_frequency_minutes').group.
+    add_property('last_refresh_time_i').group
 
     FILE_META_GROUP = Napkin::NodeUtil::PropertyGroup.new('file_meta').
     add_property('etag').
@@ -235,15 +259,6 @@ module Napkin
     add_converter('rss_item',lambda {|item|item.guid.content}).
     add_property('pubDate').
     add_converter('rss_item',lambda {|item|item.pubDate.to_s})
-
-    #  def puts_meta(meta, attr)
-    #    # pd = ParseDate.parsedate(meta[attr])
-    #    # puts pd
-    #    d = DateTime.parse(meta[attr])
-    #    d2 = DateTime.now - d
-    #    puts attr + ": " + meta[attr]
-    #    puts (d2 * 24 * 60).to_i
-    #  end
 
     def init_nodes
       nn = Napkin::NodeUtil::NodeNav.new
@@ -281,7 +296,9 @@ module Napkin
       command_text = "git --git-dir=#{git_dir} --work-tree=#{cache_dir} #{command}"
       result_text = `#{command_text}`
       result_status = $?
-      puts "[exec] git ... #{command}\n  -> #{result_status}\n#{result_text}"
+      if (result_status != 0)
+        puts "[exec] git ... #{command}\n  -> #{result_status}\n#{result_text}"
+      end
     end
   end
 
