@@ -223,7 +223,20 @@ module Napkin
       def hash_to_node(node, hash)
         Neo4j::Transaction.run do
           @wrapper_id_list.each do |id|
-            node[prefix_key(id)] = hash[id]
+            old_value = node[prefix_key(id)]
+            new_value = hash[id]
+            if (old_value != new_value) then
+              node[prefix_key(id)] = new_value
+              if (old_value.nil?) then
+                # puts "hash_to_node: DEFINED value:#{prefix_key(id)}"
+              else
+                puts "hash_to_node: CHANGED value:#{prefix_key(id)}"
+                puts "#{old_value}"
+                puts "-->"
+                puts "#{new_value}"
+                puts "--!"
+              end
+            end
           end
         end
       end

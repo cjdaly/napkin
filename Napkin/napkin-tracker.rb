@@ -66,6 +66,8 @@ module Napkin
           sleep 5
 
           init_nodes
+
+          @git_enabled = false
           init_git
 
           puts "Tracker thread initialized..."
@@ -177,15 +179,14 @@ module Napkin
 
           rss_text = rss_file.read
         end
-
-        puts "file metadata:\n#{FILE_META_GROUP.dump_hash(rss_file_meta_hash)}\n"
+        FILE_META_GROUP.hash_to_node(feed_node, rss_file_meta_hash)
 
         rss = RSS::Parser.parse(rss_text, false)
 
         rss_channel_hash = RSS_CHANNEL_GROUP.construct_hash('rss_channel', rss.channel)
-
-        # TODO: compare with existing / update
-        puts "RSS Channel:\n#{RSS_CHANNEL_GROUP.dump_hash(rss_channel_hash)}\n"
+        nn_channel = Napkin::NodeUtil::NodeNav.new(feed_node)
+        nn_channel.go_sub!('channel');
+        RSS_CHANNEL_GROUP.hash_to_node(nn_channel.node, rss_channel_hash)
 
         nn_items = Napkin::NodeUtil::NodeNav.new(feed_node)
         nn_items.go_sub!('items');
@@ -197,16 +198,14 @@ module Napkin
           guid = rss_item_hash['guid']
           item_node = nn_items.node.outgoing(:sub).find{|sub| sub['rss_item.guid'] == guid}
 
-          if(item_node.nil?) then
-            puts "NEW RSS Item: #{rss_item_hash['title']} // #{rss_item_hash['guid']}"
+          if(!item_node.nil?) then
+            RSS_ITEM_GROUP.hash_to_node(item_node, rss_item_hash)
+          else
             Neo4j::Transaction.run do
               item_count = nn_items.get_or_init('item_count',0)
               nn_item = nn_items.dup
-              if (nn_item.go_sub!("#{item_count}"))
-                RSS_ITEM_GROUP.hash_to_node(nn_item.node, rss_item_hash)
-              else
-                # TODO: ???
-              end
+              nn_item.go_sub!("#{item_count}")
+              RSS_ITEM_GROUP.hash_to_node(nn_item.node, rss_item_hash)
               item_count += 1
               nn_items['item_count'] = item_count
             end
@@ -244,9 +243,11 @@ module Napkin
     add_property('description').
     add_converter('rss_channel',lambda {|ch|ch.description}).
     add_property('pubDate').
-    add_converter('rss_channel',lambda {|ch|ch.pubDate}).
+    add_converter('rss_channel',lambda {|ch|ch.pubDate.to_s}).
     add_property('lastBuildDate').
-    add_converter('rss_channel',lambda {|ch|ch.lastBuildDate})
+    add_converter('rss_channel',lambda {|ch|ch.lastBuildDate.to_s}).
+    add_property('category').
+    add_converter('rss_channel',lambda {|ch|ch.category.class.name})
 
     RSS_ITEM_GROUP = Napkin::NodeUtil::PropertyGroup.new('rss_item').
     add_property('title').
@@ -258,7 +259,9 @@ module Napkin
     add_property('guid').
     add_converter('rss_item',lambda {|item|item.guid.content}).
     add_property('pubDate').
-    add_converter('rss_item',lambda {|item|item.pubDate.to_s})
+    add_converter('rss_item',lambda {|item|item.pubDate.to_s}).
+    add_property('category').
+    add_converter('rss_item',lambda {|item|item.category.class.name})
 
     def init_nodes
       nn = Napkin::NodeUtil::NodeNav.new
@@ -278,6 +281,8 @@ module Napkin
     #
 
     def init_git
+      return unless @git_enabled
+
       @cache_dir = Napkin::Config::OPEN_URI_CACHE_PATH
       git_command("init")
       git_command("config --file #{@cache_dir}/.git/config user.name #{Napkin::Config::GIT_USER_NAME}")
@@ -285,6 +290,8 @@ module Napkin
     end
 
     def do_git_stuff()
+      return unless @git_enabled
+
       git_command("status -s")
       git_command("add .")
       git_command("commit -m \"...\"")
@@ -293,6 +300,8 @@ module Napkin
     end
 
     def git_command(command, cache_dir=@cache_dir, git_dir=@cache_dir + "/.git")
+      return unless @git_enabled
+
       command_text = "git --git-dir=#{git_dir} --work-tree=#{cache_dir} #{command}"
       result_text = `#{command_text}`
       result_status = $?
