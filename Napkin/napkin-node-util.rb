@@ -10,30 +10,32 @@ module Napkin
     #
     #
     class NodeNav
-      attr_accessor :node
+      attr_accessor :node, :property_key_prefix
       def initialize(node = Neo4j.ref_node)
         @node = node
+        @property_key_prefix = ""
       end
 
       def reset(node = Neo4j.ref_node)
         @node = node
+        @property_key_prefix = ""
       end
 
       def [](key)
-        return @node[key]
+        return @node[@property_key_prefix + key]
       end
 
       def []=(key, value)
         Neo4j::Transaction.run do
-          @node[key] = value
+          @node[@property_key_prefix + key] = value
         end
       end
 
       def init_property(key, default)
         property_initialized = true
         Neo4j::Transaction.run do
-          if (@node[key].nil?) then
-            @node[key] = default
+          if (@node[@property_key_prefix + key].nil?) then
+            @node[@property_key_prefix + key] = default
           else
             property_initialized = false
           end
@@ -42,12 +44,12 @@ module Napkin
       end
 
       def get_or_init(key, default)
-        value = @node[key]
+        value = @node[@property_key_prefix + key]
         if (value.nil?) then
           Neo4j::Transaction.run do
-            value = @node[key]
+            value = @node[@property_key_prefix + key]
             if (value.nil?) then
-              @node[key] = default
+              @node[@property_key_prefix + key] = default
               value = default
             end
           end
@@ -96,7 +98,11 @@ module Napkin
         return missed_count
       end
 
-      def go_sub_path!(path)
+      def go_sub_path!(path, set_property_key_prefix = false, property_key_prefix_separator = "#")
+        if (set_property_key_prefix) then
+          @property_key_prefix = path + property_key_prefix_separator
+        end
+
         path_segments = path.split('/')
         sub_exists = true
 

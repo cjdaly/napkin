@@ -16,21 +16,38 @@ module Napkin
     def ServerUtils.init_neo4j
       start_time = Time.now
 
-      nn = Napkin::NodeUtil::NodeNav.new
-      nn.go_sub_path!('napkin/starts')
+      nn_starts = Napkin::NodeUtil::NodeNav.new
+      nn_starts.go_sub_path!('napkin/starts', true)
 
-      start_count = nn.get_or_init('start_count',0)
+      nn_cycles = Napkin::NodeUtil::NodeNav.new
+      nn_cycles.go_sub_path!('napkin/cycles', true)
+
+      start_count = nn_starts.get_or_init('start_count',-1)
       start_count += 1
-      nn['start_count'] = start_count
-
-      nn.go_sub!("#{start_count}")
-      nn['start_time'] = "#{start_time}"
-      nn['start_time_i'] = start_time.to_i
+      nn_starts['start_count'] = start_count
 
       # let Neo4J warm up...
-      sleep 5
+      sleep 2
 
-      puts "!!! init_neo4j: start: #{start_count} ; #{nn.get_path()} ; #{start_time}"
+      nn_starts.go_sub!("#{start_count}")
+      nn_starts['start_time'] = "#{start_time}"
+      nn_starts['start_time_i'] = start_time.to_i
+
+      cycle_count = nn_cycles.get_or_init('cycle_count',-1)
+      cycle_count += 1
+      nn_cycles['cycle_count'] = cycle_count
+
+      nn_starts['start_cycle_count'] = cycle_count
+
+      # create a startup cycle (for task init?)
+      nn_cycles.go_sub!("#{cycle_count}")
+      nn_cycles['cycle_start_time'] = "#{start_time}"
+      nn_cycles['cycle_start_time_i'] = start_time.to_i
+
+      # let Neo4J warm up...
+      sleep 2
+
+      puts "!!! init_neo4j: start: #{start_count} ; #{nn_starts.get_path()} ; #{start_time}"
     end
 
     #
