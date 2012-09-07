@@ -10,32 +10,43 @@ module Napkin
     #
     #
     class NodeNav
-      attr_accessor :node, :property_key_prefix
+      attr_accessor :node, :property_key_prefix, :property_key_prefix_separator
       def initialize(node = Neo4j.ref_node)
         @node = node
         @property_key_prefix = ""
+        @property_key_prefix_separator = ""
       end
 
       def reset(node = Neo4j.ref_node)
         @node = node
         @property_key_prefix = ""
+        @property_key_prefix_separator = ""
+      end
+
+      def prefix_key(key)
+        "#{@property_key_prefix}#{@property_key_prefix_separator}#{key}"
+      end
+
+      def set_key_prefix(prefix, separator = "#")
+        @property_key_prefix = prefix
+        @property_key_prefix_separator = separator
       end
 
       def [](key)
-        return @node[@property_key_prefix + key]
+        return @node[prefix_key(key)]
       end
 
       def []=(key, value)
         Neo4j::Transaction.run do
-          @node[@property_key_prefix + key] = value
+          @node[prefix_key(key)] = value
         end
       end
 
       def init_property(key, default)
         property_initialized = true
         Neo4j::Transaction.run do
-          if (@node[@property_key_prefix + key].nil?) then
-            @node[@property_key_prefix + key] = default
+          if (@node[prefix_key(key)].nil?) then
+            @node[prefix_key(key)] = default
           else
             property_initialized = false
           end
@@ -44,12 +55,12 @@ module Napkin
       end
 
       def get_or_init(key, default)
-        value = @node[@property_key_prefix + key]
+        value = @node[prefix_key(key)]
         if (value.nil?) then
           Neo4j::Transaction.run do
-            value = @node[@property_key_prefix + key]
+            value = @node[prefix_key(key)]
             if (value.nil?) then
-              @node[@property_key_prefix + key] = default
+              @node[prefix_key(key)] = default
               value = default
             end
           end
@@ -98,9 +109,10 @@ module Napkin
         return missed_count
       end
 
-      def go_sub_path!(path, set_property_key_prefix = false, property_key_prefix_separator = "#")
+      def go_sub_path!(path, set_property_key_prefix = false)
         if (set_property_key_prefix) then
-          @property_key_prefix = path + property_key_prefix_separator
+          @property_key_prefix = path
+          @property_key_prefix_separator = "#"
         end
 
         path_segments = path.split('/')
@@ -176,16 +188,15 @@ module Napkin
     end
 
     class PropertyGroup
-      def initialize(id, prefix=id, separator='.')
+      def initialize(id, separator='#')
         @id = id
-        @prefix = prefix
         @separator = separator
         @wrapper_id_list = []
         @wrapper_hash = {}
       end
 
       def prefix_key(key)
-        "#{@prefix}#{@separator}#{key}"
+        "#{@id}#{@separator}#{key}"
       end
 
       def add_property(id, description = "", default = nil)
@@ -200,18 +211,17 @@ module Napkin
         end
       end
 
-      def yaml_to_hash(yaml_text, filter = true)
+      def yaml_to_hash(yaml_text, filter = true, output_hash = {})
         yaml = YAML.load(yaml_text)
         return yaml unless filter
 
-        out = {}
         @wrapper_id_list.each do |id|
-          val = yaml[id]
+          val = yaml[prefix_key(id)]
           if (!val.nil?) then
-            out[id] = val
+            output_hash[prefix_key(id)] = val
           end
         end
-        return out
+        return output_hash
       end
 
       def hash_to_yaml(hash)
@@ -221,7 +231,7 @@ module Napkin
       def node_to_hash(node)
         hash = {}
         @wrapper_id_list.each do |id|
-          hash[id] = node[prefix_key(id)]
+          hash[prefix_key(id)] = node[prefix_key(id)]
         end
         return hash
       end
@@ -230,12 +240,16 @@ module Napkin
         Neo4j::Transaction.run do
           @wrapper_id_list.each do |id|
             old_value = node[prefix_key(id)]
-            new_value = hash[id]
+            new_value = hash[prefix_key(id)]
             if (old_value != new_value) then
-              node[prefix_key(id)] = new_value
-              if (old_value.nil?) then
-                # puts "hash_to_node: DEFINED value:#{prefix_key(id)}"
+              if (new_value.nil?) then
+                # leave node value as-is
+                # TODO: how to express removal of node property?
+              elsif (old_value.nil?) then
+                node[prefix_key(id)] = new_value
+                puts "hash_to_node: DEFINED value:#{prefix_key(id)}"
               else
+                node[prefix_key(id)] = new_value
                 puts "hash_to_node: CHANGED value:#{prefix_key(id)}"
                 puts "#{old_value}"
                 puts "-->"
@@ -251,7 +265,7 @@ module Napkin
         result = ""
         @wrapper_id_list.each do |id|
           wrapper = @wrapper_hash[id]
-          value = hash[id]
+          value = hash[prefix_key(id)]
           result += "~~~ #{id}=[#{value.class}, default: #{wrapper.default}]= #{value}\n"
         end
         return result
@@ -261,7 +275,7 @@ module Napkin
         hash = {}
         @wrapper_id_list.each do |id|
           wrapper = @wrapper_hash[id]
-          hash[id] = wrapper.convert(converter_id, param)
+          hash[prefix_key(id)] = wrapper.convert(converter_id, param)
         end
         return hash
       end

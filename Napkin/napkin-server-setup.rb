@@ -62,6 +62,15 @@ props_google_news = {
   'refresh_frequency_minutes' => 20
 }
 
-post_node('tracker/feed', props_zh)
-post_node('tracker/feed', props_jesse)
-post_node('tracker/feed', props_google_news)
+# post_node('tracker/feed', props_zh)
+# post_node('tracker/feed', props_jesse)
+# post_node('tracker/feed', props_google_news)
+
+tasks_test = {
+  'id' => "test",
+  #  'napkin/tasks#task_name' =>"Test task",
+  'napkin/tasks#task_class' => "TestTask",
+  'napkin/tasks#task_enabled' => "true"
+}
+post_node('napkin/tasks', tasks_test)
+

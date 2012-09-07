@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'neo4j'
 require 'napkin-node-util'
+require 'napkin-handlers'
 require 'napkin-extensions'
 
 module Napkin
@@ -63,47 +64,59 @@ module Napkin
       end
 
       def process_tasks
-        @tasks_list.each do |task_id|
-          puts "Task #{task_id} processing..."
-          task_class = @tasks_hash[task_id]
-          task = task_class.new
-          process_task(task)
+        nn = Napkin::NodeUtil::NodeNav.new
+        nn.go_sub_path!('napkin/tasks')
+
+        nn.node.outgoing(:sub).each do |sub|
+          task_id = sub[:id]
+
+          task = construct_task(sub)
+          if (task.nil?) then
+            puts "Task #{task_id} skipped. No handler class."
+          else
+            puts "Task #{task_id} processing..."
+            process_task(task)
+          end
+
           sleep @mid_cycle_delay_seconds
         end
       end
 
-      def process_task(task)
-        task.cycle
+      def construct_task(node)
+        task = nil
+        begin
+          task_class = get_task_class(node)
+          task = task_class.new
+        rescue StandardError => err
+          puts "Error in construct_task: #{err}\n#{err.backtrace}"
+        end
+        return task
       end
 
-      def init_tasks
-        @tasks_hash = {}
-        @tasks_list = []
-
-        nn = Napkin::NodeUtil::NodeNav.new
-        nn.go_sub_path!('napkin/tasks', true)
-
-        nn.node.outgoing(:sub).each do |sub|
-          init_task(sub)
+      def process_task(task)
+        begin
+          task.cycle
+        rescue StandardError => err
+          puts "Error in process_task: #{err}\n#{err.backtrace}"
         end
       end
 
-      def init_task(node)
-        task_id = node[:id]
-        task_class = get_task_class(node)
+      TASKS_GROUP = Napkin::NodeUtil::PropertyGroup.new('napkin/tasks').
+      add_property('task_name').group.
+      add_property('task_class').group.
+      add_property('task_enabled').group
 
-        # TODO: establish consistent/declared task order
-        @tasks_list.push(task_id)
-        @tasks_hash[task_id] = task_class
-
-        puts "Task #{task_id} initialized..."
+      def init_tasks
+        nn = Napkin::NodeUtil::NodeNav.new
+        nn.go_sub_path!('napkin/tasks')
+        nn['HTTP-handler-post'] = "TaskPostHandler"
       end
 
       def get_task_class(node)
         nn = Napkin::NodeUtil::NodeNav.new(node)
-        nn.property_key_prefix="napkin/tasks"
+        nn.set_key_prefix("napkin/tasks")
 
-        task_class_name = nn["task_class_name"]
+        task_class_name = nn["task_class"]
         if (task_class_name.nil?) then
           return Napkin::Extensions::Tasks::NilTask
         end
@@ -114,6 +127,47 @@ module Napkin
         end
 
         return task_class
+      end
+    end
+  end
+
+  module Extensions
+    module Tasks
+      class TestTask < Task
+        def init
+          super
+          puts "!!! TestTask.init called !!!"
+        end
+
+        def cycle
+          super
+          puts "!!! TestTask.cycle called !!!"
+        end
+      end
+    end
+  end
+
+  module Handlers
+    class TaskPostHandler < HttpMethodHandler
+      def handle
+        return "" unless at_destination?
+
+        @request.body.rewind
+        body_text = @request.body.read
+        body_hash = Napkin::Core::Pulse::TASKS_GROUP.yaml_to_hash(body_text, filter=false)
+
+        id = body_hash['id']
+        return "TaskPostHandler: missing id!" if id.nil?
+
+        nn = @nn.dup
+        nn.go_sub!(id)
+        nn.set_key_prefix("napkin/tasks")
+
+        Napkin::Core::Pulse::TASKS_GROUP.hash_to_node(nn.node, body_hash)
+
+        output_hash = Napkin::Core::Pulse::TASKS_GROUP.node_to_hash(nn.node)
+        output_text = Napkin::Core::Pulse::TASKS_GROUP.hash_to_yaml(output_hash)
+        return output_text
       end
     end
   end

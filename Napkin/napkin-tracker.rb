@@ -15,6 +15,8 @@ module Napkin
   module Handlers
     class FeedHandler < HttpMethodHandler
       def handle
+        return "" unless at_destination?
+
         @request.body.rewind
         body_text = @request.body.read
         body_hash = Tracker::FEED_GROUP.yaml_to_hash(body_text, filter=false)
@@ -217,8 +219,7 @@ module Napkin
       end
     end
 
-    FEED_GROUP = Napkin::NodeUtil::PropertyGroup.
-    new('feed').
+    FEED_GROUP = Napkin::NodeUtil::PropertyGroup.new('feed').
     add_property('name').group.
     add_property('url').group.
     add_property('refresh_enabled').group.
