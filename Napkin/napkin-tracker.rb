@@ -57,6 +57,22 @@ module Napkin
     end
   end
 
+  module Extensions
+    module Tasks
+      class TrackerTask < Task
+        def init
+          super
+          puts "!!! TrackerTask.init called !!!"
+        end
+
+        def cycle
+          super
+          puts "!!! TrackerTask.cycle called !!!"
+        end
+      end
+    end
+  end
+
   class Tracker
     def cycle
       @enabled = true

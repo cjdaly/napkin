@@ -199,6 +199,10 @@ module Napkin
         "#{@id}#{@separator}#{key}"
       end
 
+      def read(node, key)
+        return node[prefix_key(key)]
+      end
+
       def add_property(id, description = "", default = nil)
         @wrapper_id_list.push(id)
         @wrapper_hash[id] = PropertyWrapper.new(id, description, default, self)

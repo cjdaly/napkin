@@ -70,7 +70,7 @@ tasks_test = {
   'id' => "test",
   #  'napkin/tasks#task_name' =>"Test task",
   'napkin/tasks#task_class' => "TestTask",
-  'napkin/tasks#task_enabled' => "true"
+  'napkin/tasks#task_enabled' => false
 }
 post_node('napkin/tasks', tasks_test)
 

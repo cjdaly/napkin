@@ -43,11 +43,12 @@ module Napkin
       nn_cycles.go_sub!("#{cycle_count}")
       nn_cycles['cycle_start_time'] = "#{start_time}"
       nn_cycles['cycle_start_time_i'] = start_time.to_i
+      nn_cycles['init_cycle'] = true
 
       # let Neo4J warm up...
       sleep 2
 
-      puts "!!! init_neo4j: start: #{start_count} ; #{nn_starts.get_path()} ; #{start_time}"
+      puts "!!! init_neo4j: start: #{start_count} ; cycle #{cycle_count} ; #{start_time}"
     end
 
     #

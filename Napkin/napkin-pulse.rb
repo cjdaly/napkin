@@ -20,8 +20,13 @@ module Napkin
 
             puts "Pulse thread initialized..."
             while (next_cycle)
-              puts "Pulse thread - cycle: #{@cycle_count}"
-              sleep @pre_cycle_delay_seconds
+              nn = Napkin::NodeUtil::NodeNav.new
+              nn.go_sub_path!('napkin/cycles', true)
+              cycle_count = nn['cycle_count']
+              puts "Pulse thread - cycle: #{cycle_count}"
+
+              pre_cycle_delay_seconds = nn.get_or_init('pre_cycle_delay_seconds', 5)
+              sleep pre_cycle_delay_seconds
               if (@enabled)
                 process_tasks
                 puts "Pulse thread refreshed..."
@@ -29,7 +34,8 @@ module Napkin
                 puts "Pulse thread disabled..."
               end
 
-              sleep @post_cycle_delay_seconds
+              post_cycle_delay_seconds = nn.get_or_init('post_cycle_delay_seconds', 1)
+              sleep post_cycle_delay_seconds
             end
             puts "Pulse thread stopped..."
           rescue StandardError => err
@@ -44,15 +50,11 @@ module Napkin
         nn = Napkin::NodeUtil::NodeNav.new
         nn.go_sub_path!('napkin/cycles', true)
 
-        @cycle_count = nn['cycle_count']
-        @cycle_count += 1
-        nn['cycle_count']= @cycle_count
+        cycle_count = nn['cycle_count']
+        cycle_count += 1
+        nn['cycle_count']= cycle_count
 
-        @pre_cycle_delay_seconds = nn.get_or_init('pre_cycle_delay_seconds', 9)
-        @mid_cycle_delay_seconds = nn.get_or_init('mid_cycle_delay_seconds', 5)
-        @post_cycle_delay_seconds = nn.get_or_init('post_cycle_delay_seconds', 1)
-
-        nn.go_sub!("#{@cycle_count}")
+        nn.go_sub!("#{cycle_count}")
 
         nn['cycle_start_time'] = "#{cycle_start_time}"
         nn['cycle_start_time_i'] = cycle_start_time.to_i
@@ -69,28 +71,23 @@ module Napkin
 
         nn.node.outgoing(:sub).each do |sub|
           task_id = sub[:id]
-
-          task = construct_task(sub)
-          if (task.nil?) then
-            puts "Task #{task_id} skipped. No handler class."
+          task_name = TASKS_GROUP.read(sub, 'task_name')
+          task_enabled = TASKS_GROUP.read(sub, 'task_enabled')
+          if (!task_enabled) then
+            puts "Task: #{task_name} (id: #{task_id}) skipped. Task not enabled."
           else
-            puts "Task #{task_id} processing..."
-            process_task(task)
+            task = construct_task(sub)
+            if (task.nil?) then
+              puts "Task: #{task_name} (id: #{task_id}) skipped. No handler class."
+            else
+              puts "Task: #{task_name} (id: #{task_id}) processing..."
+              process_task(task)
+            end
           end
 
-          sleep @mid_cycle_delay_seconds
+          mid_cycle_delay_seconds = nn.get_or_init('mid_cycle_delay_seconds', 5)
+          sleep mid_cycle_delay_seconds
         end
-      end
-
-      def construct_task(node)
-        task = nil
-        begin
-          task_class = get_task_class(node)
-          task = task_class.new
-        rescue StandardError => err
-          puts "Error in construct_task: #{err}\n#{err.backtrace}"
-        end
-        return task
       end
 
       def process_task(task)
@@ -110,6 +107,43 @@ module Napkin
         nn = Napkin::NodeUtil::NodeNav.new
         nn.go_sub_path!('napkin/tasks')
         nn['HTTP-handler-post'] = "TaskPostHandler"
+
+        nn.set_key_prefix("napkin/tasks")
+        post_init_delay_seconds = nn.get_or_init('post_init_delay_seconds', 2)
+
+        nn.node.outgoing(:sub).each do |sub|
+          task_id = sub[:id]
+          task_name = TASKS_GROUP.read(sub, 'task_name')
+
+          task = construct_task(sub)
+          if (task.nil?) then
+            puts "Task: #{task_name} (id: #{task_id}) initialization skipped. No handler class."
+          else
+            puts "Task: #{task_name} (id: #{task_id}) initializing..."
+            init_task(task)
+          end
+
+          sleep post_init_delay_seconds
+        end
+      end
+
+      def init_task(task)
+        begin
+          task.init
+        rescue StandardError => err
+          puts "Error in init_task: #{err}\n#{err.backtrace}"
+        end
+      end
+
+      def construct_task(node)
+        task = nil
+        begin
+          task_class = get_task_class(node)
+          task = task_class.new
+        rescue StandardError => err
+          puts "Error in construct_task: #{err}\n#{err.backtrace}"
+        end
+        return task
       end
 
       def get_task_class(node)
