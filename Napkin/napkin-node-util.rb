@@ -199,8 +199,28 @@ module Napkin
         "#{@id}#{@separator}#{key}"
       end
 
-      def read(node, key)
+      def get(node, key)
         return node[prefix_key(key)]
+      end
+
+      def set(node, key, value)
+        Neo4j::Transaction.run do
+          node[prefix_key(key)] = value
+        end
+      end
+
+      def get_or_init(node, key, default)
+        value = node[prefix_key(key)]
+        if (value.nil?) then
+          Neo4j::Transaction.run do
+            value = node[prefix_key(key)]
+            if (value.nil?) then
+              node[prefix_key(key)] = default
+              value = default
+            end
+          end
+        end
+        return value
       end
 
       def add_property(id, description = "", default = nil)

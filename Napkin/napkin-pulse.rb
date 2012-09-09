@@ -71,8 +71,8 @@ module Napkin
 
         nn.node.outgoing(:sub).each do |sub|
           task_id = sub[:id]
-          task_name = TASKS_GROUP.read(sub, 'task_name')
-          task_enabled = TASKS_GROUP.read(sub, 'task_enabled')
+          task_name = TASKS_GROUP.get(sub, 'task_name')
+          task_enabled = TASKS_GROUP.get(sub, 'task_enabled')
           if (!task_enabled) then
             puts "Task: #{task_name} (id: #{task_id}) skipped. Task not enabled."
           else
@@ -113,7 +113,7 @@ module Napkin
 
         nn.node.outgoing(:sub).each do |sub|
           task_id = sub[:id]
-          task_name = TASKS_GROUP.read(sub, 'task_name')
+          task_name = TASKS_GROUP.get(sub, 'task_name')
 
           task = construct_task(sub)
           if (task.nil?) then
@@ -195,7 +195,6 @@ module Napkin
 
         nn = @nn.dup
         nn.go_sub!(id)
-        nn.set_key_prefix("napkin/tasks")
 
         Napkin::Core::Pulse::TASKS_GROUP.hash_to_node(nn.node, body_hash)
 

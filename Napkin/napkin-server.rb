@@ -8,16 +8,13 @@ require 'sinatra'
 
 #
 require 'napkin-server-helpers'
-
-#require 'napkin-tracker'
 require 'napkin-pulse'
+require 'napkin-tracker'
 
 helpers Napkin::ServerUtils
 
 Napkin::ServerUtils.init_neo4j
 
-# tracker = Napkin::Tracker.new
-# tracker.cycle
 pulse = Napkin::Core::Pulse.new
 pulse.cycle
 
