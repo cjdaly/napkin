@@ -7,6 +7,7 @@ require 'neo4j'
 #
 require 'napkin-config'
 require 'napkin-node-util'
+require 'napkin-extensions'
 
 module Napkin
   module Handlers
@@ -45,9 +46,9 @@ module Napkin
           result += "key:#{key}, value:#{value}\n"
         end
 
-        @nn.node.outgoing(:sub).each do |n|
-          puts "CHECK: #{n[:id]} / #{n['id']} / #{get_keys(n)}"
-          result += "   [sub] --- id:#{n[:id]}, neo_id:#{n.neo_id}\n"
+        @nn.node.outgoing(NAPKIN_SUB).each do |n|
+          puts "CHECK: #{n[NAPKIN_ID]} / #{get_keys(n)}"
+          result += "   [sub] --- id:#{n[NAPKIN_ID]}, neo_id:#{n.neo_id}\n"
         end
         return result
       end

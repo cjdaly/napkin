@@ -25,7 +25,7 @@ module Napkin
         output_text = subclass_handle(body_hash)
         if (output_text.nil?)
           filtered_text = Napkin::Extensions::Tasks::TrackerTask::FEED_GROUP.hash_to_yaml(body_hash)
-          "!!! HTTP - #{@method}: '#{get_segment}', #{@nn[:id]}\n#{body_text}\n!-->\n#{filtered_text}"
+          "!!! HTTP - #{@method}: '#{get_segment}', #{@nn[NAPKIN_ID]}\n#{body_text}\n!-->\n#{filtered_text}"
         else
           return output_text
         end
@@ -38,7 +38,7 @@ module Napkin
 
     class FeedPostHandler < FeedHandler
       def subclass_handle(body_hash)
-        id = body_hash['id']
+        id = body_hash[NAPKIN_ID]
         return "FeedPostHandler: missing id!" if id.nil?
 
         nn = @nn.dup
@@ -77,8 +77,8 @@ module Napkin
         def refresh_feeds
           nn_feeds = Napkin::NodeUtil::NodeNav.new
           nn_feeds.go_sub_path!("tracker/feeds")
-          nn_feeds.node.outgoing(:sub).each do |sub|
-            feed_id = sub[:id]
+          nn_feeds.node.outgoing(NAPKIN_SUB).each do |sub|
+            feed_id = sub[NAPKIN_ID]
             feed_name = FEED_GROUP.get(sub, 'name')
             refresh_enabled = FEED_GROUP.get(sub, 'refresh_enabled')
 
@@ -102,7 +102,7 @@ module Napkin
         def time_to_refresh!(feed_node)
           now_time_i = Time.now.to_i
 
-          feed_id = feed_node[:id]
+          feed_id = feed_node[NAPKIN_ID]
           feed_name = FEED_GROUP.get(feed_node, 'name')
 
           refresh_frequency_minutes = FEED_GROUP.get_or_init(feed_node, 'refresh_frequency_minutes', 60)
@@ -156,7 +156,7 @@ module Napkin
 
               # TODO: use lucene
               guid = rss_item_hash['guid']
-              item_node = nn_items.node.outgoing(:sub).find{|sub| sub['tracker/feeds/rss_item#guid'] == guid}
+              item_node = nn_items.node.outgoing(NAPKIN_SUB).find{|sub| sub['tracker/feeds/rss_item#guid'] == guid}
 
               if(!item_node.nil?) then
                 RSS_ITEM_GROUP.hash_to_node(item_node, rss_item_hash)
@@ -226,7 +226,7 @@ module Napkin
         def init_nodes
           nn = Napkin::NodeUtil::NodeNav.new
           nn.go_sub_path!('tracker/feeds')
-          nn['HTTP-handler-post'] = "FeedPostHandler"
+          nn[NAPKIN_HTTP_POST] = "FeedPostHandler"
         end
 
         #

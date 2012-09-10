@@ -10,6 +10,7 @@ require 'neo4j'
 require 'napkin-config'
 require 'napkin-node-util'
 require 'napkin-handlers'
+require 'napkin-extensions'
 
 module Napkin
   module ServerUtils
@@ -107,8 +108,7 @@ module Napkin
     end
 
     def get_handler_class(nn, method)
-      puts "!!! Searching for handler: HTTP-handler-#{method}"
-      handler_class_name = nn["HTTP-handler-#{method}"]
+      handler_class_name = nn["#{NAPKIN_HTTP_HANDLERS}##{method}"]
       if (handler_class_name.nil?) then
         return Napkin::Handlers::HttpMethodHandler
       end

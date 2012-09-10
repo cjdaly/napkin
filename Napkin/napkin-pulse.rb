@@ -69,8 +69,8 @@ module Napkin
         nn = Napkin::NodeUtil::NodeNav.new
         nn.go_sub_path!('napkin/tasks')
 
-        nn.node.outgoing(:sub).each do |sub|
-          task_id = sub[:id]
+        nn.node.outgoing(NAPKIN_SUB).each do |sub|
+          task_id = sub[NAPKIN_ID]
           task_name = TASKS_GROUP.get(sub, 'task_name')
           task_enabled = TASKS_GROUP.get(sub, 'task_enabled')
           if (!task_enabled) then
@@ -106,13 +106,13 @@ module Napkin
       def init_tasks
         nn = Napkin::NodeUtil::NodeNav.new
         nn.go_sub_path!('napkin/tasks')
-        nn['HTTP-handler-post'] = "TaskPostHandler"
+        nn[NAPKIN_HTTP_POST] = "TaskPostHandler"
 
         nn.set_key_prefix("napkin/tasks")
         post_init_delay_seconds = nn.get_or_init('post_init_delay_seconds', 2)
 
-        nn.node.outgoing(:sub).each do |sub|
-          task_id = sub[:id]
+        nn.node.outgoing(NAPKIN_SUB).each do |sub|
+          task_id = sub[NAPKIN_ID]
           task_name = TASKS_GROUP.get(sub, 'task_name')
 
           task = construct_task(sub)
@@ -190,7 +190,7 @@ module Napkin
         body_text = @request.body.read
         body_hash = Napkin::Core::Pulse::TASKS_GROUP.yaml_to_hash(body_text, filter=false)
 
-        id = body_hash['id']
+        id = body_hash[NAPKIN_ID]
         return "TaskPostHandler: missing id!" if id.nil?
 
         nn = @nn.dup

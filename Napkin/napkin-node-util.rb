@@ -4,6 +4,7 @@ require 'neo4j'
 
 #
 require 'napkin-config'
+require 'napkin-extensions'
 
 module Napkin
   module NodeUtil
@@ -69,7 +70,7 @@ module Napkin
       end
 
       def go_sub(id)
-        sub = @node.outgoing(:sub).find{|sub| sub[:id] == id}
+        sub = @node.outgoing(NAPKIN_SUB).find{|sub| sub[NAPKIN_ID] == id}
         if (sub.nil?) then
           return false
         else
@@ -82,10 +83,10 @@ module Napkin
         created_node = false
         if (!go_sub(id)) then
           Neo4j::Transaction.run do
-            sub = @node.outgoing(:sub).find{|sub| sub[:id] == id}
+            sub = @node.outgoing(NAPKIN_SUB).find{|sub| sub[NAPKIN_ID] == id}
             if (sub.nil?) then
-              sub = Neo4j::Node.new :id => id
-              @node.outgoing(:sub) << sub
+              sub = Neo4j::Node.new NAPKIN_ID => id
+              @node.outgoing(NAPKIN_SUB) << sub
               created_node = true
             end
             @node = sub
@@ -129,7 +130,7 @@ module Napkin
       end
 
       def go_sup
-        sup = @node.incoming(:sub).first()
+        sup = @node.incoming(NAPKIN_SUB).first()
         if (sup.nil?) then
           return false
         else
@@ -148,7 +149,7 @@ module Napkin
       end
 
       def get_segment
-        segment = @node[:id]
+        segment = @node[NAPKIN_ID]
         segment.nil? ? 'nil' : segment
       end
     end
