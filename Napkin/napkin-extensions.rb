@@ -12,19 +12,26 @@ module Napkin
   NAPKIN_HTTP_POST = NAPKIN_HTTP_HANDLERS + '#post'
   NAPKIN_HTTP_PUT = NAPKIN_HTTP_HANDLERS + '#put'
   #
+  NAPKIN_TASK_INIT = 'napkin/tasks/task#init'
+  #
   module Extensions
     class Task
+      def initialize(task_node, cycle_node, start_node)
+        @task_node = task_node
+        @cycle_node = cycle_node
+        @start_node = start_node
+      end
+
+      def get_node_ids
+        return "task: #{@task_node[NAPKIN_ID]}, cycle: #{@cycle_node[NAPKIN_ID]}, start: #{@start_node[NAPKIN_ID]}"
+      end
+
       def init
-        @is_initialized = true
-        puts "!!! Task.init called !!!"
+        puts "!!! Task.init called (#{get_node_ids}) !!!"
       end
 
       def cycle
-        if (!@is_initialized)
-          init
-        end
-
-        puts "!!! Task.cycle called !!!"
+        puts "!!! Task.cycle called (#{get_node_ids}) !!!"
       end
 
       def get_progress

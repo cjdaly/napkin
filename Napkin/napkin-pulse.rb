@@ -66,6 +66,9 @@ module Napkin
       end
 
       def process_tasks
+        cycle_node = get_cycle_node()
+        start_node = get_start_node()
+
         nn = Napkin::NodeUtil::NodeNav.new
         nn.go_sub_path!('napkin/tasks')
 
@@ -76,12 +79,12 @@ module Napkin
           if (!task_enabled) then
             puts "Task: #{task_name} (id: #{task_id}) skipped. Task not enabled."
           else
-            task = construct_task(sub)
+            task = construct_task(sub, cycle_node, start_node)
             if (task.nil?) then
               puts "Task: #{task_name} (id: #{task_id}) skipped. No handler class."
             else
               puts "Task: #{task_name} (id: #{task_id}) processing..."
-              process_task(task)
+              process_task(task, sub, cycle_node, start_node)
             end
           end
 
@@ -90,11 +93,20 @@ module Napkin
         end
       end
 
-      def process_task(task)
+      def process_task(task, task_node, cycle_node, start_node)
+        task_initialized = is_task_init?(task_node, cycle_node, start_node)
+        if (task_initialized) then
+          cycle_task(task)
+        else
+          init_task(task, task_node, cycle_node, start_node)
+        end
+      end
+
+      def cycle_task(task)
         begin
           task.cycle
         rescue StandardError => err
-          puts "Error in process_task: #{err}\n#{err.backtrace}"
+          puts "Error in cycle_task: #{err}\n#{err.backtrace}"
         end
       end
 
@@ -104,6 +116,9 @@ module Napkin
       add_property('task_enabled').group
 
       def init_tasks
+        cycle_node = get_cycle_node()
+        start_node = get_start_node()
+
         nn = Napkin::NodeUtil::NodeNav.new
         nn.go_sub_path!('napkin/tasks')
         nn[NAPKIN_HTTP_POST] = "TaskPostHandler"
@@ -115,31 +130,47 @@ module Napkin
           task_id = sub[NAPKIN_ID]
           task_name = TASKS_GROUP.get(sub, 'task_name')
 
-          task = construct_task(sub)
+          task = construct_task(sub, cycle_node, start_node)
           if (task.nil?) then
             puts "Task: #{task_name} (id: #{task_id}) initialization skipped. No handler class."
           else
             puts "Task: #{task_name} (id: #{task_id}) initializing..."
-            init_task(task)
+            init_task(task, sub, cycle_node, start_node)
           end
 
           sleep post_init_delay_seconds
         end
       end
 
-      def init_task(task)
+      def get_task_start_nodenav(task_node, start_node)
+        task_id = task_node[NAPKIN_ID]
+        nn = Napkin::NodeUtil::NodeNav.new(start_node)
+        nn.go_sub_path!("tasks/#{task_id}")
+        return nn
+      end
+
+      def is_task_init?(task_node, cycle_node, start_node)
+        nn = get_task_start_nodenav(task_node, start_node)
+        task_init = nn.get_or_init(NAPKIN_TASK_INIT, false)
+        return task_init
+      end
+
+      def init_task(task, task_node, cycle_node, start_node)
         begin
           task.init
+
+          nn = get_task_start_nodenav(task_node, start_node)
+          nn[NAPKIN_TASK_INIT] = true
         rescue StandardError => err
           puts "Error in init_task: #{err}\n#{err.backtrace}"
         end
       end
 
-      def construct_task(node)
+      def construct_task(task_node, cycle_node, start_node)
         task = nil
         begin
-          task_class = get_task_class(node)
-          task = task_class.new
+          task_class = get_task_class(task_node)
+          task = task_class.new(task_node, cycle_node, start_node)
         rescue StandardError => err
           puts "Error in construct_task: #{err}\n#{err.backtrace}"
         end
@@ -162,6 +193,25 @@ module Napkin
 
         return task_class
       end
+
+      def get_cycle_node
+        nn = Napkin::NodeUtil::NodeNav.new
+        nn.go_sub_path!('napkin/cycles', true)
+
+        cycle_count = nn['cycle_count']
+        nn.go_sub!("#{cycle_count}")
+        return nn.node
+      end
+
+      def get_start_node
+        nn = Napkin::NodeUtil::NodeNav.new
+        nn.go_sub_path!('napkin/starts', true)
+
+        start_count = nn['start_count']
+        nn.go_sub!("#{start_count}")
+        return nn.node
+      end
+
     end
   end
 
