@@ -154,12 +154,18 @@ module Napkin
             rss.items.each do |item|
               rss_item_hash = RSS_ITEM_GROUP.construct_hash('rss_item', item)
 
-              # TODO: use lucene
-              guid = rss_item_hash['guid']
-              item_node = nn_items.node.outgoing(NAPKIN_SUB).find{|sub| sub['tracker/feeds/rss_item#guid'] == guid}
+              guid = rss_item_hash['tracker/feeds/rss_item#guid']
+              item_node = nil
+              nodes = RSSItemIndex.find('tracker/feeds/rss_item#guid' => guid)
+              nodes.each do |n|
+                if (Napkin::NodeUtil::NodeNav.get_sup(n) == nn_items.node)
+                  item_node = n
+                end
+              end
 
               if(!item_node.nil?) then
                 RSS_ITEM_GROUP.hash_to_node(item_node, rss_item_hash)
+                puts "refresh_feed: FOUND #{guid}"
               else
                 Neo4j::Transaction.run do
                   item_count = nn_items.get_or_init('item_count',-1)
@@ -170,6 +176,7 @@ module Napkin
                   nn_item.go_sub!("#{item_count}")
                   RSS_ITEM_GROUP.hash_to_node(nn_item.node, rss_item_hash)
                 end
+                puts "refresh_feed: NEW #{guid}"
               end
 
             end
@@ -221,7 +228,21 @@ module Napkin
         add_property('pubDate').
         add_converter('rss_item',lambda {|item|item.pubDate.to_s}).
         add_property('category').
-        add_converter('rss_item',lambda {|item|item.category.class.name})
+        add_converter('rss_item',lambda {|item|item.category.class.name}).
+        add_property('_index').
+        add_converter('rss_item',lambda {|item|true})
+
+        class RSSItemIndex
+          extend Neo4j::Core::Index::ClassMethods
+          include Neo4j::Core::Index
+
+          self.node_indexer do
+            index_names :exact => 'tracker_feeds_rss_item'
+            trigger_on 'tracker/feeds/rss_item#_index' => true
+          end
+
+          index 'tracker/feeds/rss_item#guid'
+        end
 
         def init_nodes
           nn = Napkin::NodeUtil::NodeNav.new

@@ -30,37 +30,6 @@ def post_node(
   puts "POST Incoming:\n#{response.to_s()}\n"
 end
 
-props_zh = {
-  'napkin#id' => "zh",
-  'tracker/feeds/feed#name' =>"Zerohedge",
-  'tracker/feeds/feed#url' => "http://feeds.feedburner.com/zerohedge/feed?format=xml",
-  # alternate url:
-  # 'tracker/feeds/feed#url' => "http://www.zerohedge.com/fullrss2.xml",
-  'tracker/feeds/feed#refresh_enabled' => true,
-  'tracker/feeds/feed#refresh_frequency_minutes' => 25
-}
-
-props_jesse = {
-  'napkin#id' => "jesse",
-  'tracker/feeds/feed#name' =>"Jesse's Café Américain",
-  'tracker/feeds/feed#url' => "http://feeds.feedburner.com/JessesCafeAmericain?format=xml",
-  'tracker/feeds/feed#refresh_enabled' => true,
-  'tracker/feeds/feed#refresh_frequency_minutes' => 30,
-  'tracker/feeds/feed#last_refresh_time_i' => 0
-}
-
-props_google_news = {
-  'napkin#id' => "gn",
-  'tracker/feeds/feed#name' =>"Google News",
-  'tracker/feeds/feed#url' => "http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&output=rss",
-  'tracker/feeds/feed#refresh_enabled' => true,
-  'tracker/feeds/feed#refresh_frequency_minutes' => 20
-}
-
-# post_node('tracker/feeds', props_zh)
-# post_node('tracker/feeds', props_jesse)
-# post_node('tracker/feeds', props_google_news)
-
 tasks_test = {
   'napkin#id' => "test",
   'napkin/tasks#task_name' =>"test task",
@@ -76,4 +45,35 @@ tasks_tracker = {
 
 # post_node('napkin/tasks', tasks_test)
 # post_node('napkin/tasks', tasks_tracker)
+
+props_zh = {
+  'napkin#id' => "zh",
+  'tracker/feeds/feed#name' =>"Zerohedge",
+  'tracker/feeds/feed#url' => "http://feeds.feedburner.com/zerohedge/feed?format=xml",
+  # alternate url:
+  # 'tracker/feeds/feed#url' => "http://www.zerohedge.com/fullrss2.xml",
+  'tracker/feeds/feed#refresh_enabled' => true,
+  'tracker/feeds/feed#refresh_frequency_minutes' => 45
+}
+
+props_jesse = {
+  'napkin#id' => "jesse",
+  'tracker/feeds/feed#name' =>"Jesse's Café Américain",
+  'tracker/feeds/feed#url' => "http://feeds.feedburner.com/JessesCafeAmericain?format=xml",
+  'tracker/feeds/feed#refresh_enabled' => true,
+  'tracker/feeds/feed#refresh_frequency_minutes' => 55,
+  'tracker/feeds/feed#last_refresh_time_i' => 0
+}
+
+props_google_news = {
+  'napkin#id' => "gn",
+  'tracker/feeds/feed#name' =>"Google News",
+  'tracker/feeds/feed#url' => "http://news.google.com/news?pz=1&cf=all&ned=us&hl=en&output=rss",
+  'tracker/feeds/feed#refresh_enabled' => true,
+  'tracker/feeds/feed#refresh_frequency_minutes' => 20
+}
+
+# post_node('tracker/feeds', props_zh)
+# post_node('tracker/feeds', props_jesse)
+# post_node('tracker/feeds', props_google_news)
 

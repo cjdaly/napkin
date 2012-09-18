@@ -8,6 +8,21 @@ require 'napkin-extensions'
 
 module Napkin
   module NodeUtil
+    NAPKIN_ID_INDEX = 'napkin#_index_id'
+    NAPKIN_ID_INDEX_FILE = 'napkin_id'
+    
+    class NapkinIdIndex
+      extend Neo4j::Core::Index::ClassMethods
+      include Neo4j::Core::Index
+
+      self.node_indexer do
+        index_names :exact => NAPKIN_ID_INDEX_FILE
+        trigger_on NAPKIN_ID_INDEX => true
+      end
+
+      index NAPKIN_ID
+    end
+
     #
     #
     class NodeNav
@@ -70,7 +85,15 @@ module Napkin
       end
 
       def go_sub(id)
-        sub = @node.outgoing(NAPKIN_SUB).find{|sub| sub[NAPKIN_ID] == id}
+        sub = nil
+        nodes = NapkinIdIndex.find(NAPKIN_ID => id)
+
+        nodes.each do |n|
+          if (NodeNav.get_sup(n) == @node)
+            sub = n
+          end
+        end
+
         if (sub.nil?) then
           return false
         else
@@ -85,7 +108,7 @@ module Napkin
           Neo4j::Transaction.run do
             sub = @node.outgoing(NAPKIN_SUB).find{|sub| sub[NAPKIN_ID] == id}
             if (sub.nil?) then
-              sub = Neo4j::Node.new NAPKIN_ID => id
+              sub = Neo4j::Node.new(NAPKIN_ID => id, NAPKIN_ID_INDEX => true)
               @node.outgoing(NAPKIN_SUB) << sub
               created_node = true
             end
@@ -129,8 +152,13 @@ module Napkin
         return created_count
       end
 
+      def NodeNav.get_sup(node)
+        sup = node.incoming(NAPKIN_SUB).first()
+        return sup
+      end
+
       def go_sup
-        sup = @node.incoming(NAPKIN_SUB).first()
+        sup = NodeNav.get_sup(@node)
         if (sup.nil?) then
           return false
         else
@@ -139,18 +167,27 @@ module Napkin
         end
       end
 
-      def get_path
-        nn = dup
-        path = "#{nn.get_segment}"
-        while (nn.go_sup())
-          path = "#{nn.get_segment}/" + path
+      def NodeNav.get_path(node)
+        path = NodeNav.get_segment(node)
+        n = NodeNav.get_sup(node)
+        while (!n.nil?)
+          path = NodeNav.get_segment(n) + "/" + path
+          n = NodeNav.get_sup(n)
         end
         return path
       end
 
+      def get_path
+        return NodeNav.get_path(@node)
+      end
+
+      def NodeNav.get_segment(node)
+        segment = node[NAPKIN_ID]
+        return segment.nil? ? '~' : segment
+      end
+
       def get_segment
-        segment = @node[NAPKIN_ID]
-        segment.nil? ? 'nil' : segment
+        return NodeNav.get_segment(@node)
       end
     end
 
