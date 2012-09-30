@@ -78,18 +78,19 @@ module Napkin
       "puts \"Here is item-#{item_id} from channel #{channel_id}!\""
     end
 
-    def handle_request (path, method, request)
+    def handle_request (path, method, request, user)
       content_type 'text/plain'
       nn = Napkin::NodeUtil::NodeNav.new
       segments = path.split('/')
       response_text = ""
 
       current_segment_index = 0
+      # TODO: use lucene index!
       segments.each_with_index do |segment, i|
         if (nn.go_sub(segment)) then
           handler_class = get_handler_class(nn, method)
-          puts "!!! HTTP handler: #{handler_class.name}"
-          handler = handler_class.new(nn.dup ,method, request, segments, i)
+          puts "!!! HTTP handler: #{handler_class.name} as #{user}"
+          handler = handler_class.new(nn.dup ,method, request, segments, i, user)
           result = handler.handle
 
           response_text += "#{result}"
@@ -123,7 +124,7 @@ module Napkin
 
     class Authenticator
       def check(username, password)
-        return username == 'fred' && password == 'fred'
+        return username == password
       end
     end
 

@@ -12,12 +12,13 @@ require 'napkin-extensions'
 module Napkin
   module Handlers
     class HttpMethodHandler
-      def initialize(node_nav, method, request, segments, segment_index)
+      def initialize(node_nav, method, request, segments, segment_index, user)
         @nn = node_nav
         @method = method
         @request = request
         @segments = segments
         @segment_index = segment_index
+        @user = user
       end
 
       def at_destination?

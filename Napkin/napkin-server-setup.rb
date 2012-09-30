@@ -42,9 +42,23 @@ tasks_tracker = {
   'napkin/tasks#task_class' => "TrackerTask",
   'napkin/tasks#task_enabled' => true
 }
+tasks_sketchup = {
+  'napkin#id' => "sketchup",
+  'napkin/tasks#task_name' =>"Sketchup task",
+  'napkin/tasks#task_class' => "SketchupTask",
+  'napkin/tasks#task_enabled' => true
+}
+tasks_chatter = {
+  'napkin#id' => "chatter",
+  'napkin/tasks#task_name' =>"Chatter task",
+  'napkin/tasks#task_class' => "ChatterTask",
+  'napkin/tasks#task_enabled' => true
+}
 
 # post_node('napkin/tasks', tasks_test)
 # post_node('napkin/tasks', tasks_tracker)
+# post_node('napkin/tasks', tasks_sketchup)
+# post_node('napkin/tasks', tasks_chatter)
 
 props_zh = {
   'napkin#id' => "zh",

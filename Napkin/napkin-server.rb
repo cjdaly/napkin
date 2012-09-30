@@ -7,9 +7,17 @@ require 'rubygems'
 require 'sinatra'
 
 #
-require 'napkin-server-helpers'
+# heartbeat
 require 'napkin-pulse'
+
+#
+# extensions
 require 'napkin-tracker'
+require 'napkin-sketchup'
+require 'napkin-chatter'
+
+#
+require 'napkin-server-utils'
 
 helpers Napkin::ServerUtils
 
@@ -18,19 +26,21 @@ Napkin::ServerUtils.init_neo4j
 pulse = Napkin::Core::Pulse.new
 pulse.cycle
 
+user = nil
 use Rack::Auth::Basic, "authenticate" do |username, password|
+  user = username
   auth = Napkin::ServerUtils::Authenticator.new
   auth.check(username,password)
 end
 
 get '/*' do |path|
-  handle_request(path, :get, request)
+  handle_request(path, :get, request, user)
 end
 
 post '/*' do |path|
-  handle_request(path, :post, request)
+  handle_request(path, :post, request, user)
 end
 
 put '/*' do |path|
-  handle_request(path, :put, request)
+  handle_request(path, :put, request, user)
 end
