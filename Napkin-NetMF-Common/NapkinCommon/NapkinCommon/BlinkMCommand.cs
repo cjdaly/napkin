@@ -3,7 +3,7 @@ using System.Threading;
 using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 
-namespace NetduinoPlusChatterer
+namespace NapkinCommon
 {
     public class BlinkMCommand
     {

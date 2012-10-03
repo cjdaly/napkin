@@ -30,11 +30,13 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="BlinkMCommand.cs" />
     <Compile Include="HttpUtil.cs" />
     <Compile Include="MemCheck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.SPOT.Hardware" />
     <Reference Include="Microsoft.SPOT.Native">
     </Reference>
     <Reference Include="Microsoft.SPOT.Net" />
