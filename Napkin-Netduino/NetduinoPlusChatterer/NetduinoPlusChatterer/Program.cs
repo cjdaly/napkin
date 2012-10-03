@@ -8,6 +8,7 @@ using Microsoft.SPOT;
 using Microsoft.SPOT.Hardware;
 using SecretLabs.NETMF.Hardware;
 using SecretLabs.NETMF.Hardware.NetduinoPlus;
+using NapkinCommon;
 
 namespace NetduinoPlusChatterer
 {
@@ -19,9 +20,14 @@ namespace NetduinoPlusChatterer
             Cycle();
         }
 
+        private static OutputPort _led;
+        private static InterruptPort _button;
+
         private static void Init()
         {
-            OutputPort led = new OutputPort(Pins.ONBOARD_LED, false);
+            _led = new OutputPort(Pins.ONBOARD_LED, false);
+            _button = new InterruptPort(Pins.ONBOARD_SW1, false, Port.ResistorMode.Disabled, Port.InterruptMode.InterruptEdgeBoth);
+            _button.OnInterrupt += new NativeEventHandler(button_OnInterrupt);
 
             I2CDevice i2cDevice = new I2CDevice(null);
             I2CDevice.Configuration blinkM_D = new I2CDevice.Configuration(0x0D, BlinkMCommand.DefaultClockRateKhz);
@@ -41,16 +47,23 @@ namespace NetduinoPlusChatterer
 
             brightness = 42;
 
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
             BlinkMCommand.FadeToHSB.Execute(i2cDevice, blinkM_D, 0, saturation, brightness);
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
             BlinkMCommand.FadeToHSB.Execute(i2cDevice, blinkM_D, 0, saturation, 0);
-            BlinkMCommand.FadeToHSB.Execute(i2cDevice, blinkM_E, 48, saturation, brightness);
-            Thread.Sleep(1000);
-            BlinkMCommand.FadeToHSB.Execute(i2cDevice, blinkM_E, 48, saturation, 0);
+            BlinkMCommand.FadeToHSB.Execute(i2cDevice, blinkM_E, 35, saturation, brightness);
+            Thread.Sleep(2000);
+            BlinkMCommand.FadeToHSB.Execute(i2cDevice, blinkM_E, 35, saturation, 0);
             BlinkMCommand.FadeToHSB.Execute(i2cDevice, blinkM_F, 82, saturation, brightness);
-            Thread.Sleep(1000);
+            Thread.Sleep(3000);
             BlinkMCommand.FadeToHSB.Execute(i2cDevice, blinkM_F, 82, saturation, 0);
+        }
+
+        static void button_OnInterrupt(uint data1, uint data2, DateTime time)
+        {
+            Debug.Print("BUTTON PRESS!");
+            _led.Write(true);
+            _keepCycling = false;
         }
 
         private static void InitBlinkM(I2CDevice i2cDevice, I2CDevice.Configuration blinkM)
@@ -61,75 +74,49 @@ namespace NetduinoPlusChatterer
             BlinkMCommand.SetFadeSpeed.Execute(i2cDevice, blinkM, 255);
         }
 
+        private static bool _keepCycling = true;
+
         private static void Cycle()
         {
             int cycle = 0;
-            int cycleDelayMilliseconds = 10 * 1000;
+            int postCycle = 12;
+
+            int cycleEndDelayMilliseconds = 5 * 1000;
+            int cyclePostDelayMilliseconds = 2 * 1000;
 
             Debug.Print("Hello!");
 
             NetworkCredential credential = new NetworkCredential("ndp1", "ndp1");
-            string uri = "http://192.168.2.50:4567/chatter";
+            string chatterUri = "http://192.168.2.50:4567/chatter";
+            string configUri = "http://192.168.2.50:4567/config";
 
-            while (true)
+            uint mem1 = Debug.GC(false);
+            uint mem2 = Debug.GC(false);
+
+            MemCheck memCheck = new MemCheck();
+
+            while (_keepCycling)
             {
-                Debug.Print("cycle: " + cycle++);
-                uint mem = Debug.GC(false);
-                string requestText = "Hello from NetduinoPlus!\nmem: " + mem;
+                Debug.Print("cycle: " + ++cycle);
+                memCheck.Check();
 
-                string responseText = DoHttpMethod("POST", uri, credential, requestText);
+                string configResponseText = HttpUtil.DoHttpMethod("GET", configUri, credential, null);
+                Debug.Print(configResponseText);
 
-                Debug.Print(responseText);
-                Thread.Sleep(cycleDelayMilliseconds);
-            }
-        }
+                if (cycle % postCycle == 0) {
+                    memCheck.Check();
+                    Thread.Sleep(cyclePostDelayMilliseconds);
+                    memCheck.Check();
 
-        private static string DoHttpMethod(string method, string uri, NetworkCredential credential, string requestText)
-        {
-            string responseText = null;
-
-            using (HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri))
-            {
-                request.Method = method;
-                request.Credentials = credential;
-
-                if (requestText != null)
-                {
-                    byte[] buffer = Encoding.UTF8.GetBytes(requestText);
-                    request.ContentLength = buffer.Length;
-                    request.ContentType = "text/plain";
-
-                    Stream stream = request.GetRequestStream();
-                    stream.Write(buffer, 0, buffer.Length);
+                    string chatterRequestText = "Hello from NetduinoPlus!\nBytes available: average=" + memCheck.MemAverage + ", high=" + memCheck.MemHigh + ", low=" + memCheck.MemLow;
+                    memCheck.Reset();
+                    string chatterResponseText = HttpUtil.DoHttpMethod("POST", chatterUri, credential, chatterRequestText);
+                    Debug.Print(chatterResponseText);
                 }
 
-                responseText = GetResponseText(request);
+                memCheck.Check();
+                Thread.Sleep(cycleEndDelayMilliseconds);
             }
-
-            return responseText;
-        }
-
-        private static string GetResponseText(HttpWebRequest request)
-        {
-            string responseText = "";
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            {
-                int contentLength = (int)response.ContentLength;
-                byte[] buffer = new byte[contentLength];
-                Stream stream = response.GetResponseStream();
-                int i = 0;
-                while (i < contentLength)
-                {
-                    int readCount = stream.Read(buffer, i, contentLength - i);
-                    i += readCount;
-                }
-
-                char[] responseChars = Encoding.UTF8.GetChars(buffer);
-                responseText = new string(responseChars);
-            }
-
-            return responseText;
         }
 
     }
