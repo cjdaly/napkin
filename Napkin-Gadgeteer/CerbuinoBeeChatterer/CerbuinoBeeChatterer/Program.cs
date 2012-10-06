@@ -36,6 +36,25 @@ namespace CerbuinoBeeChatterer
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
+            temperatureHumidity.MeasurementComplete += new TemperatureHumidity.MeasurementCompleteEventHandler(temperatureHumidity_MeasurementComplete);
+            temperatureHumidity.StartContinuousMeasurements();
+
+            GT.Timer timer = new GT.Timer(5000);
+            timer.Tick += new GT.Timer.TickEventHandler(timer_Tick);
+            timer.Start();
+        }
+
+        void timer_Tick(GT.Timer timer)
+        {
+            double lightSensorPercentage = lightsensor.ReadLightSensorPercentage();
+            double lightSensorVoltage = lightsensor.ReadLightSensorVoltage();
+
+            Debug.Print("light sensor percentage: " + lightSensorPercentage + ", voltage: " + lightSensorVoltage);
+        }
+
+        void temperatureHumidity_MeasurementComplete(TemperatureHumidity sender, double temperature, double relativeHumidity)
+        {
+            Debug.Print("temperature: " + temperature + ", humidity: " + relativeHumidity);
         }
     }
 }
