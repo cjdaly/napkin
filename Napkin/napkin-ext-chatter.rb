@@ -17,7 +17,12 @@ module Napkin
       def handle
         return "" unless at_destination?
 
-        return "???????? ChatterPostHandler ?????????"
+        @request.body.rewind
+        body_text = @request.body.read
+        
+        puts "CHATTER got:\n#{body_text}"
+
+        return "!!!!!! ChatterPostHandler !!!!!!\n#{body_text}"
       end
     end
   end

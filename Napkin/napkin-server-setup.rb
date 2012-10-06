@@ -30,6 +30,46 @@ def post_node(
   puts "POST Incoming:\n#{response.to_s()}\n"
 end
 
+def put_config(
+  path,
+  key,
+  value,
+  hostname="localhost",
+  creds="fred:fred@",
+  port=":4567"
+  )
+  #
+  response = RestClient.put(
+  "http://#{creds}#{hostname}#{port}/config/#{path}",
+  value,
+  {:params => {'key' => key}}
+  )
+  #
+  puts "PUT Incoming:\n#{response.to_s()}\n"
+end
+
+def post_config(
+  path,
+  sub_id,
+  hostname="localhost",
+  creds="fred:fred@",
+  port=":4567"
+  )
+  #
+  response = RestClient.post(
+  "http://#{creds}#{hostname}#{port}/config/#{path}",
+  "",
+  {:params => {'sub' => sub_id}}
+  )
+  #
+  puts "POST Incoming:\n#{response.to_s()}\n"
+end
+
+# post_config('', 'ndp1')
+# put_config('ndp1', 'blinkM_13_hsb', "0,255,42")
+# put_config('ndp1', 'blinkM_14_hsb', "80,255,42")
+# put_config('ndp1', 'blinkM_15_hsb', "160,255,42")
+
 tasks_test = {
   'napkin#id' => "test",
   'napkin/tasks#task_name' =>"test task",
@@ -38,20 +78,26 @@ tasks_test = {
 }
 tasks_tracker = {
   'napkin#id' => "tracker",
-  'napkin/tasks#task_name' =>"RSS tracker task",
+  'napkin/tasks#task_name' =>"RSS feed tracker task",
   'napkin/tasks#task_class' => "TrackerTask",
   'napkin/tasks#task_enabled' => true
 }
 tasks_sketchup = {
   'napkin#id' => "sketchup",
-  'napkin/tasks#task_name' =>"Sketchup task",
+  'napkin/tasks#task_name' =>"Sketchup model construction",
   'napkin/tasks#task_class' => "SketchupTask",
   'napkin/tasks#task_enabled' => true
 }
 tasks_chatter = {
   'napkin#id' => "chatter",
-  'napkin/tasks#task_name' =>"Chatter task",
+  'napkin/tasks#task_name' =>"Chatter",
   'napkin/tasks#task_class' => "ChatterTask",
+  'napkin/tasks#task_enabled' => true
+}
+tasks_config = {
+  'napkin#id' => "config",
+  'napkin/tasks#task_name' =>"Device configuration",
+  'napkin/tasks#task_class' => "ConfigTask",
   'napkin/tasks#task_enabled' => true
 }
 
@@ -59,6 +105,7 @@ tasks_chatter = {
 # post_node('napkin/tasks', tasks_tracker)
 # post_node('napkin/tasks', tasks_sketchup)
 # post_node('napkin/tasks', tasks_chatter)
+# post_node('napkin/tasks', tasks_config)
 
 props_zh = {
   'napkin#id' => "zh",

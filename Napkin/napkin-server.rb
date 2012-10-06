@@ -12,9 +12,10 @@ require 'napkin-pulse'
 
 #
 # extensions
-require 'napkin-tracker'
-require 'napkin-sketchup'
-require 'napkin-chatter'
+require 'napkin-ext-tracker'
+require 'napkin-ext-sketchup'
+require 'napkin-ext-chatter'
+require 'napkin-ext-config'
 
 #
 require 'napkin-server-utils'
