@@ -117,10 +117,11 @@ namespace NetduinoPlusChatterer
                 {
                     Thread.Sleep(cycleDelayMilliseconds);
                     memCheck.Check();
-
-                    string chatterRequestText = "Hello from NetduinoPlus!\nBytes available: average=" + memCheck.MemAverage + ", high=" + memCheck.MemHigh + ", low=" + memCheck.MemLow;
+                    string chatterRequestText = memCheck.GetStatus("MemCheck for " + DeviceId);
                     memCheck.Reset();
+                    memCheck.Check();
                     string chatterResponseText = HttpUtil.DoHttpMethod("POST", chatterUri, credential, chatterRequestText);
+                    memCheck.Check();
                     Debug.Print(chatterResponseText);
                 }
 
