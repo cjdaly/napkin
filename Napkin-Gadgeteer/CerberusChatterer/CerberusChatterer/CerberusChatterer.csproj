@@ -115,4 +115,10 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Napkin-NetMF-Common\NapkinCommon\NapkinCommon\NapkinCommon.csproj">
+      <Project>{A051E60E-D7AC-4350-8199-92722001B579}</Project>
+      <Name>NapkinCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
