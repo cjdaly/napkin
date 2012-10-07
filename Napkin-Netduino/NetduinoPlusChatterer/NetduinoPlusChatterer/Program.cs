@@ -104,28 +104,26 @@ namespace NetduinoPlusChatterer
             {
                 Debug.Print("cycle: " + ++cycle);
                 Thread.Sleep(cycleDelayMilliseconds);
-                memCheck.Check();
+                memCheck.Sample();
 
                 UpdateBlinkM(_blinkM_D, _i2cDevice, credential);
-                memCheck.Check();
+                memCheck.Sample();
                 UpdateBlinkM(_blinkM_E, _i2cDevice, credential);
-                memCheck.Check();
+                memCheck.Sample();
                 UpdateBlinkM(_blinkM_F, _i2cDevice, credential);
-                memCheck.Check();
+                memCheck.Sample();
 
                 if (cycle % postCycle == 0)
                 {
                     Thread.Sleep(cycleDelayMilliseconds);
-                    memCheck.Check();
+                    memCheck.Sample();
                     string chatterRequestText = memCheck.GetStatus("MemCheck for " + DeviceId);
                     memCheck.Reset();
-                    memCheck.Check();
+                    memCheck.Sample();
                     string chatterResponseText = HttpUtil.DoHttpMethod("POST", chatterUri, credential, chatterRequestText);
-                    memCheck.Check();
+                    memCheck.Sample();
                     Debug.Print(chatterResponseText);
                 }
-
-                
             }
         }
 
@@ -133,7 +131,7 @@ namespace NetduinoPlusChatterer
         {
             string deviceAddressText = blinkM.Address.ToString();
             string defaultHsbText = "38,255,42";
-            string hsbText = GetOrInitBlinkMValue("blinkM_" + deviceAddressText + "_hsb", defaultHsbText, credential);
+            string hsbText = ConfigUtil.GetOrInitConfigValue(NapkinServerUri, DeviceId, "blinkM_" + deviceAddressText + "_hsb", defaultHsbText, credential);
             string[] hsbArray = hsbText.Split(',');
             if ((hsbArray == null) || (hsbArray.Length != 3))
             {
@@ -151,24 +149,6 @@ namespace NetduinoPlusChatterer
             catch (Exception)
             {
                 Debug.Print("Error parsing HSB data: " + hsbText);
-            }
-        }
-
-        private static string GetOrInitBlinkMValue(string key, string defaultValue, NetworkCredential credential)
-        {
-            string uri = NapkinServerUri + "/config/" + DeviceId + "?key=" + key;
-            string responseText = HttpUtil.DoHttpMethod("GET", uri, credential, null);
-            Debug.Print("GOT " + key + "=" + responseText);
-            // Thread.Sleep(NetworkDelayMilliseconds);
-
-            if ((responseText == null) || (responseText == ""))
-            {
-                responseText = HttpUtil.DoHttpMethod("PUT", uri, credential, defaultValue);
-                return defaultValue;
-            }
-            else
-            {
-                return responseText;
             }
         }
 
