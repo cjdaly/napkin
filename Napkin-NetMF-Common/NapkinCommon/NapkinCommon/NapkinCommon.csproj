@@ -33,7 +33,6 @@
     <Compile Include="BlinkMCommand.cs" />
     <Compile Include="ConfigUtil.cs" />
     <Compile Include="HttpUtil.cs" />
-    <Compile Include="MemCheck.cs" />
     <Compile Include="NumericSamplers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Collections;
 using System.Threading;
 using Microsoft.SPOT;
@@ -12,6 +13,9 @@ using GT = Gadgeteer;
 using GTM = Gadgeteer.Modules;
 using Gadgeteer.Modules.GHIElectronics;
 using Gadgeteer.Modules.Seeed;
+
+using NapkinCommon;
+using NapkinGadgeteerCommon;
 
 namespace CerbuinoBeeChatterer
 {
@@ -36,25 +40,69 @@ namespace CerbuinoBeeChatterer
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
-            temperatureHumidity.MeasurementComplete += new TemperatureHumidity.MeasurementCompleteEventHandler(temperatureHumidity_MeasurementComplete);
-            temperatureHumidity.StartContinuousMeasurements();
 
-            GT.Timer timer = new GT.Timer(5000);
+            _sensors = new SensorCombo(SampleLightSensorPercentage, SampleLightSensorVoltage);
+
+            temperatureHumidity.MeasurementComplete += new TemperatureHumidity.MeasurementCompleteEventHandler(temperatureHumidity_MeasurementComplete);
+
+            _cycleDelayMilliseconds = 5 * 1000;
+            GT.Timer timer = new GT.Timer(_cycleDelayMilliseconds);
             timer.Tick += new GT.Timer.TickEventHandler(timer_Tick);
             timer.Start();
         }
 
+        public const string DeviceId = "cerbee1";
+        public const string NapkinServerUri = "http://192.168.2.50:4567";
+
+        private int _cycleCount = 0;
+        private int _postCycle = 12;
+        private int _cycleDelayMilliseconds;
+
+        private SensorCombo _sensors;
+
+        private double SampleLightSensorPercentage()
+        {
+            return lightsensor.ReadLightSensorPercentage(); 
+        }
+
+        private double SampleLightSensorVoltage()
+        {
+            return lightsensor.ReadLightSensorVoltage();
+        }
+
         void timer_Tick(GT.Timer timer)
         {
-            double lightSensorPercentage = lightsensor.ReadLightSensorPercentage();
-            double lightSensorVoltage = lightsensor.ReadLightSensorVoltage();
+            _cycleCount++;
+            if (_cycleCount % _postCycle == 0)
+            {
+                _sensors.MemCheck.Sample();
 
-            Debug.Print("light sensor percentage: " + lightSensorPercentage + ", voltage: " + lightSensorVoltage);
+                NetworkCredential credential = new NetworkCredential(DeviceId, DeviceId);
+                string chatterUri = NapkinServerUri + "/chatter";
+                string chatterRequestText = _sensors.GetStatus("Status from " + DeviceId);
+                string chatterResponseText = HttpUtil.DoHttpMethod("POST", chatterUri, credential, chatterRequestText);
+                
+                Thread.Sleep(_cycleDelayMilliseconds / 2);
+
+                _sensors.ResetAll();
+                _sensors.MemCheck.Sample();
+            }
+
+            _sensors.LightSensorPercentageSampler.Sample();
+            _sensors.LightSensorVoltageSampler.Sample();
+
+            temperatureHumidity.RequestMeasurement();
+            _sensors.MemCheck.Sample();
         }
 
         void temperatureHumidity_MeasurementComplete(TemperatureHumidity sender, double temperature, double relativeHumidity)
         {
-            Debug.Print("temperature: " + temperature + ", humidity: " + relativeHumidity);
+            _sensors.MemCheck.Sample();
+            _sensors.TemperatureSampler.Sample(temperature);
+            _sensors.HumiditySampler.Sample(relativeHumidity);
+            _sensors.MemCheck.Sample();
         }
+
+
     }
 }

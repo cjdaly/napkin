@@ -6,21 +6,44 @@ namespace NapkinCommon
 {
     public abstract class Sampler
     {
-        public Sampler()
+        public Sampler(string statusKeyPrefix)
         {
             Reset();
+            _statusKeyPrefix = statusKeyPrefix;
         }
+
+        public string StatusKeyPrefix { get { return _statusKeyPrefix; } }
+        protected string _statusKeyPrefix;
 
         protected int _samples = 0;
         public int Samples { get { return _samples; } }
 
         public abstract void Sample();
         public abstract void Reset();
-        public abstract string GetStatus(string keyPrefix, string headline = null);
+        public abstract string GetStatus(string headline = null);
+
+        private static long TakeMemorySample()
+        {
+            return Debug.GC(false);
+        }
+        public static LongSampler CreateMemCheck(string statusKeyPrefix = "memory") {
+            LongSampler sampler = new LongSampler(TakeMemorySample, statusKeyPrefix);
+            return sampler;
+        }
+        
     }
 
-    public abstract class LongSampler : Sampler
+    public class LongSampler : Sampler
     {
+        public delegate long TakeLongSample();
+        private TakeLongSample _sampler;
+
+        public LongSampler(TakeLongSample sampler, string statusKeyPrefix)
+            : base(statusKeyPrefix)
+        {
+            _sampler = sampler;
+        }
+
         private long _total;
         private long _low;
         private long _high;
@@ -37,29 +60,41 @@ namespace NapkinCommon
 
         public override void Sample()
         {
-            long sample = SampleImpl();
+            long sample = _sampler();
+            Sample(sample);
+        }
+
+        public void Sample(long sample)
+        {
             _total += sample;
             if (sample < _low) _low = sample;
             if (sample > _high) _high = sample;
             _samples++;
         }
 
-        protected abstract long SampleImpl();
-
-        public override string GetStatus(string keyPrefix, string headline = null)
+        public override string GetStatus(string headline = null)
         {
             StringBuilder sb = new StringBuilder();
             if (headline != null) sb.AppendLine(headline);
-            sb.Append(keyPrefix).AppendLine("_samples=" + Samples);
-            sb.Append(keyPrefix).AppendLine("_average=" + Average);
-            sb.Append(keyPrefix).AppendLine("_high=" + _high);
-            sb.Append(keyPrefix).AppendLine("_low=" + _low);
+            sb.Append(StatusKeyPrefix).AppendLine("_samples=" + Samples);
+            sb.Append(StatusKeyPrefix).AppendLine("_average=" + Average);
+            sb.Append(StatusKeyPrefix).AppendLine("_high=" + _high);
+            sb.Append(StatusKeyPrefix).AppendLine("_low=" + _low);
             return sb.ToString();
         }
     }
 
-    public abstract class DoubleSampler : Sampler
+    public class DoubleSampler : Sampler
     {
+        public delegate double TakeDoubleSample();
+        private TakeDoubleSample _sampler;
+
+        public DoubleSampler(TakeDoubleSample sampler, string statusKeyPrefix)
+            : base(statusKeyPrefix)
+        {
+            _sampler = sampler;
+        }
+
         private double _total;
         private double _low;
         private double _high;
@@ -76,24 +111,28 @@ namespace NapkinCommon
 
         public override void Sample()
         {
-            double sample = SampleImpl();
+            double sample = _sampler();
+            Sample(sample);
+        }
+
+        public void Sample(double sample)
+        {
             _total += sample;
             if (sample < _low) _low = sample;
             if (sample > _high) _high = sample;
             _samples++;
         }
 
-        protected abstract double SampleImpl();
-
-        public override string GetStatus(string keyPrefix, string headline = null)
+        public override string GetStatus(string headline = null)
         {
             StringBuilder sb = new StringBuilder();
             if (headline != null) sb.AppendLine(headline);
-            sb.Append(keyPrefix).AppendLine("_samples=" + Samples);
-            sb.Append(keyPrefix).AppendLine("_average=" + Average);
-            sb.Append(keyPrefix).AppendLine("_high=" + _high);
-            sb.Append(keyPrefix).AppendLine("_low=" + _low);
+            sb.Append(StatusKeyPrefix).AppendLine("_samples=" + Samples);
+            sb.Append(StatusKeyPrefix).AppendLine("_average=" + Average);
+            sb.Append(StatusKeyPrefix).AppendLine("_high=" + _high);
+            sb.Append(StatusKeyPrefix).AppendLine("_low=" + _low);
             return sb.ToString();
         }
     }
+
 }

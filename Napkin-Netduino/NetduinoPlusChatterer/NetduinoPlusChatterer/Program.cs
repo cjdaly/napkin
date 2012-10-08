@@ -98,7 +98,7 @@ namespace NetduinoPlusChatterer
             NetworkCredential credential = new NetworkCredential(DeviceId, DeviceId);
             string chatterUri = NapkinServerUri + "/chatter";
 
-            MemCheck memCheck = new MemCheck();
+            LongSampler memCheck = Sampler.CreateMemCheck();
 
             while (_keepCycling)
             {

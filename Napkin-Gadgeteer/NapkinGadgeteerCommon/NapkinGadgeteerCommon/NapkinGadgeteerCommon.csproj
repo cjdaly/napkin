@@ -31,10 +31,16 @@
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Class1.cs" />
+    <Compile Include="SensorCombo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.SPOT.Native">
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Napkin-NetMF-Common\NapkinCommon\NapkinCommon\NapkinCommon.csproj">
+      <Project>{A051E60E-D7AC-4350-8199-92722001B579}</Project>
+      <Name>NapkinCommon</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
