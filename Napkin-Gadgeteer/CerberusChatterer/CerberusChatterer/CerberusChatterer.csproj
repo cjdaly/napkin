@@ -120,5 +120,9 @@
       <Project>{A051E60E-D7AC-4350-8199-92722001B579}</Project>
       <Name>NapkinCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\NapkinGadgeteerCommon\NapkinGadgeteerCommon\NapkinGadgeteerCommon.csproj">
+      <Project>{6AF9F241-E845-42C8-B1DF-034BCD78803F}</Project>
+      <Name>NapkinGadgeteerCommon</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

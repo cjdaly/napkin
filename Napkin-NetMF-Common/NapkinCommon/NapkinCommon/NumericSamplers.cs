@@ -26,11 +26,12 @@ namespace NapkinCommon
         {
             return Debug.GC(false);
         }
-        public static LongSampler CreateMemCheck(string statusKeyPrefix = "memory") {
+        public static LongSampler CreateMemCheck(string statusKeyPrefix = "memory")
+        {
             LongSampler sampler = new LongSampler(TakeMemorySample, statusKeyPrefix);
             return sampler;
         }
-        
+
     }
 
     public class LongSampler : Sampler
@@ -99,7 +100,7 @@ namespace NapkinCommon
         private double _low;
         private double _high;
 
-        public double Average { get { return _total / _samples; } }
+        public double Average { get { return (_samples == 0) ? 0 : (_total / _samples); } }
 
         public override void Reset()
         {

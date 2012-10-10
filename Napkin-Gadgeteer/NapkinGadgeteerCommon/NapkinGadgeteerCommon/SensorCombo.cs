@@ -25,10 +25,11 @@ namespace NapkinGadgeteerCommon
         public readonly DoubleSampler TemperatureSampler;
         public readonly DoubleSampler HumiditySampler;
 
-        public string GetStatus(string headline = null)
+        public string GetStatus(int deviceCycle, string headline = null)
         {
             StringBuilder sb = new StringBuilder();
             if (headline != null) sb.AppendLine(headline);
+            sb.Append("device_cycle=").AppendLine(deviceCycle.ToString());
             sb.Append(MemCheck.GetStatus());
             sb.Append(LightSensorPercentageSampler.GetStatus());
             sb.Append(LightSensorVoltageSampler.GetStatus());

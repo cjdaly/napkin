@@ -41,28 +41,30 @@ namespace CerbuinoBeeChatterer
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
 
+            _credential = new NetworkCredential(DeviceId, DeviceId);
+
             _sensors = new SensorCombo(SampleLightSensorPercentage, SampleLightSensorVoltage);
 
             temperatureHumidity.MeasurementComplete += new TemperatureHumidity.MeasurementCompleteEventHandler(temperatureHumidity_MeasurementComplete);
 
-            _cycleDelayMilliseconds = 5 * 1000;
             GT.Timer timer = new GT.Timer(_cycleDelayMilliseconds);
             timer.Tick += new GT.Timer.TickEventHandler(timer_Tick);
             timer.Start();
         }
 
-        public const string DeviceId = "cerbee1";
-        public const string NapkinServerUri = "http://192.168.2.50:4567";
+        public readonly string DeviceId = "cerbee1";
+        public readonly string NapkinServerUri = "http://192.168.2.50:4567";
+        private NetworkCredential _credential;
 
         private int _cycleCount = 0;
-        private int _postCycle = 12;
-        private int _cycleDelayMilliseconds;
+        private readonly int _postCycle = 6 * 5;
+        private readonly int _cycleDelayMilliseconds = 10 * 1000;
 
         private SensorCombo _sensors;
 
         private double SampleLightSensorPercentage()
         {
-            return lightsensor.ReadLightSensorPercentage(); 
+            return lightsensor.ReadLightSensorPercentage();
         }
 
         private double SampleLightSensorVoltage()
@@ -77,12 +79,10 @@ namespace CerbuinoBeeChatterer
             {
                 _sensors.MemCheck.Sample();
 
-                NetworkCredential credential = new NetworkCredential(DeviceId, DeviceId);
                 string chatterUri = NapkinServerUri + "/chatter";
-                string chatterRequestText = _sensors.GetStatus("Status from " + DeviceId);
-                string chatterResponseText = HttpUtil.DoHttpMethod("POST", chatterUri, credential, chatterRequestText);
-                
-                Thread.Sleep(_cycleDelayMilliseconds / 2);
+                string chatterRequestText = _sensors.GetStatus(_cycleCount);
+
+                HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText, false);
 
                 _sensors.ResetAll();
                 _sensors.MemCheck.Sample();
@@ -90,9 +90,11 @@ namespace CerbuinoBeeChatterer
 
             _sensors.LightSensorPercentageSampler.Sample();
             _sensors.LightSensorVoltageSampler.Sample();
+            _sensors.MemCheck.Sample();
+
+            Debug.Print(_sensors.GetStatus(_cycleCount, "STATUS"));
 
             temperatureHumidity.RequestMeasurement();
-            _sensors.MemCheck.Sample();
         }
 
         void temperatureHumidity_MeasurementComplete(TemperatureHumidity sender, double temperature, double relativeHumidity)
