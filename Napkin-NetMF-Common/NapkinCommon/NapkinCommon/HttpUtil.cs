@@ -11,7 +11,7 @@ namespace NapkinCommon
     public class HttpUtil
     {
 
-        public static string DoHttpMethod(string method, string uri, NetworkCredential credential, string requestText)
+        public static string DoHttpMethod(string method, string uri, NetworkCredential credential, string requestText, bool readResponse = true)
         {
             string responseText = null;
 
@@ -30,7 +30,11 @@ namespace NapkinCommon
                     stream.Write(buffer, 0, buffer.Length);
                 }
 
-                responseText = GetResponseText(request);
+                if (readResponse)
+                {
+                    // PollHaveResponse(request);
+                    responseText = GetResponseText(request);
+                }
             }
 
             return responseText;
@@ -42,6 +46,8 @@ namespace NapkinCommon
 
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
+                // PollHaveResponse(request);
+
                 int contentLength = (int)response.ContentLength;
                 byte[] buffer = new byte[contentLength];
                 Stream stream = response.GetResponseStream();
@@ -56,7 +62,22 @@ namespace NapkinCommon
                 responseText = new string(responseChars);
             }
 
+            // PollHaveResponse(request);
+
             return responseText;
+        }
+
+        private static void PollHaveResponse(HttpWebRequest request, int timeoutMilliseconds = 2000)
+        {
+            DateTime start = DateTime.Now;
+            DateTime timeout = start.AddMilliseconds(timeoutMilliseconds);
+            while (!request.HaveResponse && (DateTime.Now < timeout))
+            {
+                Thread.Sleep(10);
+            }
+            DateTime finish = DateTime.Now;
+            TimeSpan consumed = finish.Subtract(start);
+            Debug.Print("HaveResponse: " + request.HaveResponse + " after: " + consumed);
         }
     }
 }
