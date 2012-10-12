@@ -42,7 +42,6 @@ namespace CerberusChatterer
             *******************************************************************************************/
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Hello!");
-
             _credential = new NetworkCredential(DeviceId, DeviceId);
 
             _sensors = new SensorCombo(SampleLightSensorPercentage, SampleLightSensorVoltage);
@@ -79,23 +78,14 @@ namespace CerberusChatterer
             _cycleCount++;
             if (_cycleCount % _postCycle == 0)
             {
-                Debug.Print("YO 1");
                 _sensors.MemCheck.Sample();
 
-                Debug.Print("YO 2");
                 string chatterUri = NapkinServerUri + "/chatter";
-                string chatterRequestText = _sensors.GetStatus("Status from " + DeviceId + " on cycle " + _cycleCount);
+                string chatterRequestText = _sensors.GetStatus(_cycleCount);
 
-                Debug.Print("YO 3");
-                Thread.Sleep(2000);
-                _sensors.MemCheck.Sample();
-                Debug.Print("YO 3a");
-                string chatterResponseText = HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText);
-                Debug.Print("YO 4");
+                HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText, false);
 
                 _sensors.ResetAll();
-
-                Debug.Print("YO 5");
                 _sensors.MemCheck.Sample();
             }
 
@@ -103,7 +93,7 @@ namespace CerberusChatterer
             _sensors.LightSensorVoltageSampler.Sample();
             _sensors.MemCheck.Sample();
 
-            Debug.Print(_sensors.GetStatus("Status for cycle: " + _cycleCount));
+            Debug.Print(_sensors.GetStatus(_cycleCount, "STATUS"));
 
             temperatureHumidity.RequestMeasurement();
         }
