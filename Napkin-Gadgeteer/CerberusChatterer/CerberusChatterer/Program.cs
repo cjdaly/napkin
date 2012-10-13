@@ -58,7 +58,8 @@ namespace CerberusChatterer
         private NetworkCredential _credential;
 
         private int _cycleCount = 0;
-        private readonly int _postCycle = 6;
+        private readonly int _postCycle = 6 * 30;
+        private readonly int _configCycle = 3;
         private readonly int _cycleDelayMilliseconds = 10 * 1000;
 
         private SensorCombo _sensors;
@@ -76,12 +77,24 @@ namespace CerberusChatterer
         void timer_Tick(GT.Timer timer)
         {
             _cycleCount++;
+
+            _sensors.MemCheck.Sample();
+            UpdateLed7R();
+            _sensors.MemCheck.Sample();
+
+            if (_cycleCount % _configCycle == 0)
+            {
+                UpdateDeviceStarts();
+                _sensors.MemCheck.Sample();
+                UpdateMulticolorLed();
+                _sensors.MemCheck.Sample();
+            }
+
             if (_cycleCount % _postCycle == 0)
             {
-                _sensors.MemCheck.Sample();
-
                 string chatterUri = NapkinServerUri + "/chatter";
                 string chatterRequestText = _sensors.GetStatus(_cycleCount);
+                _sensors.MemCheck.Sample();
 
                 HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText, false);
 
@@ -96,6 +109,67 @@ namespace CerberusChatterer
             Debug.Print(_sensors.GetStatus(_cycleCount, "STATUS"));
 
             temperatureHumidity.RequestMeasurement();
+        }
+
+        private void UpdateLed7R()
+        {
+            led7r.TurnLightOn(_cycleCount % 8);
+            led7r.TurnLightOff((_cycleCount -1) % 8);
+        }
+
+        private int _deviceStartCountCurrent = -1;
+        private void UpdateDeviceStarts()
+        {
+            if (_deviceStartCountCurrent > -1) return;
+
+            string deviceStartsText = ConfigUtil.GetOrInitConfigValue(NapkinServerUri, DeviceId, "device_start_count", "0", _credential);
+
+            try
+            {
+                int deviceStartCountPrevious = int.Parse(deviceStartsText);
+                _deviceStartCountCurrent = deviceStartCountPrevious + 1;
+
+                ConfigUtil.PutConfigValue(NapkinServerUri + "/config/" + DeviceId, "device_start_count", _deviceStartCountCurrent.ToString(), _credential);
+                Debug.Print("UpdateDeviceStarts updated device_start_count: " + _deviceStartCountCurrent);
+            }
+            catch (Exception)
+            {
+                Debug.Print("Error in UpdateDeviceStarts: " + deviceStartsText);
+            }
+        }
+
+        private string _deviceLocation;
+        private void UpdateDeviceLocation()
+        {
+            _deviceLocation = ConfigUtil.GetOrInitConfigValue(NapkinServerUri, DeviceId, "device_location", "???", _credential);
+            Debug.Print("Got device_location: " + _deviceLocation);
+        }
+
+        private void UpdateMulticolorLed()
+        {
+            string defaultRgbText = "64,0,0";
+            string rgbText = ConfigUtil.GetOrInitConfigValue(NapkinServerUri, DeviceId, "MulticolorLed_rgb", defaultRgbText, _credential);
+
+            string[] rgbArray = rgbText.Split(',');
+            if ((rgbArray == null) || (rgbArray.Length != 3))
+            {
+                Debug.Print("Badly formed RGB data: " + rgbText);
+                rgbText = defaultRgbText;
+            }
+
+            try
+            {
+                byte red = (byte)int.Parse(rgbArray[0]);
+                byte green = (byte)int.Parse(rgbArray[1]);
+                byte blue = (byte)int.Parse(rgbArray[2]);
+                multicolorLed.SetRedIntensity(red);
+                multicolorLed.SetGreenIntensity(green);
+                multicolorLed.SetBlueIntensity(blue);
+            }
+            catch (Exception)
+            {
+                Debug.Print("Error parsing RGB data: " + rgbText);
+            }
         }
 
         void temperatureHumidity_MeasurementComplete(TemperatureHumidity sender, double temperature, double relativeHumidity)

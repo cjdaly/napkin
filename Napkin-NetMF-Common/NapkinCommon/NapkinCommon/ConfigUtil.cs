@@ -18,7 +18,7 @@ namespace NapkinCommon
             }
             else if (responseText == "")
             {
-                responseText = HttpUtil.DoHttpMethod("PUT", uri, credential, defaultValue);
+                HttpUtil.DoHttpMethod("PUT", uri, credential, defaultValue, false);
                 return defaultValue;
             }
             else
@@ -37,13 +37,13 @@ namespace NapkinCommon
         public static void PutConfigValue(string uri, string key, string value, NetworkCredential credential)
         {
             uri = uri + "?key=" + key;
-            string responseText = HttpUtil.DoHttpMethod("PUT", uri, credential, value);
+            HttpUtil.DoHttpMethod("PUT", uri, credential, value, false);
         }
 
         public static void PostConfigNode(string uri, string sub, NetworkCredential credential)
         {
             uri = uri + "?sub=" + sub;
-            string responseText = HttpUtil.DoHttpMethod("POST", uri, credential, null);
+            HttpUtil.DoHttpMethod("POST", uri, credential, null, false);
         }
     }
 }
