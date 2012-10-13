@@ -58,9 +58,9 @@ namespace CerberusChatterer
         private NetworkCredential _credential;
 
         private int _cycleCount = 0;
-        private readonly int _postCycle = 6 * 30;
-        private readonly int _configCycle = 3;
-        private readonly int _cycleDelayMilliseconds = 10 * 1000;
+        private readonly int _postCycle = 300;
+        private readonly int _configCycle = 33;
+        private readonly int _cycleDelayMilliseconds = 1 * 1000;
 
         private SensorCombo _sensors;
 
@@ -77,6 +77,7 @@ namespace CerberusChatterer
         void timer_Tick(GT.Timer timer)
         {
             _cycleCount++;
+            Debug.Print("cycle: " + _cycleCount);
 
             _sensors.MemCheck.Sample();
             UpdateLed7R();
@@ -86,16 +87,23 @@ namespace CerberusChatterer
             {
                 UpdateDeviceStarts();
                 _sensors.MemCheck.Sample();
+                UpdateDeviceLocation();
+                _sensors.MemCheck.Sample();
                 UpdateMulticolorLed();
                 _sensors.MemCheck.Sample();
             }
 
             if (_cycleCount % _postCycle == 0)
             {
-                string chatterUri = NapkinServerUri + "/chatter";
-                string chatterRequestText = _sensors.GetStatus(_cycleCount);
+                StringBuilder sb = new StringBuilder();
+                sb.Append("device_id=").AppendLine(DeviceId);
+                sb.Append("device_start_count=").AppendLine(_deviceStartCountCurrent.ToString());
+                sb.Append("device_cycle=").AppendLine(_cycleCount.ToString());
+                sb.Append("device_location=").AppendLine(_deviceLocation);
+                string chatterRequestText = _sensors.GetStatus(sb);
                 _sensors.MemCheck.Sample();
 
+                string chatterUri = NapkinServerUri + "/chatter";
                 HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText, false);
 
                 _sensors.ResetAll();
@@ -106,7 +114,7 @@ namespace CerberusChatterer
             _sensors.LightSensorVoltageSampler.Sample();
             _sensors.MemCheck.Sample();
 
-            Debug.Print(_sensors.GetStatus(_cycleCount, "STATUS"));
+            // Debug.Print(_sensors.GetStatus());
 
             temperatureHumidity.RequestMeasurement();
         }
@@ -114,7 +122,7 @@ namespace CerberusChatterer
         private void UpdateLed7R()
         {
             led7r.TurnLightOn(_cycleCount % 8);
-            led7r.TurnLightOff((_cycleCount -1) % 8);
+            led7r.TurnLightOff((_cycleCount - 1) % 8);
         }
 
         private int _deviceStartCountCurrent = -1;
@@ -138,17 +146,19 @@ namespace CerberusChatterer
             }
         }
 
-        private string _deviceLocation;
+        private string _deviceLocation = "???";
         private void UpdateDeviceLocation()
         {
+            if (_deviceLocation != "???") return;
+
             _deviceLocation = ConfigUtil.GetOrInitConfigValue(NapkinServerUri, DeviceId, "device_location", "???", _credential);
             Debug.Print("Got device_location: " + _deviceLocation);
         }
 
         private void UpdateMulticolorLed()
         {
-            string defaultRgbText = "64,0,0";
-            string rgbText = ConfigUtil.GetOrInitConfigValue(NapkinServerUri, DeviceId, "MulticolorLed_rgb", defaultRgbText, _credential);
+            string defaultRgbText = "0,0,64";
+            string rgbText = ConfigUtil.GetOrInitConfigValue(NapkinServerUri, DeviceId, "MulticolorLed_rBg", defaultRgbText, _credential);
 
             string[] rgbArray = rgbText.Split(',');
             if ((rgbArray == null) || (rgbArray.Length != 3))

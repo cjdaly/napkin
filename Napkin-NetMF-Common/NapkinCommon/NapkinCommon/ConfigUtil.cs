@@ -12,11 +12,7 @@ namespace NapkinCommon
             string uri = napkinServerUri + "/config/" + devicePath + "?key=" + key;
             string responseText = HttpUtil.DoHttpMethod("GET", uri, credential, null);
             Debug.Print("GOT " + key + "=" + responseText);
-            if (responseText == null)
-            {
-                return defaultValue;
-            }
-            else if (responseText == "")
+            if ((responseText == null) || (responseText == ""))
             {
                 HttpUtil.DoHttpMethod("PUT", uri, credential, defaultValue, false);
                 return defaultValue;
