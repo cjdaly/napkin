@@ -21,17 +21,6 @@ namespace NapkinCommon
         public abstract void Sample();
         public abstract void Reset();
         public abstract string GetStatus(string headline = null);
-
-        private static long TakeMemorySample()
-        {
-            return Debug.GC(false);
-        }
-        public static LongSampler CreateMemCheck(string statusKeyPrefix = "memory")
-        {
-            LongSampler sampler = new LongSampler(TakeMemorySample, statusKeyPrefix);
-            return sampler;
-        }
-
     }
 
     public class LongSampler : Sampler

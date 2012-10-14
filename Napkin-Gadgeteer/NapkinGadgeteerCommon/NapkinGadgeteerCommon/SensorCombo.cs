@@ -12,33 +12,29 @@ namespace NapkinGadgeteerCommon
             DoubleSampler.TakeDoubleSample lightSensorPercentageSampler,
             DoubleSampler.TakeDoubleSample lightSensorVoltageSampler)
         {
-            MemCheck = Sampler.CreateMemCheck();
             LightSensorPercentageSampler = new DoubleSampler(lightSensorPercentageSampler, "light_sensor_percentage");
             LightSensorVoltageSampler = new DoubleSampler(lightSensorVoltageSampler, "light_sensor_voltage");
             TemperatureSampler = new DoubleSampler(null, "temperature");
             HumiditySampler = new DoubleSampler(null, "humidity");
         }
 
-        public readonly LongSampler MemCheck;
         public readonly DoubleSampler LightSensorPercentageSampler;
         public readonly DoubleSampler LightSensorVoltageSampler;
         public readonly DoubleSampler TemperatureSampler;
         public readonly DoubleSampler HumiditySampler;
 
-        public string GetStatus(StringBuilder sb = null)
+        public StringBuilder AppendStatus(StringBuilder sb = null)
         {
             if (sb == null) sb = new StringBuilder();
-            sb.Append(MemCheck.GetStatus());
             sb.Append(LightSensorPercentageSampler.GetStatus());
             sb.Append(LightSensorVoltageSampler.GetStatus());
             sb.Append(TemperatureSampler.GetStatus());
             sb.Append(HumiditySampler.GetStatus());
-            return sb.ToString();
+            return sb;
         }
 
         public void ResetAll()
         {
-            MemCheck.Reset();
             LightSensorPercentageSampler.Reset();
             LightSensorVoltageSampler.Reset();
             TemperatureSampler.Reset();

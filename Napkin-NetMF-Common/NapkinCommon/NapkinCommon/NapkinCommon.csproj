@@ -32,6 +32,7 @@
   <ItemGroup>
     <Compile Include="BlinkMCommand.cs" />
     <Compile Include="ConfigUtil.cs" />
+    <Compile Include="DeviceVitals.cs" />
     <Compile Include="HttpUtil.cs" />
     <Compile Include="NumericSamplers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -14,10 +14,12 @@ namespace NetduinoPlusChatterer
 {
     public class Program
     {
-        // TODO: read these values from config properties file
         public const string DeviceId = "ndp1";
         public const string NapkinServerUri = "http://192.168.2.50:4567";
         public const int NetworkDelayMilliseconds = 2000;
+        private static NetworkCredential _credential;
+
+        private static DeviceVitals _vitals;
 
         public static void Main()
         {
@@ -35,6 +37,9 @@ namespace NetduinoPlusChatterer
 
         private static void Init()
         {
+            _credential = new NetworkCredential(DeviceId, DeviceId);
+            _vitals = new DeviceVitals(NapkinServerUri, DeviceId, _credential);
+
             _led = new OutputPort(Pins.ONBOARD_LED, false);
             _button = new InterruptPort(Pins.ONBOARD_SW1, false, Port.ResistorMode.Disabled, Port.InterruptMode.InterruptEdgeBoth);
             _button.OnInterrupt += new NativeEventHandler(button_OnInterrupt);
@@ -88,41 +93,55 @@ namespace NetduinoPlusChatterer
 
         private static void Cycle()
         {
-            int cycle = 0;
-            int postCycle = 12;
+            int blinkMCycle = 2;
+            int configCycle = 3;
+            int postCycle = 6;
 
             int cycleDelayMilliseconds = 5 * 1000;
 
-            Debug.Print("Hello!");
+            Debug.Print("Hello from: " + DeviceId);
 
-            NetworkCredential credential = new NetworkCredential(DeviceId, DeviceId);
             string chatterUri = NapkinServerUri + "/chatter";
-
-            LongSampler memCheck = Sampler.CreateMemCheck();
 
             while (_keepCycling)
             {
-                Debug.Print("cycle: " + ++cycle);
+                _vitals.IncrementCycleCount();
+                int cycleCount = _vitals.CycleCount;
+                Debug.Print("Starting cycle: " + cycleCount + " on device: " + DeviceId);
+
                 Thread.Sleep(cycleDelayMilliseconds);
-                memCheck.Sample();
+                _vitals.MemCheck.Sample();
 
-                UpdateBlinkM(_blinkM_D, _i2cDevice, credential);
-                memCheck.Sample();
-                UpdateBlinkM(_blinkM_E, _i2cDevice, credential);
-                memCheck.Sample();
-                UpdateBlinkM(_blinkM_F, _i2cDevice, credential);
-                memCheck.Sample();
+                if (cycleCount % blinkMCycle == 0)
+                {
+                    UpdateBlinkM(_blinkM_D, _i2cDevice, _credential);
+                    _vitals.MemCheck.Sample();
+                    UpdateBlinkM(_blinkM_E, _i2cDevice, _credential);
+                    _vitals.MemCheck.Sample();
+                    UpdateBlinkM(_blinkM_F, _i2cDevice, _credential);
+                    _vitals.MemCheck.Sample();
+                }
 
-                if (cycle % postCycle == 0)
+                if (cycleCount % configCycle == 0)
+                {
+                    _vitals.UpdateDeviceStarts();
+                    _vitals.MemCheck.Sample();
+                    _vitals.UpdateDeviceLocation();
+                    _vitals.MemCheck.Sample();
+                }
+
+                if (cycleCount % postCycle == 0)
                 {
                     Thread.Sleep(cycleDelayMilliseconds);
-                    memCheck.Sample();
-                    string chatterRequestText = memCheck.GetStatus("MemCheck for " + DeviceId);
-                    memCheck.Reset();
-                    memCheck.Sample();
-                    string chatterResponseText = HttpUtil.DoHttpMethod("POST", chatterUri, credential, chatterRequestText);
-                    memCheck.Sample();
-                    Debug.Print(chatterResponseText);
+                    _vitals.MemCheck.Sample();
+                    StringBuilder sb = new StringBuilder();
+                    _vitals.AppendStatus(sb);
+
+                    string chatterRequestText = sb.ToString();
+                    HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText, false);
+
+                    _vitals.MemCheck.Reset();
+                    _vitals.MemCheck.Sample();
                 }
             }
         }
