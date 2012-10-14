@@ -15,51 +15,69 @@ namespace NapkinCommon
         {
             string responseText = null;
 
-            using (HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri))
+            try
             {
-                request.Method = method;
-                request.Credentials = credential;
-
-                if (requestText != null)
+                using (HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri))
                 {
-                    byte[] buffer = Encoding.UTF8.GetBytes(requestText);
-                    request.ContentLength = buffer.Length;
-                    request.ContentType = "text/plain";
+                    request.Method = method;
+                    request.Credentials = credential;
 
-                    Stream stream = request.GetRequestStream();
-                    stream.Write(buffer, 0, buffer.Length);
-                }
+                    // stayin' alive?
+                    // http://forums.netduino.com/index.php?/topic/2964-every-2nd-webrequest-fails/
+                    request.KeepAlive = false;
 
-                if (readResponse)
-                {
-                    // PollHaveResponse(request);
-                    responseText = GetResponseText(request);
+                    if (requestText != null)
+                    {
+                        byte[] buffer = Encoding.UTF8.GetBytes(requestText);
+                        request.ContentLength = buffer.Length;
+                        request.ContentType = "text/plain";
+
+                        Stream stream = request.GetRequestStream();
+                        stream.Write(buffer, 0, buffer.Length);
+                    }
+
+                    if (readResponse)
+                    {
+                        // PollHaveResponse(request);
+                        responseText = GetResponseText(request);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print("Exception in DoHttpMethod: " + ex.Message);
             }
 
             return responseText;
         }
 
-        public static string GetResponseText(HttpWebRequest request)
+        private static string GetResponseText(HttpWebRequest request)
         {
             string responseText = "";
 
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            try
             {
-                // PollHaveResponse(request);
-
-                int contentLength = (int)response.ContentLength;
-                byte[] buffer = new byte[contentLength];
-                Stream stream = response.GetResponseStream();
-                int i = 0;
-                while (i < contentLength)
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
-                    int readCount = stream.Read(buffer, i, contentLength - i);
-                    i += readCount;
-                }
+                    // PollHaveResponse(request);
 
-                char[] responseChars = Encoding.UTF8.GetChars(buffer);
-                responseText = new string(responseChars);
+                    int contentLength = (int)response.ContentLength;
+                    byte[] buffer = new byte[contentLength];
+                    Stream stream = response.GetResponseStream();
+                    int i = 0;
+                    while (i < contentLength)
+                    {
+                        int readCount = stream.Read(buffer, i, contentLength - i);
+                        i += readCount;
+                    }
+
+                    char[] responseChars = Encoding.UTF8.GetChars(buffer);
+                    responseText = new string(responseChars);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print("Exception in GetResponseText: " + ex.Message);
             }
 
             // PollHaveResponse(request);

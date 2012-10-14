@@ -25,6 +25,47 @@ namespace NapkinCommon
             _cycleCount++;
         }
 
+        private int _postCycleDefault = 12 * 5;
+        private int _postCycle = -1;
+        public int PostCycle { get { return _postCycle; } }
+        public void InitPostCycle()
+        {
+            if (_postCycle != -1) return;
+
+            string postCycleText = ConfigUtil.GetOrInitConfigValue(_napkinServerUri, _deviceId, "post_cycle", _postCycleDefault.ToString(), _credential);
+
+            try
+            {
+                _postCycle = int.Parse(postCycleText);
+            }
+            catch (Exception)
+            {
+                _postCycle = _postCycleDefault;
+                Debug.Print("Error in InitPostCycle: " + postCycleText);
+            }
+        }
+
+        private int _cycleDelayMillisecondsDefault = 5 * 1000;
+        private int _cycleDelayMilliseconds = -1;
+        public int CycleDelayMilliseconds { get { return _cycleDelayMilliseconds; } }
+        public void InitCycleDelayMilliseconds()
+        {
+            if (_cycleDelayMilliseconds != -1) return;
+
+            string cycleDelayMillisecondsText = ConfigUtil.GetOrInitConfigValue(_napkinServerUri, _deviceId, "cycle_delay_milliseconds", _cycleDelayMillisecondsDefault.ToString(), _credential);
+
+            try
+            {
+                _cycleDelayMilliseconds = int.Parse(cycleDelayMillisecondsText);
+            }
+            catch (Exception)
+            {
+                _cycleDelayMilliseconds = _cycleDelayMillisecondsDefault;
+                Debug.Print("Error in InitCycleDelayMilliseconds: " + cycleDelayMillisecondsText);
+            }
+        }
+
+
         private int _deviceStartCountCurrent = -1;
         public void UpdateDeviceStarts()
         {
@@ -47,9 +88,10 @@ namespace NapkinCommon
         }
 
         private string _deviceLocation = "???";
-        public void UpdateDeviceLocation()
+        public string DeviceLocation { get { return _deviceLocation; } }
+        public void UpdateDeviceLocation(bool force = false)
         {
-            if (_deviceLocation != "???") return;
+            if (_deviceLocation != "???" && !force) return;
 
             _deviceLocation = ConfigUtil.GetOrInitConfigValue(_napkinServerUri, _deviceId, "device_location", "???", _credential);
             Debug.Print("Got device_location: " + _deviceLocation);

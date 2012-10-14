@@ -37,14 +37,12 @@ namespace CerbuinoBeeChatterer
 
             temperatureHumidity.MeasurementComplete += new TemperatureHumidity.MeasurementCompleteEventHandler(temperatureHumidity_MeasurementComplete);
 
-            GT.Timer timer = new GT.Timer(_cycleDelayMilliseconds);
-            timer.Tick += new GT.Timer.TickEventHandler(timer_Tick);
-            timer.Start();
+            _cycleThread = new Thread(CycleDriver);
+            _cycleThread.Start();
         }
 
-        private readonly int _postCycle = 6 * 5;
-        private readonly int _configCycle = 3;
-        private readonly int _cycleDelayMilliseconds = 10 * 1000;
+        private readonly int _cycleDelayMillisecondsInitial = 15 * 1000;
+        private Thread _cycleThread;
 
         private SensorCombo _sensors;
         private DeviceVitals _vitals;
@@ -59,24 +57,39 @@ namespace CerbuinoBeeChatterer
             return lightsensor.ReadLightSensorVoltage();
         }
 
-        void timer_Tick(GT.Timer timer)
+        private void CycleDriver()
+        {
+            Debug.Print("cycle thread starting!");
+            Thread.Sleep(_cycleDelayMillisecondsInitial);
+
+            Debug.Print("Starting cycle: " + _vitals.CycleCount + " on device: " + DeviceId);
+            _vitals.MemCheck.Sample();
+
+            _vitals.UpdateDeviceStarts();
+            _vitals.UpdateDeviceLocation();
+
+            _vitals.InitPostCycle();
+            _vitals.InitCycleDelayMilliseconds();
+
+            bool exit = false;
+            while (!exit)
+            {
+                Thread.Sleep(_vitals.CycleDelayMilliseconds);
+                Cycle();
+            }
+
+        }
+
+        private void Cycle()
         {
             _vitals.IncrementCycleCount();
             int cycleCount = _vitals.CycleCount;
-            Debug.Print("Starting cycle: " + cycleCount +" on device: " + DeviceId);
+            Debug.Print("Starting cycle: " + cycleCount + " on device: " + DeviceId + " with postCycle: " + _vitals.PostCycle);
 
-            _vitals.MemCheck.Sample();
-
-            if (cycleCount % _configCycle == 0)
+            if (cycleCount % _vitals.PostCycle == 0)
             {
-                _vitals.UpdateDeviceStarts();
                 _vitals.MemCheck.Sample();
-                _vitals.UpdateDeviceLocation();
-                _vitals.MemCheck.Sample();
-            }
 
-            if (cycleCount % _postCycle == 0)
-            {
                 StringBuilder sb = new StringBuilder();
                 _vitals.AppendStatus(sb);
                 _sensors.AppendStatus(sb);
