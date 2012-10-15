@@ -69,6 +69,18 @@ end
 # put_config('ndp1', 'blinkM_13_hsb', "0,255,42")
 # put_config('ndp1', 'blinkM_14_hsb', "80,255,42")
 # put_config('ndp1', 'blinkM_15_hsb', "160,255,42")
+# put_config('ndp1', 'device_location', "man cave")
+
+# post_config('', 'cerb1')
+# put_config('cerb1', 'device_location', "man cave")
+# put_config('cerb1', 'MulticolorLed_rBg', "0,0,64")
+# put_config('cerb1', 'post_cycle', "30")
+# put_config('cerb1', 'cycle_delay_milliseconds', "5000")
+
+# post_config('', 'cerbee1')
+# put_config('cerbee1', 'device_location', "garage")
+# put_config('cerbee1', 'post_cycle', "60")
+# put_config('cerbee1', 'cycle_delay_milliseconds', "5000")
 
 tasks_test = {
   'napkin#id' => "test",
@@ -114,7 +126,7 @@ props_zh = {
   # alternate url:
   # 'tracker/feeds/feed#url' => "http://www.zerohedge.com/fullrss2.xml",
   'tracker/feeds/feed#refresh_enabled' => true,
-  'tracker/feeds/feed#refresh_frequency_minutes' => 45
+  'tracker/feeds/feed#refresh_frequency_minutes' => 55
 }
 
 props_jesse = {
@@ -122,8 +134,8 @@ props_jesse = {
   'tracker/feeds/feed#name' =>"Jesse's Café Américain",
   'tracker/feeds/feed#url' => "http://feeds.feedburner.com/JessesCafeAmericain?format=xml",
   'tracker/feeds/feed#refresh_enabled' => true,
-  'tracker/feeds/feed#refresh_frequency_minutes' => 55,
-  'tracker/feeds/feed#last_refresh_time_i' => 0
+  'tracker/feeds/feed#refresh_frequency_minutes' => 150,
+  # 'tracker/feeds/feed#last_refresh_time_i' => 0
 }
 
 props_google_news = {

@@ -16,13 +16,27 @@ module Napkin
     class ChatterPostHandler < HttpMethodHandler
       def handle
         return "" unless at_destination?
+        post_time = Time.now
 
         @request.body.rewind
         body_text = @request.body.read
-        
-        puts "CHATTER got:\n#{body_text}"
 
-        return "!!!!!! ChatterPostHandler !!!!!!\n#{body_text}"
+        puts "CHATTER got from #{@user}:\n#{body_text}"
+
+        nn = @nn.dup
+        nn.go_sub!(@user)
+        nn.set_key_prefix('chatter')
+
+        post_count = nn.get_or_init('post_count', -1)
+        post_count += 1
+        nn['post_count'] = post_count
+
+        nn.go_sub!("#{post_count}")
+        nn['post_body'] = body_text
+        nn['post_time_i'] = post_time.to_i
+        nn['post_time_s'] = post_time.to_s
+
+        return "OK"
       end
     end
   end

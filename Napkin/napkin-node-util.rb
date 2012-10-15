@@ -10,7 +10,6 @@ module Napkin
   module NodeUtil
     NAPKIN_ID_INDEX = 'napkin#_index_id'
     NAPKIN_ID_INDEX_FILE = 'napkin_id'
-    
     class NapkinIdIndex
       extend Neo4j::Core::Index::ClassMethods
       include Neo4j::Core::Index
@@ -85,20 +84,27 @@ module Napkin
       end
 
       def go_sub(id)
-        sub = nil
-        nodes = NapkinIdIndex.find(NAPKIN_ID => id)
+        begin
+          # TODO: got exception here after several days of continuous run:
+          ## org.apache.lucene.store.AlreadyClosedException: this IndexReader is closed
+          nodes = NapkinIdIndex.find(NAPKIN_ID => id)
 
-        nodes.each do |n|
-          if (NodeNav.get_sup(n) == @node)
-            sub = n
+          sub = nil
+          nodes.each do |n|
+            if (NodeNav.get_sup(n) == @node)
+              sub = n
+            end
           end
-        end
 
-        if (sub.nil?) then
-          return false
-        else
-          @node = sub
-          return true
+          if (sub.nil?) then
+            return false
+          else
+            @node = sub
+            return true
+          end
+        rescue StandardError => err
+          puts "Error in go_sub: #{err}\n#{err.backtrace}"
+          return false;
         end
       end
 
@@ -216,7 +222,7 @@ module Napkin
           begin
             result = converter_lambda.call(param)
           rescue StandardError => err
-            result = "Error in refresh_feed: #{err}\n#{err.backtrace}"
+            result = "Error in convert: #{err}\n#{err.backtrace}"
             puts result
           end
         end
