@@ -39,6 +39,10 @@ namespace NapkinCommon
                     if (readResponse)
                     {
                         // PollHaveResponse(request);
+
+                        // http://www.tinyclr.com/forum/topic?id=3793   (start at comment 7)
+                        Thread.Sleep(100);
+
                         responseText = GetResponseText(request);
                     }
                 }
