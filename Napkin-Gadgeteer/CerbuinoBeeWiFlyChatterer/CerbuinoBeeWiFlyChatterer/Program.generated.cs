@@ -16,6 +16,8 @@ namespace CerbuinoBeeWiFlyChatterer
     public partial class Program : Gadgeteer.Program
     {
         // GTM.Module definitions
+        Gadgeteer.Modules.Seeed.Barometer barometer;
+        Gadgeteer.Modules.GHIElectronics.Motion_Sensor motion_Sensor;
 
         public static void Main()
         {
@@ -30,7 +32,11 @@ namespace CerbuinoBeeWiFlyChatterer
 
         private void InitializeModules()
         {   
-            // Initialize GTM.Modules and event handlers here.
+            // Initialize GTM.Modules and event handlers here.		
+            motion_Sensor = new GTM.GHIElectronics.Motion_Sensor(1);
+		
+            barometer = new GTM.Seeed.Barometer(2);
+
         }
     }
 }
