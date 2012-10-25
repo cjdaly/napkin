@@ -1,0 +1,838 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.NET</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.NET.TelnetServer">
+            <summary>
+            A telnet server with minimal TELNET and ANSI support
+            </summary>
+            <remarks>
+            I found these links very useful:
+            ANSI escapes: http://isthe.com/chongo/tech/comp/ansi_escapes.html
+            Telnet commands: http://www.networksorcery.com/enp/protocol/telnet.htm
+            </remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer._Sock">
+            <summary>Reference to the socket</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer._Buffer">
+            <summary>Local data buffer</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer._WriteBuffer">
+            <summary>Some commands, like color, will be buffered to avoid small data packets. This actually speeds up the server.</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.#ctor(Toolbox.NETMF.NET.SimpleSocket)">
+            <summary>
+            Creates a new telnet server
+            </summary>
+            <param name="Socket">The socket</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Close">
+            <summary>
+            Closes the connection
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Listen">
+            <summary>
+            Listens and waits until we have a connection
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer._Write(System.String,System.Boolean)">
+            <summary>
+            Writes data to the client
+            </summary>
+            <param name="Data">Data to write</param>
+            <param name="Buffered">When true, data will be sent in front of the next packet</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer._Write(System.Char[],System.Boolean)">
+            <summary>
+            Writes data to the client
+            </summary>
+            <param name="Data">Data to write</param>
+            <param name="Buffered">When true, data will be sent in front of the next packet</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Beep">
+            <summary>
+            Sends a beep to the client
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer._Read">
+            <summary>
+            Reads data from the client
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Input(System.Int32,System.Boolean)">
+            <summary>
+            Reads out input from the terminal
+            </summary>
+            <param name="Length">The amount of bytes to read, if 0, it reads until a carriage return</param>
+            <param name="Blocking">When set to false, it won't wait for data, it will just return empty if there's no data</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Print(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Prints a text to the screen
+            </summary>
+            <param name="Text">Text to print</param>
+            <param name="NoNewLine">Normally a Print call will print the text and go to the next line. Set this to true to avoid that behaviour.</param>
+            <param name="Buffered">When true, data won't be sent immediately but stored in a buffer.</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.ClearScreen">
+            <summary>Clears the terminal's screen</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Color(Toolbox.NETMF.NET.TelnetServer.Colors)">
+            <summary>
+            Sets the terminal colors
+            </summary>
+            <param name="Foreground">Forground color</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Color(Toolbox.NETMF.NET.TelnetServer.Colors,Toolbox.NETMF.NET.TelnetServer.Colors)">
+            <summary>
+            Sets the terminal colors
+            </summary>
+            <param name="Foreground">Forground color</param>
+            <param name="Background">Background color</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Locate(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Moves the cursor position
+            </summary>
+            <param name="Line">Line (starts at 1 instead of 0!)</param>
+            <param name="Column">Column (starts at 1 instead of 0!)</param>
+            <param name="Buffered">When true, data won't be sent immediately but stored in a buffer.</param>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.TelnetServer.EchoEnabled">
+            <summary>When true, user inputted data gets echoed</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.TelnetServer.InputBuffer">
+            <summary>
+            Returns the amount of bytes waiting for this.Input()
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.TelnetServer.RemoteAddress">
+            <summary>The client address</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.TelnetServer.IsConnected">
+            <summary>
+            True when there's a connection
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.TelnetServer.Colors">
+            <summary>Available colors</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Black">
+            <summary>Black</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Blue">
+            <summary>Blue</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Green">
+            <summary>Green</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Cyan">
+            <summary>Cyan</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Red">
+            <summary>Red</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Magenta">
+            <summary>Magenta</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Brown">
+            <summary>Brown/orange</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.White">
+            <summary>White</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Gray">
+            <summary>Gray</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.LightBlue">
+            <summary>Light blue</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.LightGreen">
+            <summary>Light green</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.LightCyan">
+            <summary>Light cyan</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.LightRed">
+            <summary>Light red</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.LightMagenta">
+            <summary>Light magenta</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Yellow">
+            <summary>Yellow</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.HighIntensityWhite">
+            <summary>High-intensity white</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.TerminalDefault">
+            <summary>The default of the terminal</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.HTTP_Client">
+            <summary>
+            Simple HTTP Client
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.HTTP_Client._Socket">
+            <summary>Reference to the socket</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.HTTP_Client._Cookies">
+            <summary>Contains all cookies</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.HTTP_Client._Username">
+            <summary>When using HTTP Authentication, the username is stored here</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.HTTP_Client._Password">
+            <summary>When using HTTP Authentication, the password is stored here</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.#ctor(Toolbox.NETMF.NET.SimpleSocket)">
+            <summary>
+            Initializes a web session
+            </summary>
+            <param name="Socket">The socket to use (default TCP port for HTTP is 80)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.Authenticate(System.String,System.String)">
+            <summary>
+            When a Username is specified, HTTP Authentication will be used
+            </summary>
+            <param name="Username">The username</param>
+            <param name="Password">The password</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.SetCookie(System.String,System.String)">
+            <summary>
+            Saves cookie data to the memory
+            </summary>
+            <param name="Key">The cookie name</param>
+            <param name="Value">The cookie value (Needs to be URL Encoded!)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.Get(System.String,System.String)">
+            <summary>
+            Executes a GET request and returns the HTTP response
+            </summary>
+            <param name="Url">Path to request</param>
+            <param name="Arguments">Request arguments</param>
+            <returns>HTTP response</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.Post(System.String,System.String)">
+            <summary>
+            Executes a POST request and returns the HTTP response
+            </summary>
+            <param name="Url">Path to request</param>
+            <param name="Arguments">Request arguments</param>
+            <returns>HTTP response</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client._DoRequest(System.String)">
+            <summary>
+            Actually executes a request
+            </summary>
+            <param name="RequestData">The Request Data</param>
+            <returns>The HTTP Response</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client._ParseHeaders(System.String[])">
+            <summary>
+            Parses the headers from a response and processes all cookies
+            </summary>
+            <param name="HTTP_Headers">The response headers</param>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.Hostname">
+            <summary>Returns the hostname of the webserver</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.Port">
+            <summary>Returns the port the webserver should listen to</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.Referrer">
+            <summary>The referrer for the next HTTP request (will automaticly be filled when a page is requested)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.UserAgent">
+            <summary>The user agent header we send with the HTTP request</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.Accept">
+            <summary>The Accept-header we send with the HTTP request</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.AcceptLanguage">
+            <summary>The Accept Language-header we send with the HTTP request</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response">
+            <summary>
+            HTTP Response container
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.GetAllHeaders">
+            <summary>Returns all response headers</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.ToString">
+            <summary>Returns the webserver's response body</summary>
+            <returns>The webserver's response body</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.ResponseHeader(System.String)">
+            <summary>
+            Reads out a specific header
+            </summary>
+            <param name="Header">The name of the header</param>
+            <returns>The value of the header</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.#ctor(System.String)">
+            <summary>
+            Creates a new HTTP Response object based on some response data from the webserver
+            </summary>
+            <param name="ResponseData">The response data from the webserver</param>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.ResponseBody">
+            <summary>Returns the response body</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.ResponseCode">
+            <summary>Returns the response </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SMTP_Client">
+            <summary>
+            .NETMF SMTP Client
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client._SMTP_Auth">
+            <summary>Reference to the SMTP authentication type</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client._SMTP_User">
+            <summary>Reference to the SMTP authentication username</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client._SMTP_Pass">
+            <summary>Reference to the SMTP authentication password</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client._LocalHostname">
+            <summary>Local host name, used for identifying the mail client</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client._Socket">
+            <summary>Reference to the socket</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.#ctor(Toolbox.NETMF.NET.SimpleSocket,Toolbox.NETMF.NET.SMTP_Client.AuthenticationTypes,System.String,System.String)">
+            <summary>
+            Initializes a mail sender
+            </summary>
+            <param name="Socket">The socket to use (default TCP port for SMTP is 25)</param>
+            <param name="AuthenticationType">The form of SMTP Authentication (default: no authentication)</param>
+            <param name="Username">Username for the SMTP server (when using authentication)</param>
+            <param name="Password">Password for the SMTP server (when using authentication)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.Send(Toolbox.NETMF.NET.SMTP_Client.MailMessage,Toolbox.NETMF.NET.SMTP_Client.MailContact,Toolbox.NETMF.NET.SMTP_Client.MailContact[],Toolbox.NETMF.NET.SMTP_Client.MailContact[],Toolbox.NETMF.NET.SMTP_Client.MailContact[])">
+            <summary>
+            Sends a message
+            </summary>
+            <param name="Message">The message to send</param>
+            <param name="From">The sender (From: header)</param>
+            <param name="To">A list of recipients (To: header)</param>
+            <param name="CC">A list of recipients (CC: header)</param>
+            <param name="BCC">A list of recipients (in no header at all)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.Send(Toolbox.NETMF.NET.SMTP_Client.MailMessage,Toolbox.NETMF.NET.SMTP_Client.MailContact,Toolbox.NETMF.NET.SMTP_Client.MailContact)">
+            <summary>
+            Sends a message
+            </summary>
+            <param name="Message">The message to send</param>
+            <param name="From">The sender (From: header)</param>
+            <param name="To">The recipient (To: header)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client._Send(System.String,System.String[],System.String)">
+            <summary>
+            Actually sends a message
+            </summary>
+            <param name="From">The mail address of the sender</param>
+            <param name="Recipients">The mail addresses of all recipients (To, CC and BCC)</param>
+            <param name="Data">The data, including headers</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client._RFC2822_Date">
+            <summary>
+            Returns the date formatted for mail headers
+            </summary>
+            <returns>The date formatted for mail headers</returns>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SMTP_Client.MailContact">
+            <summary>
+            Small container for mail contacts
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.MailContact.ToString">
+            <summary>Returns the name and mail address as a string</summary>
+            <returns>Returns the name and mail address as a string</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.MailContact.#ctor(System.String,System.String)">
+            <summary>Creates a new mail contact</summary>
+            <param name="MailAddress">The mail address of the person</param>
+            <param name="Name">The full name of the person</param>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailContact.Name">
+            <summary>The full name of the person</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailContact.MailAddress">
+            <summary>The mail address of the person</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SMTP_Client.MailMessage">
+            <summary>
+            Container for mail messages
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client.MailMessage._Priority">
+            <summary>Contains the priority</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.MailMessage.ToString">
+            <summary>Returns the mailbody</summary>
+            <returns>Returns the mailbody</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.MailMessage.#ctor(System.String,System.String)">
+            <summary>Creates a new mail message</summary>
+            <param name="Subject">The subject of the mail</param>
+            <param name="Body">The body of the mail</param>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailMessage.Subject">
+            <summary>The subject of the mail</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailMessage.Body">
+            <summary>The body of the mail</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailMessage.ContentType">
+            <summary>Content type of the mail (default: text/plain)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailMessage.CharacterSet">
+            <summary>Character set of the mail (default: us-ascii)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailMessage.Priority">
+            <summary>Defines the priority of the mail (1 to 5, default: 3)</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SMTP_Client.AuthenticationTypes">
+            <summary>
+            Supported authentication types
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client.AuthenticationTypes.None">
+            <summary>No authentication is used</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client.AuthenticationTypes.Login">
+            <summary>Login authentication is used</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.POP3_Client">
+            <summary>
+            .NETMF POP3 Client
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.POP3_Client._POP3_User">
+            <summary>Reference to the POP3 username</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.POP3_Client._POP3_Pass">
+            <summary>Reference to the POP3 password</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.POP3_Client._Socket">
+            <summary>Reference to the socket wrapper</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.POP3_Client._MessageCount">
+            <summary>The amount of messages on the server</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.POP3_Client._BoxSize">
+            <summary>The size of the mailbox on the server in bytes</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.#ctor(Toolbox.NETMF.NET.SimpleSocket,System.String,System.String)">
+            <summary>
+            Initializes a mail client
+            </summary>
+            <param name="Socket">The socket to use (default TCP port for POP3 is 110)</param>
+            <param name="Username">Username for the POP3 server</param>
+            <param name="Password">Password for the POP3 server</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.Connect">
+            <summary>Connects to the POP3 server</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client._Stat">
+            <summary>
+            Updates the current mailbox statistics
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client._Top(System.UInt32)">
+            <summary>
+            Fetches the headers of a mail message
+            </summary>
+            <param name="Id">The message Id</param>
+            <returns>The headers as one big string</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.FetchBody(System.UInt32,System.Boolean)">
+            <summary>
+            Fetches the body of a mail message
+            </summary>
+            <param name="Id">The message Id</param>
+            <param name="IncludeHeaders">When true, mail headers will also be included</param>
+            <returns></returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.FetchHeaders(System.UInt32)">
+            <summary>
+            Fetches the headers of a mail message
+            </summary>
+            <param name="Id">The message Id</param>
+            <returns>An array with a header in each index</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.FetchHeaders(System.UInt32,System.String[])">
+            <summary>
+            Fetches specific headers of a mail message
+            </summary>
+            <param name="Id">The message Id</param>
+            <param name="Headers">The names of the headers</param>
+            <returns>An array with a header in each index</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.ListMails(System.UInt32[]@,System.UInt32[]@)">
+            <summary>
+            Fetches a list of emails from the server
+            </summary>
+            <param name="Id">The unique ID of the mail (unique for the current session)</param>
+            <param name="Size">The size of the mail in bytes</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.Close">
+            <summary>Closes the connection</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.POP3_Client.MessageCount">
+            <summary>The amount of messages on the server</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.POP3_Client.BoxSize">
+            <summary>The size of the mailbox on the server in bytes</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.POP3_Client.IsConnected">
+            <summary>Returns true when connected</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SimpleSocket">
+            <summary>
+            Simplifies usage of sockets in .NETMF
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.Listen">
+            <summary>
+            Listens on the port instead of connecting remotely
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.NtpLookup">
+            <summary>
+            Returns a timestamp from an NTP server
+            </summary>
+            <returns>The amount of seconds since 1 jan. 1900</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.Connect(Toolbox.NETMF.NET.SimpleSocket.SocketProtocol)">
+            <summary>
+            Connects to the remote host
+            </summary>
+            <param name="Protocol">The protocol to be used</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.Close">
+            <summary>
+            Closes the connection
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.Send(System.String)">
+            <summary>
+            Sends string data to the socket
+            </summary>
+            <param name="Data">The string to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.SendBinary(System.Byte[])">
+            <summary>
+            Sends binary data to the socket
+            </summary>
+            <param name="Data">The binary data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.Receive(System.Boolean)">
+            <summary>
+            Receives data from the socket
+            </summary>
+            <param name="Block">When true, this function will wait until there is data to return</param>
+            <returns>The received data (may be empty)</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.ReceiveBinary(System.Int32)">
+            <summary>
+            Receives binary data from the socket (line endings aren't used with this method)
+            </summary>
+            <param name="Length">The amount of bytes to receive</param>
+            <returns>The binary data</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.FeatureImplemented(Toolbox.NETMF.NET.SimpleSocket.SocketFeatures)">
+            <summary>
+            Checks if a feature is implemented
+            </summary>
+            <param name="Feature">The feature to check for</param>
+            <returns>True if the feature is implemented</returns>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SimpleSocket.LineEnding">
+            <summary>When LineEnding contains data, <see cref="M:Toolbox.NETMF.NET.SimpleSocket.Receive(System.Boolean)"/> will only return data when <see cref="P:Toolbox.NETMF.NET.SimpleSocket.LineEnding"/> is reached</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SimpleSocket.IsConnected">
+            <summary>
+            Returns true when connected, otherwise false
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SimpleSocket.Hostname">
+            <summary>Returns the hostname this socket is configured for/connected to</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SimpleSocket.Port">
+            <summary>Returns the port number this socket is configured for</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SimpleSocket.BytesAvailable">
+            <summary>
+            Requests the amount of bytes available in the buffer
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SimpleSocket.SocketProtocol">
+            <summary>
+            Supported protocols
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketProtocol.TcpStream">
+            <summary>The socket will work as a TCP Stream</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketProtocol.UdpDatagram">
+            <summary>The socket will work as a UDP Datagram</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SimpleSocket.SocketFeatures">
+            <summary>
+            Possible features
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketFeatures.TcpStream">
+            <summary>When the socket has support for a TCP Stream</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketFeatures.UdpDatagram">
+            <summary>When the socket has support for a UDP Datagram</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketFeatures.NtpClient">
+            <summary>When the socket has support for built-in NTP</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketFeatures.TcpListener">
+            <summary>When the socket can also listen to a local port</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SNTP_Client">
+            <summary>
+            Simple Network Time Protocol client
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SNTP_Client._Socket">
+            <summary>Reference to the socket</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SNTP_Client.#ctor(Toolbox.NETMF.NET.SimpleSocket)">
+            <summary>
+            Creates a connection to a NTP server
+            </summary>
+            <param name="Socket">The socket to use (default UDP port for NTP is 123)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SNTP_Client.Synchronize">
+            <summary>
+            Synchronizes the MCU with the NTP-server
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SNTP_Client.Hostname">
+            <summary>Returns the hostname of the NTP server</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SNTP_Client.Port">
+            <summary>Returns the UDP port number of the NTP server</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SNTP_Client.Timestamp">
+            <summary>
+            The amount of seconds since 1 jan. 1900
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SNTP_Client.UTCDate">
+            <summary>
+            The UTC time as DateTime object
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SNTP_Client.LocalDate">
+            <summary>
+            The local time as DateTime object
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.IRC_Client">
+            <summary>
+            IRC Client
+            </summary>
+            <remarks>
+            This client contains the most basic features to stay connected to an IRC server.
+            It can also reply to the CTCP commands VERSION, TIME and PING.
+            To disable or change the CTCP replies, just create your own OnCtcpRequest method.
+            </remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Socket">
+            <summary>Contains the socket wrapper</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._LoopThread">
+            <summary>Main loop thread</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Nickname">
+            <summary>The nickname of the client</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Username">
+            <summary>The username of the client</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Fullname">
+            <summary>The full name of the client</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Password">
+            <summary>Optional password</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._ClientVersion">
+            <summary>Contains the clientversion</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Authenticated">
+            <summary>True when the user is authenticated by the remote server</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._ServerName">
+            <summary>Contains the name of the IRC server</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.#ctor(Toolbox.NETMF.NET.SimpleSocket,System.String,System.String,System.String,System.String)">
+            <summary>
+            Connects to an IRC server
+            </summary>
+            <param name="Socket">The socket to use</param>
+            <param name="Nickname">Nickname</param>
+            <param name="Username">Username (optional)</param>
+            <param name="Fullname">Full name (optional)</param>
+            <param name="Password">Password to connect to the server (optional)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Dispose">
+            <summary>
+            Disposes this object
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Connect">
+            <summary>
+            Connects to the IRC server
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Disconnect">
+            <summary>
+            Closes the connection
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client._Loop">
+            <summary>
+            Main loop
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client._DataReceived(System.String)">
+            <summary>Triggered for every line of data received by the server</summary>
+            <param name="Data">The received line of data</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.CtcpResponse(System.String,System.String)">
+            <summary>Sends a CTCP Response</summary>
+            <param name="Recipient">The recipient (may be a user or a channel)</param>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.CtcpRequest(System.String,System.String)">
+            <summary>Sends a CTCP Request</summary>
+            <param name="Recipient">The recipient (may be a user or a channel)</param>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Action(System.String,System.String)">
+            <summary>Sends an action</summary>
+            <param name="Recipient">The recipient (may be a user or a channel)</param>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Notice(System.String,System.String)">
+            <summary>Sends a notice</summary>
+            <param name="Recipient">The recipient (may be a user or a channel)</param>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Message(System.String,System.String)">
+            <summary>Sends a message</summary>
+            <param name="Recipient">The recipient (may be a user or a channel)</param>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Join(System.String,System.String)">
+            <summary>
+            Joins one or more channels
+            </summary>
+            <param name="Channels">The channel to join (multiple can be comma seperated)</param>
+            <param name="Passwords">Optional, the password(s) to join the channel(s)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Part(System.String,System.String)">
+            <summary>
+            Parts a channel
+            </summary>
+            <param name="Channel">The channel to leave</param>
+            <param name="Reason">The reason to leave the channel (optional)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.SendRaw(System.String)">
+            <summary>
+            Sends raw data to the remote server
+            </summary>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.SplitRawData(System.String)">
+            <summary>
+            Splits data according to the IRC protocol
+            </summary>
+            <param name="Data">Input data</param>
+            <returns>Output data</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.SplitName(System.String)">
+            <summary>
+            Returns the username splitted (many IRCds send "[nickname]![username]@[hostname]")
+            </summary>
+            <param name="Name">The full name</param>
+            <returns>An array with 3 values: nickname, username, hostname</returns>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IRC_Client.ClientVersion">
+            <summary>Returns the clientversion</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IRC_Client.Authenticated">
+            <summary>True when the user is authenticated by the remote server</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IRC_Client.ServerName">
+            <summary>Returns the name of the IRC server</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IRC_Client.Nickname">
+            <summary>
+            Gets or sets the nickname
+            </summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnRawReceived">
+            <summary>Event triggered when raw data is received from the remote server</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnNotice">
+            <summary>Event triggered when a notice is received</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnMessage">
+            <summary>Event triggered when a message is received</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnAction">
+            <summary>Event triggered when an action is received</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnCtcpRequest">
+            <summary>Event triggered when a CTCP-request is received</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnCtcpReply">
+            <summary>Event triggered when a CTCP-reply is received</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnAuthenticated">
+            <summary>Event triggered when the user is fully logged in</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnJoin">
+            <summary>Event triggered when a user joins a channel</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnPart">
+            <summary>Event triggered when a user parts a channel</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnQuit">
+            <summary>Event triggered when a user quits the server</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnKick">
+            <summary>Event triggered when a user is kicked from a channel</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnNick">
+            <summary>Event triggered when a user changes its name</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IRC_Client.Time">
+            <summary>Gets the current local time</summary>
+            <returns>The local time as string</returns>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.IRC_Client.OnStringReceived">
+            <summary>Event triggered when string data is received</summary>
+            <param name="Sender">The sender of the data</param>
+            <param name="Target">The target of the data</param>
+            <param name="Data">The data</param>
+            <remarks>A very generic method, can be used for a lot of events</remarks>
+        </member>
+    </members>
+</doc>

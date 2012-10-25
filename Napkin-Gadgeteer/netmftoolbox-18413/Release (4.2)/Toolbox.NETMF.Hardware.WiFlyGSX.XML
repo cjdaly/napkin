@@ -1,0 +1,318 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.WiFlyGSX</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.WiFlyGSX">
+            <summary>
+            Roving Networks WiFly GSX module driver
+            </summary>
+            <remarks>
+            This class is based on the Roving Networks manual found at http://www.rovingnetworks.com/files/resources/WiFly-RN-UM-2.31-v-0.1r.pdf
+            The class has been tested with a RN-XV board containing an RN-171 module containing the 2.27 firmware.
+            The implementation is not 100% perfect, but it works for most applications.
+            As mentioned in the Apache 2.0 license note above, no guarantees can be given, I just hope this code might be of help.
+            </remarks>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX.#ctor(System.String,System.Int32,System.String,System.Boolean)">
+            <summary>
+            Initializes the WiFly GSX Module
+            </summary>
+            <param name="PortName">The serial port the module is connected to</param>
+            <param name="BaudRate">The setup speed of the serial port</param>
+            <param name="CommandChar">The character used to enter command mode</param>
+            <param name="DebugMode">Enables debug mode</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX.Dispose">
+            <summary>Disposes this object</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX.DnsLookup(System.String)">
+            <summary>
+            Looks up the IP address of a hostname
+            </summary>
+            <param name="Hostname">The hostname</param>
+            <returns>The IP address</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX.NtpLookup(System.String,System.UInt16)">
+            <summary>
+            Returns the amount of seconds passed since 1 jan. 1900
+            </summary>
+            <param name="IpAddress">The IP address of an NTP server</param>
+            <param name="Port">The UDP port of the NTP server</param>
+            <returns>The amount of seconds passed since 1 jan. 1900</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX.EnableDHCP">
+            <summary>
+            Enables DHCP
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX.EnableStaticIP(System.String,System.String,System.String,System.String)">
+            <summary>
+            Enables and configures a static IP address
+            </summary>
+            <param name="IPAddress">The IP address</param>
+            <param name="SubnetMask">The subnet mask</param>
+            <param name="Gateway">The gateway</param>
+            <param name="DNS">The DNS server</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX.JoinNetwork(System.String,System.Int32,Toolbox.NETMF.Hardware.WiFlyGSX.AuthMode,System.String,System.Int32)">
+            <summary>
+            Joins a wireless network
+            </summary>
+            <param name="SSID">The name of the wireless network</param>
+            <param name="Channel">The channel the AP is listening on (0 for autodetect)</param>
+            <param name="Authentication">The method for authentication</param>
+            <param name="Key">The shared key required to join the network (WEP / WPA)</param>
+            <param name="KeyIndex">The index of the key (WEP only)</param>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX._SocketOpenString">
+            <summary>Identifier for the beginning of a stream</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX._SocketCloseString">
+            <summary>Identifier for the end of a stream</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX.OpenSocket(System.String,System.UInt16,System.Int32)">
+            <summary>
+            Opens a TCP socket
+            </summary>
+            <param name="Hostname">Remote hostname</param>
+            <param name="Port">Remote port</param>
+            <param name="Timeout">Socket timeout in ms</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX.CloseSocket">
+            <summary>Closes a TCP socket</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX.SocketWrite(System.String)">
+            <summary>
+            Writes data to the socket
+            </summary>
+            <param name="WriteBuffer">Data to write</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX.SocketRead(System.Int32,System.String)">
+            <summary>
+            Reads data from the socket
+            </summary>
+            <param name="Length">The amount of bytes to read (-1 is everything)</param>
+            <param name="UntilReached">Read until this string is reached (empty is no ending)</param>
+            <returns>The data</returns>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX._Mode">
+            <summary>Current state of the serial connection</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX._SerialPort_TextBuffer">
+            <summary>Buffer while in Idle or Command Mode</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX._SerialPort_StreamBuffer">
+            <summary>Buffer while in Stream mode</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX._SerialPort_EndStreamCheck">
+            <summary>Buffer that will contain the last _SocketCloseString.length bytes</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX._SerialPort">
+            <summary>Reference to the serial port</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX._SerialPort_Write(System.String)">
+            <summary>Writes raw data to the WiFly module</summary>
+            <param name="Text">Data to write</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX._SerialPort_DataReceived(System.Object,System.IO.Ports.SerialDataReceivedEventArgs)">
+            <summary>The WiFly module sent us data</summary>
+            <param name="sender">Reference to this._Port</param>
+            <param name="e">Event data</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX._SerialPort_LineReceived(System.String)">
+            <summary>The WiFly module sent us a line of text</summary>
+            <param name="Text">The text</param>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX._CommandMode_InitString">
+            <summary>Contains the init string to enter command mode</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX._CommandMode_LineReceived(System.String)">
+            <summary>The WiFly module sent us a line of text during Command Mode</summary>
+            <param name="Text">The text</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX._CommandMode_GetInfo(System.String,System.Int32)">
+            <summary>Executes a command and returns its answer</summary>
+            <param name="Command">The command</param>
+            <param name="Answers">The amount of lines to be expected</param>
+            <returns>The answer</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX._CommandMode_Exec(System.String)">
+            <summary>Executes a command and wait for it's response</summary>
+            <param name="Command">The command</param>
+            <returns>True if it returned AOK</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX._CommandMode_ReadValue(System.String,System.String)">
+            <summary>Reads a value from the config</summary>
+            <param name="List">The config chapter</param>
+            <param name="Key">The config name</param>
+            <returns>The value</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX._CommandMode_ReadValue(System.String,System.String,System.String)">
+            <summary>Reads a value from the config</summary>
+            <param name="List">The config chapter</param>
+            <param name="SubList">The config subchapter</param>
+            <param name="Key">The config name</param>
+            <returns>The value</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX._CommandMode_Start">
+            <summary>
+            Enters the command mode
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX._CommandMode_Stop">
+            <summary>
+            Leaves the command mode
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiFlyGSX._DebugPrint(System.Char,System.String)">
+            <summary>Does some logging</summary>
+            <param name="Flag">Type of data: (I)ncoming / (O)utgoing / (D)ebug</param>
+            <param name="Text">Text to debug</param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiFlyGSX.MacAddress">
+            <summary>Returns the MAC address of the WiFly module</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiFlyGSX.LocalIP">
+            <summary>Returns the local IP</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiFlyGSX.RemoteHostname">
+            <summary>Returns the remote hostname</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiFlyGSX.RemotePort">
+            <summary>Returns the remote port</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiFlyGSX.SocketConnected">
+            <summary>Returns wether we're connected to a remote host</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiFlyGSX.SocketBufferLength">
+            <summary>Returns the length of the socket buffer</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiFlyGSX.ModuleVersion">
+            <summary>Returns the version of the WiFly module</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiFlyGSX.DebugMode">
+            <summary>When true, debugging is enabled</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.WiFlyGSX.AuthMode">
+            <summary>Supported wifi authentication modes</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX.AuthMode.Open">
+            <summary>No encryption at all. Are you insane?!?!?</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX.AuthMode.WEP_128">
+            <summary>128-bit Wired Equivalent Privacy (WEP)</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX.AuthMode.WPA1">
+            <summary>Wi-Fi Protected Access (WPA)</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX.AuthMode.MixedWPA1_WPA2">
+            <summary>Mixed WPA1 &amp; WPA2-PSK</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX.AuthMode.WPA2_PSK">
+            <summary>Wi-Fi Protected Access (WPA) II with preshared key</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.WiFlyGSX.Modes">
+            <summary>Possible states of the serial connection</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX.Modes.Idle">
+            <summary>Not in Command Mode nor connected</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX.Modes.CommandMode">
+            <summary>In Command Mode</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX.Modes.Connecting">
+            <summary>Trying to connect</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiFlyGSX.Modes.StreamingMode">
+            <summary>Connected</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.WiFlySocket">
+            <summary>
+            Simplifies usage of sockets for the WiFly module
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.WiFlySocket._NetworkInterface">
+            <summary>Reference to the network interface</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.WiFlySocket._Hostname">
+            <summary>The remote host name</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.WiFlySocket._Port">
+            <summary>The remote TCP port</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.WiFlySocket.#ctor(System.String,System.UInt16,Toolbox.NETMF.Hardware.WiFlyGSX)">
+            <summary>
+            Creates a new socket based on the WiFly socket TCP stack
+            </summary>
+            <param name="Hostname">The hostname to connect to</param>
+            <param name="Port">The port to connect to</param>
+            <param name="NetworkInterface">Reference to the WiFly module</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.WiFlySocket.NtpLookup">
+            <summary>
+            Returns a timestamp from an NTP server
+            </summary>
+            <returns>The amount of seconds since 1 jan. 1900</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.WiFlySocket.Connect(Toolbox.NETMF.NET.SimpleSocket.SocketProtocol)">
+            <summary>
+            Connects to the remote host
+            </summary>
+            <param name="Protocol">The protocol to be used</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.WiFlySocket.Close">
+            <summary>
+            Closes the connection
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.WiFlySocket.Send(System.String)">
+            <summary>
+            Sends string data to the socket
+            </summary>
+            <param name="Data">The string to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.WiFlySocket.SendBinary(System.Byte[])">
+            <summary>
+            Sends binary data to the socket
+            </summary>
+            <param name="Data">The binary data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.WiFlySocket.Receive(System.Boolean)">
+            <summary>
+            Receives data from the socket
+            </summary>
+            <param name="Block">When true, this function will wait until there is data to return</param>
+            <returns>The received data (may be empty)</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.WiFlySocket.ReceiveBinary(System.Int32)">
+            <summary>
+            Receives binary data from the socket (line endings aren't used with this method)
+            </summary>
+            <param name="Length">The amount of bytes to receive</param>
+            <returns>The binary data</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.WiFlySocket.FeatureImplemented(Toolbox.NETMF.NET.SimpleSocket.SocketFeatures)">
+            <summary>
+            Checks if a feature is implemented
+            </summary>
+            <param name="Feature">The feature to check for</param>
+            <returns>True if the feature is implemented</returns>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.WiFlySocket.IsConnected">
+            <summary>
+            Returns true when connected, otherwise false
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.WiFlySocket.Hostname">
+            <summary>Returns the hostname this socket is configured for</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.WiFlySocket.Port">
+            <summary>Returns the port number this socket is configured for</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.WiFlySocket.BytesAvailable">
+            <summary>Requests the amount of bytes available in the buffer</summary>
+        </member>
+    </members>
+</doc>
