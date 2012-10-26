@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
+using System.IO.Ports;
 using Microsoft.SPOT;
+using Microsoft.SPOT.Hardware;
 using Microsoft.SPOT.Presentation;
 using Microsoft.SPOT.Presentation.Controls;
 using Microsoft.SPOT.Presentation.Media;
@@ -29,6 +31,8 @@ namespace CerbuinoBeeWiFlyChatterer
             barometer.MeasurementComplete += new Barometer.MeasurementCompleteEventHandler(barometer_MeasurementComplete);
             motion_Sensor.Motion_Sensed += new Motion_Sensor.Motion_SensorEventHandler(motion_Sensor_Motion_Sensed);
 
+            InitSerLcd();
+
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
         }
@@ -46,6 +50,8 @@ namespace CerbuinoBeeWiFlyChatterer
             Debug.Print("cycle thread starting!");
             Thread.Sleep(_cycleDelayMillisecondsInitial);
 
+            TestSerLcd("Marah is 5");
+
             Debug.Print("Starting cycle: " + _cycleCount + " on device: " + DeviceId);
             JoinNetwork();
 
@@ -61,6 +67,8 @@ namespace CerbuinoBeeWiFlyChatterer
         {
             _cycleCount++;
             Debug.Print("Starting cycle: " + _cycleCount + " on device: " + DeviceId);
+
+            WriteSerLcd("cycle: " + _cycleCount + "\n");
 
             barometer.RequestMeasurement();
 
@@ -109,7 +117,48 @@ namespace CerbuinoBeeWiFlyChatterer
 
         void motion_Sensor_Motion_Sensed(Motion_Sensor sender, Motion_Sensor.Motion_SensorState state)
         {
-            Debug.Print("motion: " + state);
+            Debug.Print("motion: " + state + ", active: " + sender.SensorStillActive);
+        }
+
+        //
+        // SerLCD ?
+        //
+
+        private SerialPort _serLcdPort;
+        private readonly string _portName = Serial.COM1;
+
+        private void InitSerLcd()
+        {
+            _serLcdPort = new SerialPort(_portName, 9600, Parity.None, 8, StopBits.One);
+            _serLcdPort.Open();
+        }
+
+        public bool TestSerLcd(String message)
+        {
+            // clear screen
+            _serLcdPort.Write(new byte[] { 0xFE, 0x01 }, 0, 2);
+
+            WriteSerLcd("Hello World");
+            WriteSerLcd(message, 64);
+
+            return true;
+        }
+
+        private byte[] _serLcdBuffer = new byte[40];
+        private void WriteSerLcd(String message, int position = 0)
+        {
+            int i = 0;
+            if (position != 0)
+            {
+                _serLcdBuffer[i++] = (byte)(0xFE);
+                _serLcdBuffer[i++] = (byte)(0x80 + position);
+            }
+
+            foreach (char c in message)
+            {
+                _serLcdBuffer[i++] = (byte)c;
+            }
+            _serLcdPort.Write(_serLcdBuffer, 0, i);
         }
     }
 }
