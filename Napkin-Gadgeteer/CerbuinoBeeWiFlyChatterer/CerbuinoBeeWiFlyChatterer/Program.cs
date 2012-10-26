@@ -68,7 +68,8 @@ namespace CerbuinoBeeWiFlyChatterer
             _cycleCount++;
             Debug.Print("Starting cycle: " + _cycleCount + " on device: " + DeviceId);
 
-            WriteSerLcd("cycle: " + _cycleCount + "\n");
+            ClearSerLcd();
+            WriteSerLcd("cycle: " + _cycleCount);
 
             barometer.RequestMeasurement();
 
@@ -125,7 +126,7 @@ namespace CerbuinoBeeWiFlyChatterer
         //
 
         private SerialPort _serLcdPort;
-        private readonly string _portName = Serial.COM1;
+        private readonly string _portName = Serial.COM3;
 
         private void InitSerLcd()
         {
@@ -133,10 +134,14 @@ namespace CerbuinoBeeWiFlyChatterer
             _serLcdPort.Open();
         }
 
+        public void ClearSerLcd()
+        {
+            _serLcdPort.Write(new byte[] { 0xFE, 0x01 }, 0, 2);
+        }
+
         public bool TestSerLcd(String message)
         {
-            // clear screen
-            _serLcdPort.Write(new byte[] { 0xFE, 0x01 }, 0, 2);
+            ClearSerLcd();
 
             WriteSerLcd("Hello World");
             WriteSerLcd(message, 64);
