@@ -65,10 +65,10 @@
     <Reference Include="GHIElectronics.Gadgeteer.FEZCerbuinoBee, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="GTM.GHIElectronics.Motion_Sensor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="GTM.Seeed.Barometer, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="GTM.Seeed.Barometer, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="GTM.Seeed.MoistureSensor, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Microsoft.SPOT.Graphics" />
@@ -114,5 +114,11 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Napkin-NetMF-Common\NapkinCommon\NapkinCommon\NapkinCommon.csproj">
+      <Project>{A051E60E-D7AC-4350-8199-92722001B579}</Project>
+      <Name>NapkinCommon</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
