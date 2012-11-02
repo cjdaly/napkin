@@ -18,6 +18,7 @@ using Toolbox.NETMF.NET;
 using Gadgeteer.Modules.Seeed;
 
 using NapkinCommon;
+using Gadgeteer.Modules.GHIElectronics;
 
 namespace CerbuinoBeeWiFlyChatterer
 {
@@ -64,7 +65,7 @@ namespace CerbuinoBeeWiFlyChatterer
 
             MemCheck.Sample();
             Debug.Print("Starting cycle: " + _cycleCount + " on device: " + DeviceId + " ... MemCheck:\n" + MemCheck.GetStatus());
-            //JoinNetwork();
+            JoinNetwork();
 
             MemCheck.Reset();
             MemCheck.Sample();
@@ -83,17 +84,19 @@ namespace CerbuinoBeeWiFlyChatterer
             Debug.Print("Starting cycle: " + _cycleCount + " on device: " + DeviceId + " ... MemCheck:\n" + MemCheck.GetStatus());
             MemCheck.Reset();
 
-            int moisture = moistureSensor.GetMoistureReading();
+            double potentiometerPercentage = potentiometer.ReadPotentiometerPercentage();
+            double potentiometerVoltage = potentiometer.ReadPotentiometerVoltage();
 
             ClearSerLcd();
             WriteSerLcd("cycle: " + _cycleCount);
-            WriteSerLcd("moisture: " + moisture, 64);
+            int intPotPct = (int)(potentiometerPercentage * 100);
+            WriteSerLcd("pot: " + intPotPct, 64);
 
             MemCheck.Sample();
             barometer.RequestMeasurement();
 
             MemCheck.Sample();
-            // PingServer();
+            PingServer();
 
             MemCheck.Sample();
         }
@@ -104,7 +107,16 @@ namespace CerbuinoBeeWiFlyChatterer
             {
                 _wifly = new WiFlyGSX();
                 _wifly.EnableDHCP();
-                _wifly.JoinNetwork("WIFI24Gb", 0, WiFlyGSX.AuthMode.WPA1, "Batty$nackH0g");
+                //_wifly.JoinNetwork("WIFI24G", 0, WiFlyGSX.AuthMode.WPA2_PSK, "???");
+                _wifly.JoinNetwork("linksys-dd", 0, WiFlyGSX.AuthMode.Open);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    string ip = _wifly.LocalIP;
+                    string mac = _wifly.MacAddress;
+                    Debug.Print("IP: " + ip + ", mac: " + mac);
+                    Thread.Sleep(5000);
+                }
 
                 Debug.Print("joined network");
             }
@@ -118,11 +130,11 @@ namespace CerbuinoBeeWiFlyChatterer
         {
             try
             {
-                // WiFlySocket socket = new WiFlySocket("192.168.2.50", 4567, _wifly);
-                WiFlySocket socket = new WiFlySocket("google.com", 80, _wifly);
+                WiFlySocket socket = new WiFlySocket("192.168.2.50", 4567, _wifly);
+                //WiFlySocket socket = new WiFlySocket("www.google.com", 80, _wifly);
                 HTTP_Client client = new HTTP_Client(socket);
-                // client.Authenticate(DeviceId, DeviceId);
-                HTTP_Client.HTTP_Response response = client.Get("/");
+                client.Authenticate(DeviceId, DeviceId);
+                HTTP_Client.HTTP_Response response = client.Get("/config");
 
                 Debug.Print("got from server:");
                 Debug.Print(response.ResponseBody);
