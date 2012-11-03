@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Text;
 using Microsoft.SPOT;
 
@@ -123,6 +124,74 @@ namespace NapkinCommon
             sb.Append(StatusKeyPrefix).AppendLine("_low=" + _low);
             return sb.ToString();
         }
+    }
+
+    public class SamplerBag
+    {
+        private ArrayList _samplerIds = new ArrayList();
+        private Hashtable _samplerIdToSampler = new Hashtable();
+
+        public SamplerBag(bool addMemorySampler = true)
+        {
+            if (addMemorySampler)
+            {
+                Add(new LongSampler(TakeMemorySample, "memory"));
+            }
+        }
+
+        private static long TakeMemorySample()
+        {
+            return Debug.GC(false);
+        }
+
+        public void Sample(string samplerId)
+        {
+            Sampler sampler = Get(samplerId);
+            if (sampler != null)
+            {
+                sampler.Sample();
+            }
+        }
+
+        public void Add(Sampler sampler)
+        {
+            _samplerIds.Add(sampler.StatusKeyPrefix);
+            _samplerIdToSampler[sampler.StatusKeyPrefix] = sampler;
+        }
+
+        public Sampler Get(string samplerId)
+        {
+            return (Sampler)_samplerIdToSampler[samplerId];
+        }
+
+        public void Reset()
+        {
+            foreach (String id in _samplerIds)
+            {
+                Sampler sampler = (Sampler)_samplerIdToSampler[id];
+                sampler.Reset();
+            }
+        }
+
+        public StringBuilder AppendStatus(StringBuilder sb = null)
+        {
+            if (sb == null) sb = new StringBuilder();
+            foreach (String id in _samplerIds)
+            {
+                Sampler sampler = (Sampler)_samplerIdToSampler[id];
+                sb.Append(sampler.GetStatus());
+            }
+            return sb;
+        }
+
+        public string GetStatus(string headline = null)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (headline != null) sb.AppendLine(headline);
+            AppendStatus(sb);
+            return sb.ToString();
+        }
+
     }
 
 }

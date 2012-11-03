@@ -17,6 +17,8 @@ using Gadgeteer.Modules.GHIElectronics;
 
 using NapkinCommon;
 using NapkinGadgeteerCommon;
+using NapkinGadgeteerCommon.SensorUtil;
+using Gadgeteer.Modules.Seeed;
 
 namespace cerb2
 {
@@ -26,6 +28,8 @@ namespace cerb2
         public readonly string NapkinServerUri = "http://192.168.2.50:4567";
         private NetworkCredential _credential;
 
+        private SamplerBag _samplers = new SamplerBag();
+
         void ProgramStarted()
         {
 
@@ -33,30 +37,21 @@ namespace cerb2
 
             _credential = new NetworkCredential(DeviceId, DeviceId);
 
-            _sensors = new SensorCombo(SampleLightSensorPercentage, SampleLightSensorVoltage);
+            new ButtonSampler(button, _samplers);
+            new LightSensorSampler(lightsensor, _samplers);
+            new BarometerSampler(barometer, _samplers);
+
             _vitals = new DeviceVitals(NapkinServerUri, DeviceId, _credential);
 
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
         }
 
+
         private readonly int _cycleDelayMillisecondsInitial = 15 * 1000;
         private Thread _cycleThread;
 
-        private readonly int _configCycle = 3;
-
-        private SensorCombo _sensors;
         private DeviceVitals _vitals;
-
-        private double SampleLightSensorPercentage()
-        {
-            return lightsensor.ReadLightSensorPercentage();
-        }
-
-        private double SampleLightSensorVoltage()
-        {
-            return lightsensor.ReadLightSensorVoltage();
-        }
 
         private void CycleDriver()
         {
@@ -64,7 +59,7 @@ namespace cerb2
             Thread.Sleep(_cycleDelayMillisecondsInitial);
 
             Debug.Print("Starting cycle: " + _vitals.CycleCount + " on device: " + DeviceId);
-            _vitals.MemCheck.Sample();
+            _samplers.Sample("memory");
 
             _vitals.UpdateDeviceStarts();
             _vitals.UpdateDeviceLocation();
@@ -87,26 +82,25 @@ namespace cerb2
             int cycleCount = _vitals.CycleCount;
             Debug.Print("Starting cycle: " + cycleCount + " on device: " + DeviceId + " with postCycle: " + _vitals.PostCycle);
 
-            _vitals.MemCheck.Sample();
+            _samplers.Sample("memory");
 
             if (cycleCount % _vitals.PostCycle == 0)
             {
                 StringBuilder sb = new StringBuilder();
                 _vitals.AppendStatus(sb);
-                _sensors.AppendStatus(sb);
+                _samplers.AppendStatus(sb);
                 string chatterRequestText = sb.ToString();
 
                 string chatterUri = NapkinServerUri + "/chatter";
                 HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText, false);
 
-                _sensors.ResetAll();
-                _vitals.MemCheck.Reset();
-                _vitals.MemCheck.Sample();
+                _samplers.Reset();
+                _samplers.Sample("memory");
             }
 
-            _sensors.LightSensorPercentageSampler.Sample();
-            _sensors.LightSensorVoltageSampler.Sample();
-            _vitals.MemCheck.Sample();
+            _samplers.Sample("light_sensor_percentage");
+            _samplers.Sample("light_sensor_voltage");
+            _samplers.Sample("memory");
         }
     }
 }

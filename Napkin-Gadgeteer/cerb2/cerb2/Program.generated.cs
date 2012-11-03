@@ -18,6 +18,7 @@ namespace cerb2
         // GTM.Module definitions
         Gadgeteer.Modules.GHIElectronics.Button button;
         Gadgeteer.Modules.GHIElectronics.LightSensor lightsensor;
+        Gadgeteer.Modules.Seeed.Barometer barometer;
 
         public static void Main()
         {
@@ -33,6 +34,8 @@ namespace cerb2
         private void InitializeModules()
         {   
             // Initialize GTM.Modules and event handlers here.		
+            barometer = new GTM.Seeed.Barometer(1);
+		
             button = new GTM.GHIElectronics.Button(3);
 		
             lightsensor = new GTM.GHIElectronics.LightSensor(4);
