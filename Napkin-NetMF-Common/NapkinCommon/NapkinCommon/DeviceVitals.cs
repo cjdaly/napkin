@@ -115,7 +115,8 @@ namespace NapkinCommon
             sb.Append("device_start_count=").AppendLine(_deviceStartCountCurrent.ToString());
             sb.Append("device_cycle=").AppendLine(_cycleCount.ToString());
             sb.Append("device_location=").AppendLine(_deviceLocation);
-            sb.Append(MemCheck.GetStatus());
+
+            if (MemCheck.Samples > 0) sb.Append(MemCheck.GetStatus());
             return sb;
         }
     }

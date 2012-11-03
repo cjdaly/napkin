@@ -84,6 +84,13 @@ namespace cerb2
 
             _samplers.Sample("memory");
 
+            if (cycleCount % 2 == 0)
+            {
+                string button_led = ConfigUtil.GetOrInitConfigValue(NapkinServerUri, DeviceId, "button_led", "off", _credential);
+                if (button_led == "on") button.TurnLEDOn();
+                else button.TurnLEDOff();
+            }
+
             if (cycleCount % _vitals.PostCycle == 0)
             {
                 StringBuilder sb = new StringBuilder();
@@ -100,6 +107,9 @@ namespace cerb2
 
             _samplers.Sample("light_sensor_percentage");
             _samplers.Sample("light_sensor_voltage");
+            _samplers.Sample("memory");
+
+            barometer.RequestMeasurement();
             _samplers.Sample("memory");
         }
     }

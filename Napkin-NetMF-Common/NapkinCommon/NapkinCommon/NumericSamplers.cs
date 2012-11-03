@@ -39,7 +39,7 @@ namespace NapkinCommon
         private long _low;
         private long _high;
 
-        public long Average { get { return _total / _samples; } }
+        public long Average { get { return _samples == 0 ? 0 : _total / _samples; } }
 
         public override void Reset()
         {
