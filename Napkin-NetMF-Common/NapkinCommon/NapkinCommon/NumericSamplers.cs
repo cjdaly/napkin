@@ -18,6 +18,7 @@ namespace NapkinCommon
 
         protected int _samples = 0;
         public int Samples { get { return _samples; } }
+        public bool HasSamples { get { return _samples > 0; } }
 
         public abstract void Sample();
         public abstract void Reset();
@@ -179,7 +180,7 @@ namespace NapkinCommon
             foreach (String id in _samplerIds)
             {
                 Sampler sampler = (Sampler)_samplerIdToSampler[id];
-                sb.Append(sampler.GetStatus());
+                if (sampler.HasSamples) sb.Append(sampler.GetStatus());
             }
             return sb;
         }

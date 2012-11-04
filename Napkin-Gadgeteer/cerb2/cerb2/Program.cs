@@ -5,6 +5,7 @@ using System.Collections;
 using System.Text;
 using System.Threading;
 using Microsoft.SPOT;
+using Microsoft.SPOT.Hardware;
 using Microsoft.SPOT.Presentation;
 using Microsoft.SPOT.Presentation.Controls;
 using Microsoft.SPOT.Presentation.Media;
@@ -29,6 +30,7 @@ namespace cerb2
         private NetworkCredential _credential;
 
         private SamplerBag _samplers = new SamplerBag();
+        private AnalogSampler _gasSenseSampler;
 
         void ProgramStarted()
         {
@@ -41,12 +43,14 @@ namespace cerb2
             new LightSensorSampler(lightsensor, _samplers);
             new BarometerSampler(barometer, _samplers);
 
+            GT.Socket socket2 = Gadgeteer.Socket.GetSocket(2, true, null, null);
+            _gasSenseSampler = new AnalogSampler("gas_sense", socket2, _samplers);
+
             _vitals = new DeviceVitals(NapkinServerUri, DeviceId, _credential);
 
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
         }
-
 
         private readonly int _cycleDelayMillisecondsInitial = 15 * 1000;
         private Thread _cycleThread;
@@ -104,6 +108,9 @@ namespace cerb2
                 _samplers.Reset();
                 _samplers.Sample("memory");
             }
+
+            _gasSenseSampler.Sample();
+            _samplers.Sample("memory");
 
             _samplers.Sample("light_sensor_percentage");
             _samplers.Sample("light_sensor_voltage");

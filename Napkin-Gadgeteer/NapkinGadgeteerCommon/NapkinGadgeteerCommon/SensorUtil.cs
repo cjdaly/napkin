@@ -93,5 +93,46 @@ namespace NapkinGadgeteerCommon
             }
         }
 
+
+        public class AnalogSampler
+        {
+            private readonly string _id;
+            private GT.Interfaces.AnalogInput _analogInputPin3;
+            private GT.Interfaces.AnalogInput _analogInputPin4;
+            private GT.Interfaces.AnalogInput _analogInputPin5;
+
+            private DoubleSampler _pin3ProportionSampler;
+            private DoubleSampler _pin4ProportionSampler;
+            private DoubleSampler _pin5ProportionSampler;
+
+            public AnalogSampler(string id, GT.Socket socket_A, SamplerBag samplers)
+            {
+                _id = id;
+                _analogInputPin3 = new GT.Interfaces.AnalogInput(socket_A, GT.Socket.Pin.Three, null);
+                _analogInputPin4 = new GT.Interfaces.AnalogInput(socket_A, GT.Socket.Pin.Four, null);
+                _analogInputPin5 = new GT.Interfaces.AnalogInput(socket_A, GT.Socket.Pin.Five, null);
+
+                _analogInputPin3.Active = true;
+                _analogInputPin4.Active = true;
+                _analogInputPin5.Active = true;
+
+                _pin3ProportionSampler = new DoubleSampler(null, _id + "_pin3_proportion");
+                samplers.Add(_pin3ProportionSampler);
+
+                _pin4ProportionSampler = new DoubleSampler(null, _id + "_pin4_proportion");
+                samplers.Add(_pin4ProportionSampler);
+
+                _pin5ProportionSampler = new DoubleSampler(null, _id + "_pin5_proportion");
+                samplers.Add(_pin5ProportionSampler);
+            }
+
+            public void Sample()
+            {   
+                _pin3ProportionSampler.Sample(_analogInputPin3.ReadProportion());
+                _pin4ProportionSampler.Sample(_analogInputPin4.ReadProportion());
+                _pin5ProportionSampler.Sample(_analogInputPin5.ReadProportion());
+            }
+        }
+
     }
 }
