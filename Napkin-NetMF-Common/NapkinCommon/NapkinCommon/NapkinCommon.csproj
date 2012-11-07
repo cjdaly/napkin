@@ -37,6 +37,7 @@
     <Compile Include="NumericSamplers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerLCD.cs" />
+    <Compile Include="ZilogEPir.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.SPOT.Hardware" />

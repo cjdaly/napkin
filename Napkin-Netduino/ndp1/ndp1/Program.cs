@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Ports;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -25,6 +26,8 @@ namespace ndp1
         {
             Debug.Print("Hello from: " + DeviceId);
             _credential = new NetworkCredential(DeviceId, DeviceId);
+
+            // TestSDCard();
 
             _serLcd = new SerLCD();
             _serLcd.Write("hello", "world");
@@ -115,7 +118,6 @@ namespace ndp1
             Debug.Print("Starting cycle: " + cycleCount + " on device: " + DeviceId + " with postCycle: " + _vitals.PostCycle);
 
             _serLcd.Write("cycle: " + _vitals.CycleCount);
-
             _samplers.Sample("memory");
 
             if (cycleCount % _configCycle == 0)
@@ -144,6 +146,17 @@ namespace ndp1
 
         }
 
+        private static void TestSDCard()
+        {
+            if (File.Exists(@"\SD\FOO.TXT"))
+            {
+                StreamReader reader = new StreamReader(@"\SD\FOO.TXT");
+                String text = reader.ReadToEnd();
+                reader.Close();
+
+                Debug.Print(text);
+            }
+        }
 
         private static void UpdateBlinkM(I2CDevice.Configuration blinkM, I2CDevice i2cDevice, NetworkCredential credential)
         {
