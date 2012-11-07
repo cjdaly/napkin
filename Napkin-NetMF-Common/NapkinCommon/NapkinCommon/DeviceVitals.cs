@@ -97,17 +97,6 @@ namespace NapkinCommon
             Debug.Print("Got device_location: " + _deviceLocation);
         }
 
-        public readonly LongSampler MemCheck = CreateMemCheck();
-        private static long TakeMemorySample()
-        {
-            return Debug.GC(false);
-        }
-        private static LongSampler CreateMemCheck(string statusKeyPrefix = "memory")
-        {
-            LongSampler sampler = new LongSampler(TakeMemorySample, statusKeyPrefix);
-            return sampler;
-        }
-
         public StringBuilder AppendStatus(StringBuilder sb = null)
         {
             if (sb == null) sb = new StringBuilder();
@@ -116,7 +105,6 @@ namespace NapkinCommon
             sb.Append("device_cycle=").AppendLine(_cycleCount.ToString());
             sb.Append("device_location=").AppendLine(_deviceLocation);
 
-            if (MemCheck.Samples > 0) sb.Append(MemCheck.GetStatus());
             return sb;
         }
     }
