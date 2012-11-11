@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cerbee1", "cerbee1\cerbee1.csproj", "{93624297-6D85-4955-9C1E-7C9B784E9C01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NapkinGadgeteerCommon", "..\NapkinGadgeteerCommon\NapkinGadgeteerCommon\NapkinGadgeteerCommon.csproj", "{6AF9F241-E845-42C8-B1DF-034BCD78803F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NapkinCommon", "..\..\Napkin-NetMF-Common\NapkinCommon\NapkinCommon\NapkinCommon.csproj", "{A051E60E-D7AC-4350-8199-92722001B579}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{93624297-6D85-4955-9C1E-7C9B784E9C01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93624297-6D85-4955-9C1E-7C9B784E9C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93624297-6D85-4955-9C1E-7C9B784E9C01}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{93624297-6D85-4955-9C1E-7C9B784E9C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93624297-6D85-4955-9C1E-7C9B784E9C01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93624297-6D85-4955-9C1E-7C9B784E9C01}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{6AF9F241-E845-42C8-B1DF-034BCD78803F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AF9F241-E845-42C8-B1DF-034BCD78803F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AF9F241-E845-42C8-B1DF-034BCD78803F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AF9F241-E845-42C8-B1DF-034BCD78803F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A051E60E-D7AC-4350-8199-92722001B579}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A051E60E-D7AC-4350-8199-92722001B579}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A051E60E-D7AC-4350-8199-92722001B579}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A051E60E-D7AC-4350-8199-92722001B579}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
