@@ -66,6 +66,33 @@ namespace NapkinGadgeteerCommon
             }
         }
 
+        public class TemperatureHumiditySampler
+        {
+            private Gadgeteer.Modules.Seeed.TemperatureHumidity _temperatureHumidity;
+
+            private DoubleSampler _temperatureSampler;
+            private DoubleSampler _humiditySampler;
+
+            public TemperatureHumiditySampler(Gadgeteer.Modules.Seeed.TemperatureHumidity temperatureHumidity, SamplerBag samplers)
+            {
+                _temperatureHumidity = temperatureHumidity;
+
+                _temperatureSampler = new DoubleSampler(null, "temperature");
+                samplers.Add(_temperatureSampler);
+
+                _humiditySampler = new DoubleSampler(null, "humidity");
+                samplers.Add(_humiditySampler);
+
+                _temperatureHumidity.MeasurementComplete += new GTM.Seeed.TemperatureHumidity.MeasurementCompleteEventHandler(_temperatureHumidity_MeasurementComplete);
+            }
+
+            void _temperatureHumidity_MeasurementComplete(GTM.Seeed.TemperatureHumidity sender, double temperature, double relativeHumidity)
+            {
+                _temperatureSampler.Sample(temperature);
+                _humiditySampler.Sample(relativeHumidity);
+            }
+        }
+
         public class BarometerSampler
         {
             private GTM.Seeed.Barometer _barometer;
