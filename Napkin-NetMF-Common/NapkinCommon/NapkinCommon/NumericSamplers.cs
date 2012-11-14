@@ -160,9 +160,9 @@ namespace NapkinCommon
             _samplerIdToSampler[sampler.StatusKeyPrefix] = sampler;
         }
 
-        public Sampler Get(string samplerId)
+        public Sampler Get(string samplerId, string keySetId = "chatter.device.sensor.")
         {
-            return (Sampler)_samplerIdToSampler[samplerId];
+            return (Sampler)_samplerIdToSampler[keySetId + samplerId];
         }
 
         public void Reset()
