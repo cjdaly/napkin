@@ -100,10 +100,10 @@ namespace NapkinCommon
         public StringBuilder AppendStatus(StringBuilder sb = null)
         {
             if (sb == null) sb = new StringBuilder();
-            sb.Append("device_id=").AppendLine(_deviceId);
-            sb.Append("device_start_count=").AppendLine(_deviceStartCountCurrent.ToString());
-            sb.Append("device_cycle=").AppendLine(_cycleCount.ToString());
-            sb.Append("device_location=").AppendLine(_deviceLocation);
+            sb.Append("chatter.device.vitals~id=").AppendLine(_deviceId);
+            sb.Append("chatter.device.vitals~startCount=").AppendLine(_deviceStartCountCurrent.ToString());
+            sb.Append("chatter.device.vitals~currentCycle=").AppendLine(_cycleCount.ToString());
+            sb.Append("chatter.device.vitals~location=").AppendLine(_deviceLocation);
 
             return sb;
         }

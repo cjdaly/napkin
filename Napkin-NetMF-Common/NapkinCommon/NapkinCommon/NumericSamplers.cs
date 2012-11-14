@@ -7,10 +7,10 @@ namespace NapkinCommon
 {
     public abstract class Sampler
     {
-        public Sampler(string statusKeyPrefix)
+        public Sampler(string statusKeyPrefix, string keySetId)
         {
             Reset();
-            _statusKeyPrefix = statusKeyPrefix;
+            _statusKeyPrefix = keySetId + statusKeyPrefix;
         }
 
         public string StatusKeyPrefix { get { return _statusKeyPrefix; } }
@@ -30,8 +30,8 @@ namespace NapkinCommon
         public delegate long TakeLongSample();
         private TakeLongSample _sampler;
 
-        public LongSampler(TakeLongSample sampler, string statusKeyPrefix)
-            : base(statusKeyPrefix)
+        public LongSampler(TakeLongSample sampler, string statusKeyPrefix, string keySetId = "chatter.device.sensor.")
+            : base(statusKeyPrefix, keySetId)
         {
             _sampler = sampler;
         }
@@ -68,10 +68,10 @@ namespace NapkinCommon
         {
             StringBuilder sb = new StringBuilder();
             if (headline != null) sb.AppendLine(headline);
-            sb.Append(StatusKeyPrefix).AppendLine("_samples=" + Samples);
-            sb.Append(StatusKeyPrefix).AppendLine("_average=" + Average);
-            sb.Append(StatusKeyPrefix).AppendLine("_high=" + _high);
-            sb.Append(StatusKeyPrefix).AppendLine("_low=" + _low);
+            sb.Append(StatusKeyPrefix).AppendLine("~samples=" + Samples);
+            sb.Append(StatusKeyPrefix).AppendLine("~average=" + Average);
+            sb.Append(StatusKeyPrefix).AppendLine("~high=" + _high);
+            sb.Append(StatusKeyPrefix).AppendLine("~low=" + _low);
             return sb.ToString();
         }
     }
@@ -81,8 +81,8 @@ namespace NapkinCommon
         public delegate double TakeDoubleSample();
         private TakeDoubleSample _sampler;
 
-        public DoubleSampler(TakeDoubleSample sampler, string statusKeyPrefix)
-            : base(statusKeyPrefix)
+        public DoubleSampler(TakeDoubleSample sampler, string statusKeyPrefix, string keySetId = "chatter.device.sensor.")
+            : base(statusKeyPrefix, keySetId)
         {
             _sampler = sampler;
         }
@@ -119,10 +119,10 @@ namespace NapkinCommon
         {
             StringBuilder sb = new StringBuilder();
             if (headline != null) sb.AppendLine(headline);
-            sb.Append(StatusKeyPrefix).AppendLine("_samples=" + Samples);
-            sb.Append(StatusKeyPrefix).AppendLine("_average=" + Average);
-            sb.Append(StatusKeyPrefix).AppendLine("_high=" + _high);
-            sb.Append(StatusKeyPrefix).AppendLine("_low=" + _low);
+            sb.Append(StatusKeyPrefix).AppendLine("~samples=" + Samples);
+            sb.Append(StatusKeyPrefix).AppendLine("~average=" + Average);
+            sb.Append(StatusKeyPrefix).AppendLine("~high=" + _high);
+            sb.Append(StatusKeyPrefix).AppendLine("~low=" + _low);
             return sb.ToString();
         }
     }
@@ -136,7 +136,7 @@ namespace NapkinCommon
         {
             if (addMemorySampler)
             {
-                Add(new LongSampler(TakeMemorySample, "memory"));
+                Add(new LongSampler(TakeMemorySample, "memory", "chatter.device.vitals."));
             }
         }
 
