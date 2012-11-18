@@ -27,9 +27,7 @@ module Napkin
         nn.go_sub!(@user)
         nn.set_key_prefix('chatter')
 
-        post_count = nn.get_or_init('post_count', -1)
-        post_count += 1
-        nn['post_count'] = post_count
+        post_count = nn.increment('post_count')
 
         nn.go_sub!("#{post_count}")
         nn['post_body'] = body_text

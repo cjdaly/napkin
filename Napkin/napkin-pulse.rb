@@ -50,9 +50,7 @@ module Napkin
         nn = Napkin::NodeUtil::NodeNav.new
         nn.go_sub_path!('napkin/cycles', true)
 
-        cycle_count = nn['cycle_count']
-        cycle_count += 1
-        nn['cycle_count']= cycle_count
+        cycle_count = nn.increment('cycle_count')
 
         nn.go_sub!("#{cycle_count}")
 

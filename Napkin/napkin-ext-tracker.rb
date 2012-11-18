@@ -168,9 +168,7 @@ module Napkin
                 puts "refresh_feed: FOUND #{guid}"
               else
                 Neo4j::Transaction.run do
-                  item_count = nn_items.get_or_init('item_count',-1)
-                  item_count += 1
-                  nn_items['item_count'] = item_count
+                  item_count = nn_items.increment('item_count')
 
                   nn_item = nn_items.dup
                   nn_item.go_sub!("#{item_count}")

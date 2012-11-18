@@ -73,14 +73,41 @@ end
 
 # post_config('', 'cerb1')
 # put_config('cerb1', 'device_location', "man cave")
-# put_config('cerb1', 'MulticolorLed_rBg', "0,0,64")
-# put_config('cerb1', 'post_cycle', "30")
+# put_config('cerb1', 'MulticolorLed_rBg', "0,16,16")
+# put_config('cerb1', 'post_cycle', "50")
 # put_config('cerb1', 'cycle_delay_milliseconds', "5000")
+
+# post_config('', 'cerb2')
+# put_config('cerb2', 'device_location', "man cave")
+# put_config('cerb2', 'button_led', "off")
+# put_config('cerb2', 'post_cycle', "60")
+# put_config('cerb2', 'cycle_delay_milliseconds', "5000")
 
 # post_config('', 'cerbee1')
 # put_config('cerbee1', 'device_location', "garage")
 # put_config('cerbee1', 'post_cycle', "60")
 # put_config('cerbee1', 'cycle_delay_milliseconds', "5000")
+
+# post_config('', 'cerbee2')
+# put_config('cerbee2', 'device_location', "man cave")
+# put_config('cerbee2', 'post_cycle', "60")
+# put_config('cerbee2', 'cycle_delay_milliseconds', "5000")
+
+# post_config('', 'bone1')
+# put_config('bone1', 'device_location', "tv room")
+# put_config('bone1', 'test', "foobar")
+
+
+keysets_test = {
+  'napkin#id' => "test",
+  'napkin/keysets#keyset_name' =>"test keyset",
+  'napkin/keysets#keyset_description' =>"blah blah blah...",
+  'napkin/keysets#keyset_index_id' =>"???"
+}
+
+# post_node('keysets', keysets_test)
+
+
 
 tasks_test = {
   'napkin#id' => "test",

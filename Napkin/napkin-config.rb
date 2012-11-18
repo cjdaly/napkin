@@ -2,6 +2,7 @@ module Napkin
   module Config
     DATA_PATH = File.expand_path("../../Napkin-Data")
     NEO4J_PATH = DATA_PATH + "/neo4j-db"
+    NEO4J_INDEX_RB_PATH = DATA_PATH + "/neo4j-index-rb"
     OPEN_URI_CACHE_PATH = DATA_PATH + "/open-uri-cache"
 
     GIT_USER_NAME = "Fred"

@@ -83,6 +83,14 @@ module Napkin
         return value
       end
 
+      def increment(key, initial = 0)
+        Neo4j::Transaction.run do
+          count = get_or_init(key, initial)
+          count += 1
+          @node[prefix_key(key)] = count
+        end
+      end
+
       def go_sub(id)
         begin
           # TODO: got exception here after several days of continuous run:

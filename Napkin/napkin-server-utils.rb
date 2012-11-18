@@ -23,9 +23,7 @@ module Napkin
       nn_cycles = Napkin::NodeUtil::NodeNav.new
       nn_cycles.go_sub_path!('napkin/cycles', true)
 
-      start_count = nn_starts.get_or_init('start_count',-1)
-      start_count += 1
-      nn_starts['start_count'] = start_count
+      start_count = nn_starts.increment('start_count')
 
       # let Neo4J warm up...
       sleep 2
@@ -34,9 +32,7 @@ module Napkin
       nn_starts['start_time'] = "#{start_time}"
       nn_starts['start_time_i'] = start_time.to_i
 
-      cycle_count = nn_cycles.get_or_init('cycle_count',-1)
-      cycle_count += 1
-      nn_cycles['cycle_count'] = cycle_count
+      cycle_count = nn_cycles.increment('cycle_count')
 
       nn_starts['start_cycle_count'] = cycle_count
 
