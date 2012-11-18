@@ -88,16 +88,28 @@ def clearScreen(serDisplay):
     cmd = array.array('B', (COMMAND_PREFIX, 1))
     writeToDisplay(serDisplay, cmd.tostring())  
 
+
 def writeLines(line1, line2, serDisplay):
     setCursorPos(serDisplay, 1, 1, True)                
     writeToDisplay(serDisplay, line1)
     setCursorPos(serDisplay, 2, 1, True)                
     writeToDisplay(serDisplay, line2)
-    
+
+
+def getLineText(lineNum):
+    if (lineNum < len(sys.argv)):
+        return sys.argv[lineNum]
+    else:
+        return ""
+
+print("line1: " + getLineText(1))
+print("line2: " + getLineText(2))
+print("line3: " + getLineText(3))
+print("line4: " + getLineText(4))
 
 serDisplay1 = initializeDisplay(LCD_01)
 serDisplay2 = initializeDisplay(LCD_02)
 
-writeLines("test", "123...", serDisplay2)
-writeLines("foo", "bar...", serDisplay1)
+writeLines(getLineText(1), getLineText(2), serDisplay2)
+writeLines(getLineText(3), getLineText(4), serDisplay1)
 
