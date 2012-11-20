@@ -28,7 +28,6 @@ TIMEOUT = 3 # serial port timeout is 3 seconds - only used when reading from dis
 # MUX settings
 RECEIVE_ENABLE = 32
 
-
 def writeToDisplay(serDisplay, s):
     serDisplay.write(s)
     time.sleep(0.1) # Sparkfun LCD backpack needs pause between commands
@@ -92,24 +91,54 @@ def clearScreen(serDisplay):
 def writeLines(line1, line2, serDisplay):
     setCursorPos(serDisplay, 1, 1, True)                
     writeToDisplay(serDisplay, line1)
+    #
     setCursorPos(serDisplay, 2, 1, True)                
     writeToDisplay(serDisplay, line2)
 
 
-def getLineText(lineNum):
+def getLineArg(lineNum):
     if (lineNum < len(sys.argv)):
-        return sys.argv[lineNum]
+        line = sys.argv[lineNum]
+	return line[:LCD_NUM_COLS]
     else:
         return ""
 
-print("line1: " + getLineText(1))
-print("line2: " + getLineText(2))
-print("line3: " + getLineText(3))
-print("line4: " + getLineText(4))
+TIME_LINE_MASKS = [
+    "%I:%M %a %d %b",
+    "%I:%M %a %d.%b",
+    "%I:%M %a.%d %b",
+    "%I:%M.%a %d %b",
+    "%I:%M %a %d %b",
+    "%I:%M %a %d*%b",
+    "%I:%M %a*%d %b",
+    "%I:%M*%a %d %b",
+]
+
+def updateLcds(serDisplay1, serDisplay2, cycle):
+    timeNow = time.localtime()
+    timeLineMask = TIME_LINE_MASKS[cycle%len(TIME_LINE_MASKS)]
+    timeLine = time.strftime(timeLineMask, timeNow)
+    timeLine = timeLine[:LCD_NUM_COLS]
+    #
+    line1 = timeLine
+    line2 = getLineArg(1)
+    line3 = getLineArg(2)
+    line4 = getLineArg(3)
+    #
+    writeLines(line1, line2, serDisplay2)
+    writeLines(line3, line4, serDisplay1)
+
+#
+#
+#
 
 serDisplay1 = initializeDisplay(LCD_01)
 serDisplay2 = initializeDisplay(LCD_02)
 
-writeLines(getLineText(1), getLineText(2), serDisplay2)
-writeLines(getLineText(3), getLineText(4), serDisplay1)
+done=False
+cycle=0
+while(not done):
+    cycle += 1
+    updateLcds(serDisplay1, serDisplay2, cycle)
+    time.sleep(1)
 
