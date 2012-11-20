@@ -1,9 +1,10 @@
 #!/usr/bin/python
 #
-# adapted from this source:
+# serial port code adapted from this:
 #   http://gigamega-micro.googlecode.com/files/serdisplay.py
 #
 
+import urllib, urllib2, base64
 import sys, time, datetime, array
 import serial
 import re
@@ -95,7 +96,6 @@ def writeLines(line1, line2, serDisplay):
     setCursorPos(serDisplay, 2, 1, True)                
     writeToDisplay(serDisplay, line2)
 
-
 def getLineArg(lineNum):
     if (lineNum < len(sys.argv)):
         line = sys.argv[lineNum]
@@ -114,7 +114,7 @@ TIME_LINE_MASKS = [
     "%I:%M*%a %d %b",
 ]
 
-def updateLcds(serDisplay1, serDisplay2, cycle):
+def updateLcds(serDisplay1, serDisplay2, cycle, stuff):
     timeNow = time.localtime()
     timeLineMask = TIME_LINE_MASKS[cycle%len(TIME_LINE_MASKS)]
     timeLine = time.strftime(timeLineMask, timeNow)
@@ -123,10 +123,37 @@ def updateLcds(serDisplay1, serDisplay2, cycle):
     line1 = timeLine
     line2 = getLineArg(1)
     line3 = getLineArg(2)
-    line4 = getLineArg(3)
+    line4 = stuff
     #
     writeLines(line1, line2, serDisplay2)
     writeLines(line3, line4, serDisplay1)
+
+#
+# Napkin config
+
+DEVICE_ID="bone1"
+NAPKIN_URL="http://192.168.2.50:4567"
+NAPKIN_CONFIG_URL=NAPKIN_URL + "/config/" + DEVICE_ID
+NAPKIN_CHATTER_URL=NAPKIN_URL + "/chatter"
+NAPKIN_CONFIG_KEYS =[None, 'test', None, None]
+
+#
+# Napkin util
+
+def getConfigValue(key):
+    napkinConfigUrl=NAPKIN_CONFIG_URL + "?key=" + key
+    request = urllib2.Request(napkinConfigUrl);
+    authHeader = base64.encodestring('%s:%s' % (DEVICE_ID, DEVICE_ID)).replace('\n', '')
+    request.add_header("Authorization", "Basic %s" % authHeader)
+    text = urllib2.urlopen(request).read()
+    return text
+
+# postText = "Hello from bone1!\n"
+# request = urllib2.Request(napkinChatterUrl, postText)
+# request.add_header("Authorization", "Basic %s" % authHeader)
+# response = urllib2.urlopen(request)
+# print response.read()
+
 
 #
 #
@@ -135,10 +162,13 @@ def updateLcds(serDisplay1, serDisplay2, cycle):
 serDisplay1 = initializeDisplay(LCD_01)
 serDisplay2 = initializeDisplay(LCD_02)
 
+stuff="???"
 done=False
 cycle=0
 while(not done):
     cycle += 1
-    updateLcds(serDisplay1, serDisplay2, cycle)
+    if (cycle%8 == 0):
+        stuff = getConfigValue('status')
+    updateLcds(serDisplay1, serDisplay2, cycle, stuff)
     time.sleep(1)
 
