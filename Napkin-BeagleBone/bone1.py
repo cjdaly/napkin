@@ -114,7 +114,7 @@ TIME_LINE_MASKS = [
     "%I:%M*%a %d %b",
 ]
 
-def updateLcds(serDisplay1, serDisplay2, cycle, stuff):
+def updateLcds(serDisplay1, serDisplay2, cycle, status):
     timeNow = time.localtime()
     timeLineMask = TIME_LINE_MASKS[cycle%len(TIME_LINE_MASKS)]
     timeLine = time.strftime(timeLineMask, timeNow)
@@ -123,7 +123,7 @@ def updateLcds(serDisplay1, serDisplay2, cycle, stuff):
     line1 = timeLine
     line2 = getLineArg(1)
     line3 = getLineArg(2)
-    line4 = stuff
+    line4 = status
     #
     writeLines(line1, line2, serDisplay2)
     writeLines(line3, line4, serDisplay1)
@@ -142,17 +142,60 @@ NAPKIN_CONFIG_KEYS =[None, 'test', None, None]
 
 def getConfigValue(key):
     napkinConfigUrl=NAPKIN_CONFIG_URL + "?key=" + key
-    request = urllib2.Request(napkinConfigUrl);
-    authHeader = base64.encodestring('%s:%s' % (DEVICE_ID, DEVICE_ID)).replace('\n', '')
-    request.add_header("Authorization", "Basic %s" % authHeader)
-    text = urllib2.urlopen(request).read()
-    return text
+    configValue="??? error ???"
+    try:
+        request = urllib2.Request(napkinConfigUrl);
+        authHeader = base64.encodestring('%s:%s' % (DEVICE_ID, DEVICE_ID)).replace('\n', '')
+        request.add_header("Authorization", "Basic %s" % authHeader)
+        configValue = urllib2.urlopen(request).read()
+    except urllib2.HTTPError as e:
+        print "HTTP Error in getConfigValue: " + e.strerror
+    #
+    return configValue
 
-# postText = "Hello from bone1!\n"
-# request = urllib2.Request(napkinChatterUrl, postText)
-# request.add_header("Authorization", "Basic %s" % authHeader)
-# response = urllib2.urlopen(request)
-# print response.read()
+def putConfigValue(key, value):
+    napkinConfigUrl=NAPKIN_CONFIG_URL + "?key=" + key
+    configValue="??? error ???"
+    try:
+	opener = urllib2.build_opener(urllib2.HTTPHandler)
+        request = urllib2.Request(napkinConfigUrl, value);
+        authHeader = base64.encodestring('%s:%s' % (DEVICE_ID, DEVICE_ID)).replace('\n', '')
+        request.add_header("Authorization", "Basic %s" % authHeader)
+        request.add_header("Content-Type", "text/plain")
+	request.get_method = lambda: 'PUT'
+        configValue = opener.open(request).read()
+    except urllib2.HTTPError as e:
+        print "HTTP Error in putConfigValue: " + e.strerror
+    #
+    return configValue
+
+def getOrInitConfigValue(key, defaultValue):
+    currentValue = getConfigValue(key)
+    if (not currentValue):
+        putConfigValue(key, defaultValue)
+	currentValue = defaultValue
+    return currentValue
+
+def composeChatterText(cycle, startCount):
+    chatterText = "\n"
+    chatterText += "chatter.device.vitals~id=" + DEVICE_ID + "\n"
+    chatterText += "chatter.device.vitals~startCount=" + str(startCount) + "\n"
+    chatterText += "chatter.device.vitals~currentCycle=" + str(cycle) + "\n"
+    return chatterText
+
+def postChatter(chatterText):
+    responseText="??? error ???"
+    try:
+        request = urllib2.Request(NAPKIN_CHATTER_URL, chatterText)
+        authHeader = base64.encodestring('%s:%s' % (DEVICE_ID, DEVICE_ID)).replace('\n', '')
+        request.add_header("Authorization", "Basic %s" % authHeader)
+        request.add_header("Content-Type", "text/plain")
+        response = urllib2.urlopen(request)
+        responseText = response.read()
+    except urllib2.HTTPError as e:
+        print "HTTP Error in postChatter: " + e.strerror
+    #
+    return responseText
 
 
 #
@@ -162,13 +205,31 @@ def getConfigValue(key):
 serDisplay1 = initializeDisplay(LCD_01)
 serDisplay2 = initializeDisplay(LCD_02)
 
-stuff="???"
+status="???"
 done=False
 cycle=0
+configCycle=8
+postCycle=64
+
+startCountText = getOrInitConfigValue('device_start_count', '0')
+startCount = int(startCountText)
+startCount += 1
+startCountText = str(startCount)
+putConfigValue('device_start_count', startCountText)
+# print "startCount: " + startCountText
+
 while(not done):
     cycle += 1
-    if (cycle%8 == 0):
-        stuff = getConfigValue('status')
-    updateLcds(serDisplay1, serDisplay2, cycle, stuff)
+    #
+    if (cycle%configCycle == 0):
+        status = getConfigValue('status')
+	# print "Config: status=" + status
+    #
+    if (cycle%postCycle == 0):
+        chatterText = composeChatterText(cycle, startCount)
+        chatterResponse = postChatter(chatterText)
+	# print "Chatter: " + chatterResponse
+    #
+    updateLcds(serDisplay1, serDisplay2, cycle, status)
     time.sleep(1)
 
