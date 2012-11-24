@@ -91,15 +91,15 @@ def clearScreen(serDisplay):
 
 def writeLines(line1, line2, serDisplay):
     setCursorPos(serDisplay, 1, 1, True)                
-    writeToDisplay(serDisplay, line1)
+    writeToDisplay(serDisplay, line1[:LCD_NUM_COLS])
     #
     setCursorPos(serDisplay, 2, 1, True)                
-    writeToDisplay(serDisplay, line2)
+    writeToDisplay(serDisplay, line2[:LCD_NUM_COLS])
 
 def getLineArg(lineNum):
     if (lineNum < len(sys.argv)):
         line = sys.argv[lineNum]
-	return line[:LCD_NUM_COLS]
+	return line
     else:
         return ""
 
@@ -114,15 +114,15 @@ TIME_LINE_MASKS = [
     "%I:%M*%a %d %b",
 ]
 
-def updateLcds(serDisplay1, serDisplay2, cycle, status):
+def updateLcds(serDisplay1, serDisplay2, startCount, cycle, status):
     timeNow = time.localtime()
     timeLineMask = TIME_LINE_MASKS[cycle%len(TIME_LINE_MASKS)]
     timeLine = time.strftime(timeLineMask, timeNow)
-    timeLine = timeLine[:LCD_NUM_COLS]
+    timeLine = timeLine
     #
     line1 = timeLine
     line2 = getLineArg(1)
-    line3 = getLineArg(2)
+    line3 = DEVICE_ID + "[" + str(startCount) + "," + str(cycle) + "]"
     line4 = status
     #
     writeLines(line1, line2, serDisplay2)
@@ -148,6 +148,8 @@ def getConfigValue(key):
         authHeader = base64.encodestring('%s:%s' % (DEVICE_ID, DEVICE_ID)).replace('\n', '')
         request.add_header("Authorization", "Basic %s" % authHeader)
         configValue = urllib2.urlopen(request).read()
+    except urllib2.URLError as e:
+        print "URL Error in getConfigValue: " + e.strerror
     except urllib2.HTTPError as e:
         print "HTTP Error in getConfigValue: " + e.strerror
     #
@@ -164,6 +166,8 @@ def putConfigValue(key, value):
         request.add_header("Content-Type", "text/plain")
 	request.get_method = lambda: 'PUT'
         configValue = opener.open(request).read()
+    except urllib2.URLError as e:
+        print "URL Error in putConfigValue: " + e.strerror
     except urllib2.HTTPError as e:
         print "HTTP Error in putConfigValue: " + e.strerror
     #
@@ -177,7 +181,7 @@ def getOrInitConfigValue(key, defaultValue):
     return currentValue
 
 def composeChatterText(cycle, startCount):
-    chatterText = "\n"
+    chatterText = ""
     chatterText += "chatter.device.vitals~id=" + DEVICE_ID + "\n"
     chatterText += "chatter.device.vitals~startCount=" + str(startCount) + "\n"
     chatterText += "chatter.device.vitals~currentCycle=" + str(cycle) + "\n"
@@ -192,6 +196,8 @@ def postChatter(chatterText):
         request.add_header("Content-Type", "text/plain")
         response = urllib2.urlopen(request)
         responseText = response.read()
+    except urllib2.URLError as e:
+        print "URL Error in postChatter: " + e.strerror
     except urllib2.HTTPError as e:
         print "HTTP Error in postChatter: " + e.strerror
     #
@@ -209,7 +215,7 @@ status="???"
 done=False
 cycle=0
 configCycle=8
-postCycle=64
+postCycle=256
 
 startCountText = getOrInitConfigValue('device_start_count', '0')
 startCount = int(startCountText)
@@ -230,6 +236,6 @@ while(not done):
         chatterResponse = postChatter(chatterText)
 	# print "Chatter: " + chatterResponse
     #
-    updateLcds(serDisplay1, serDisplay2, cycle, status)
+    updateLcds(serDisplay1, serDisplay2, startCount, cycle, status)
     time.sleep(1)
 
