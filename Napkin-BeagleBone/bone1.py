@@ -91,10 +91,19 @@ def clearScreen(serDisplay):
 
 def writeLines(line1, line2, serDisplay):
     setCursorPos(serDisplay, 1, 1, True)                
-    writeToDisplay(serDisplay, line1[:LCD_NUM_COLS])
+    writeToDisplay(serDisplay, fixLine(line1))
     #
     setCursorPos(serDisplay, 2, 1, True)                
-    writeToDisplay(serDisplay, line2[:LCD_NUM_COLS])
+    writeToDisplay(serDisplay, fixLine(line2))
+ 
+def fixLine(line):
+    lineWidth = LCD_NUM_COLS
+    linePadFormatPattern = "{0: <" + str(lineWidth) + "}"
+    linePad = linePadFormatPattern.format(line)
+    lineTruncate = linePad[:lineWidth]
+    lineFix = lineTruncate
+    # print "fixLine: [{0}]".format(lineFix)
+    return lineFix
 
 def getLineArg(lineNum):
     if (lineNum < len(sys.argv)):
@@ -148,10 +157,10 @@ def getConfigValue(key):
         authHeader = base64.encodestring('%s:%s' % (DEVICE_ID, DEVICE_ID)).replace('\n', '')
         request.add_header("Authorization", "Basic %s" % authHeader)
         configValue = urllib2.urlopen(request).read()
-    except urllib2.URLError as e:
-        print "URL Error in getConfigValue: " + e.strerror
-    except urllib2.HTTPError as e:
-        print "HTTP Error in getConfigValue: " + e.strerror
+    except urllib2.URLError as urlError:
+        print "URL Error in getConfigValue: {0}".format(urlError.strerror)
+    except urllib2.HTTPError as httpError:
+        print "HTTP Error in getConfigValue: {0}".format(httpError.strerror)
     #
     return configValue
 
@@ -166,10 +175,10 @@ def putConfigValue(key, value):
         request.add_header("Content-Type", "text/plain")
 	request.get_method = lambda: 'PUT'
         configValue = opener.open(request).read()
-    except urllib2.URLError as e:
-        print "URL Error in putConfigValue: " + e.strerror
-    except urllib2.HTTPError as e:
-        print "HTTP Error in putConfigValue: " + e.strerror
+    except urllib2.URLError as urlError:
+        print "URL Error in getConfigValue: {0}".format(urlError.strerror)
+    except urllib2.HTTPError as httpError:
+        print "HTTP Error in getConfigValue: {0}".format(httpError.strerror)
     #
     return configValue
 
@@ -196,10 +205,10 @@ def postChatter(chatterText):
         request.add_header("Content-Type", "text/plain")
         response = urllib2.urlopen(request)
         responseText = response.read()
-    except urllib2.URLError as e:
-        print "URL Error in postChatter: " + e.strerror
-    except urllib2.HTTPError as e:
-        print "HTTP Error in postChatter: " + e.strerror
+    except urllib2.URLError as urlError:
+        print "URL Error in getConfigValue: {0}".format(urlError.strerror)
+    except urllib2.HTTPError as httpError:
+        print "HTTP Error in getConfigValue: {0}".format(httpError.strerror)
     #
     return responseText
 
