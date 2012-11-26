@@ -96,7 +96,7 @@ end
 # post_config('', 'bone1')
 # put_config('bone1', 'device_location', "tv room")
 # put_config('bone1', 'test', "foobar")
-
+# put_config('bone1', 'status', 126.chr + " hello " + 127.chr)
 
 keysets_test = {
   'napkin#id' => "test",

@@ -1,5 +1,6 @@
 require 'yaml'
 require 'rss/2.0'
+require 'cgi'
 
 #
 require 'rubygems'
@@ -21,7 +22,7 @@ module Napkin
         @request.body.rewind
         body_text = @request.body.read
 
-        puts "CHATTER got from #{@user}:\n#{body_text}"
+        puts "CHATTER got from #{@user}"
 
         nn = @nn.dup
         nn.go_sub!(@user)
@@ -30,11 +31,27 @@ module Napkin
         post_count = nn.increment('post_count')
 
         nn.go_sub!("#{post_count}")
-        nn['post_body'] = body_text
-        nn['post_time_i'] = post_time.to_i
-        nn['post_time_s'] = post_time.to_s
+        nn.set_key_prefix("chatter.post","~")
+        nn['body'] = body_text
+        nn['time_i'] = post_time.to_i
+        nn['time_s'] = post_time.to_s
+
+        nn.set_key_prefix("","")
+        parse_keyset(body_text, nn)
 
         return "OK"
+      end
+
+      def parse_keyset(keyset_text, nn)
+        keyset_text.each_line do |line|
+          key, value = line.split('=', 2)
+          if (!key.nil?) then
+            key = key.strip
+            value = value.strip
+            puts "KEY: " + key + ", VAL: " + value
+            nn[key] = value
+          end
+        end
       end
     end
   end

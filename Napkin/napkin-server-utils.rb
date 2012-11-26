@@ -85,7 +85,7 @@ module Napkin
       segments.each_with_index do |segment, i|
         if (nn.go_sub(segment)) then
           handler_class = get_handler_class(nn, method)
-          puts "!!! HTTP handler: #{handler_class.name} as #{user}"
+          # puts "!!! HTTP handler: #{handler_class.name} as #{user}"
           handler = handler_class.new(nn.dup ,method, request, segments, i, user)
           result = handler.handle
 

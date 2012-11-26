@@ -47,10 +47,18 @@ module Napkin
           result += "key:#{key}, value:#{value}\n"
         end
 
-        @nn.node.outgoing(NAPKIN_SUB).each do |n|
-          puts "CHECK: #{n[NAPKIN_ID]} / #{get_keys(n)}"
-          result += "   [sub] --- id:#{n[NAPKIN_ID]}, neo_id:#{n.neo_id}\n"
+        count = @nn.node.outgoing(NAPKIN_SUB).count
+        puts "FIRST (of #{count}):"
+        
+        nodes = @nn.node.outgoing(NAPKIN_SUB).sort_by {|n| n.neo_id }
+        if (nodes.length > 10) then
+          nodes = nodes[-10..-1]
         end
+        
+        nodes.each_with_index do |n, i|
+          result += "   [sub #{i}] --- id:#{n[NAPKIN_ID]}, neo_id:#{n.neo_id}\n"
+        end
+        
         return result
       end
 

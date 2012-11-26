@@ -93,17 +93,7 @@ module Napkin
 
       def go_sub(id)
         begin
-          # TODO: got exception here after several days of continuous run:
-          ## org.apache.lucene.store.AlreadyClosedException: this IndexReader is closed
-          nodes = NapkinIdIndex.find(NAPKIN_ID => id)
-
-          sub = nil
-          nodes.each do |n|
-            if (NodeNav.get_sup(n) == @node)
-              sub = n
-            end
-          end
-
+          sub = find_sub(id)
           if (sub.nil?) then
             return false
           else
@@ -120,7 +110,7 @@ module Napkin
         created_node = false
         if (!go_sub(id)) then
           Neo4j::Transaction.run do
-            sub = @node.outgoing(NAPKIN_SUB).find{|sub| sub[NAPKIN_ID] == id}
+            sub = find_sub(id)
             if (sub.nil?) then
               sub = Neo4j::Node.new(NAPKIN_ID => id, NAPKIN_ID_INDEX => true)
               @node.outgoing(NAPKIN_SUB) << sub
@@ -130,6 +120,24 @@ module Napkin
           end
         end
         return created_node;
+      end
+
+      def find_sub(id)
+        sub = nil
+        
+        Neo4j::Transaction.run do
+          # TODO: got exception here after several days of continuous run:
+          ## org.apache.lucene.store.AlreadyClosedException: this IndexReader is closed
+          nodes = NapkinIdIndex.find(NAPKIN_ID => id)
+
+          nodes.each do |n|
+            if (NodeNav.get_sup(n) == @node)
+              sub = n if sub.nil?
+            end
+          end
+        end
+   
+        return sub
       end
 
       def go_sub_path(path)
