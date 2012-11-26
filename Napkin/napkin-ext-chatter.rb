@@ -19,6 +19,14 @@ module Napkin
         return "" unless at_destination?
         post_time = Time.now
 
+        query_text = @request.query_string
+        query_hash = CGI.parse(query_text)
+
+        param_format = query_hash['format'].first
+        if (param_format.nil? || param_format=="") then
+          param_format = "raw"
+        end
+
         @request.body.rewind
         body_text = @request.body.read
 
@@ -32,12 +40,17 @@ module Napkin
 
         nn.go_sub!("#{post_count}")
         nn.set_key_prefix("chatter.post","~")
-        nn['body'] = body_text
+
         nn['time_i'] = post_time.to_i
         nn['time_s'] = post_time.to_s
+        nn['format'] = param_format
 
-        nn.set_key_prefix("","")
-        parse_keyset(body_text, nn)
+        if(param_format == "keyset") then
+          nn.set_key_prefix("","")
+          parse_keyset(body_text, nn)
+        else
+          nn['body'] = body_text
+        end
 
         return "OK"
       end
