@@ -88,7 +88,7 @@ namespace cerbee1
                 _samplers.AppendStatus(sb);
                 string chatterRequestText = sb.ToString();
 
-                string chatterUri = NapkinServerUri + "/chatter";
+                string chatterUri = NapkinServerUri + "/chatter?format=keyset";
                 HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText, false);
 
                 _samplers.Reset();
