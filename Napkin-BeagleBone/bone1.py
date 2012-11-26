@@ -197,9 +197,10 @@ def composeChatterText(cycle, startCount):
     return chatterText
 
 def postChatter(chatterText):
+    napkinChatterUrl=NAPKIN_CHATTER_URL + "?format=keyset"
     responseText="??? error ???"
     try:
-        request = urllib2.Request(NAPKIN_CHATTER_URL, chatterText)
+        request = urllib2.Request(napkinChatterUrl, chatterText)
         authHeader = base64.encodestring('%s:%s' % (DEVICE_ID, DEVICE_ID)).replace('\n', '')
         request.add_header("Authorization", "Basic %s" % authHeader)
         request.add_header("Content-Type", "text/plain")
