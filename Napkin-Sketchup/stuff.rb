@@ -8,6 +8,9 @@ require 'rss/2.0'
 
 class Stuff
 
+	NAPKIN_URL = "http://192.168.2.50:4567"
+	NAPKIN_ID = "sketchy"
+
 	def doit(channel)
 		rss_text = read_rss(channel)
 		puts rss_text
@@ -16,9 +19,9 @@ class Stuff
 			puts "#{i}"
 			puts "  #{item.title}"
 			puts "  #{item.link}"
-			puts "  #{item.guid.content}"
+			# puts "  #{item.guid.content}"
 			puts ""
-			ruby_text = read_ruby(item.link)
+			ruby_text = read_ruby(channel, item.link)
 			puts ruby_text
 			ec = Stuff::EvalContext.new.init
 			eval ruby_text, ec.binding
@@ -26,14 +29,14 @@ class Stuff
 	end
 	
 	def read_rss(channel)
-		open("http://localhost:4567/channels/#{channel}/rss.xml") do |rss_file|
+		open(NAPKIN_URL + "/channels/#{channel}/rss.xml", :http_basic_authentication=>[NAPKIN_ID, NAPKIN_ID]) do |rss_file|
 			rss_text = rss_file.read
 			return rss_text
 		end
 	end
 
-	def read_ruby(item_link)
-		open(item_link) do |ruby_file|
+	def read_ruby(channel, item_link)
+		open(NAPKIN_URL + "/channels/#{channel}/" + item_link, :http_basic_authentication=>[NAPKIN_ID, NAPKIN_ID]) do |ruby_file|
 			ruby_text = ruby_file.read
 			return ruby_text
 		end
@@ -45,7 +48,7 @@ class Stuff
 		end
 
 		def helper
-			puts "in helper"
+			puts "in helper as #{NAPKIN_ID}"
 		end
 	end
 
