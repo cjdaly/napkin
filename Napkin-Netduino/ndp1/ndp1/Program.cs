@@ -32,6 +32,9 @@ namespace ndp1
             _serLcd = new SerLCD();
             _serLcd.Write("hello", "world");
 
+            _emic2 = new Emic2();
+            _emic2.Say("hello");
+
             _led = new OutputPort(Pins.ONBOARD_LED, false);
             _button = new InterruptPort(Pins.ONBOARD_SW1, false, Port.ResistorMode.Disabled, Port.InterruptMode.InterruptEdgeBoth);
             _button.OnInterrupt += new NativeEventHandler(button_OnInterrupt);
@@ -74,6 +77,7 @@ namespace ndp1
         private static DeviceVitals _vitals;
 
         private static SerLCD _serLcd;
+        private static Emic2 _emic2;
 
         private static OutputPort _led;
         private static InterruptPort _button;
@@ -94,6 +98,7 @@ namespace ndp1
             _samplers.Sample("memory");
 
             _serLcd.Write("cycle: " + _vitals.CycleCount);
+            _emic2.Say("cycle " + _vitals.CycleCount);
 
             _vitals.UpdateDeviceStarts();
             _vitals.UpdateDeviceLocation();
@@ -118,6 +123,7 @@ namespace ndp1
             Debug.Print("Starting cycle: " + cycleCount + " on device: " + DeviceId + " with postCycle: " + _vitals.PostCycle);
 
             _serLcd.Write("cycle: " + _vitals.CycleCount);
+            _emic2.Say("cycle " + _vitals.CycleCount);
             _samplers.Sample("memory");
 
             if (cycleCount % _configCycle == 0)
@@ -137,7 +143,7 @@ namespace ndp1
                 _samplers.AppendStatus(sb);
                 string chatterRequestText = sb.ToString();
 
-                string chatterUri = NapkinServerUri + "/chatter";
+                string chatterUri = NapkinServerUri + "/chatter?format=keyset";
                 HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText, false);
 
                 _samplers.Reset();
