@@ -9,36 +9,39 @@ require 'rss/2.0'
 class Stuff
 
 	NAPKIN_URL = "http://192.168.2.50:4567"
+	TEST_RSS_ROOT = NAPKIN_URL + "/channels/"
+
 	NAPKIN_ID = "sketchy"
 
 	def doit(channel)
-		rss_text = read_rss(channel)
+		rss_text = get_sketchup_text(channel + "/rss.xml")
 		puts rss_text
 		rss = RSS::Parser.parse(rss_text, false)
 		rss.items.each_with_index do |item, i|
 			puts "#{i}"
-			puts "  #{item.title}"
-			puts "  #{item.link}"
+			puts "title    :  #{item.title}"
+			puts "link     :  #{item.link}"
+			itemCategory = item.category.content
+			puts "category :  #{itemCategory}"
 			# puts "  #{item.guid.content}"
 			puts ""
-			ruby_text = read_ruby(channel, item.link)
-			puts ruby_text
-			ec = Stuff::EvalContext.new.init
-			eval ruby_text, ec.binding
+			if (itemCategory == "ruby") then
+				ruby_text = get_sketchup_text(channel + "/" + item.link)
+				puts ruby_text
+				ec = Stuff::EvalContext.new.init
+				eval ruby_text, ec.binding
+			elsif (itemCategory == "rss") then
+				subChannel = channel + "/" + item.link
+				doit(subChannel)
+			end
 		end
 	end
 	
-	def read_rss(channel)
-		open(NAPKIN_URL + "/channels/#{channel}/rss.xml", :http_basic_authentication=>[NAPKIN_ID, NAPKIN_ID]) do |rss_file|
-			rss_text = rss_file.read
-			return rss_text
-		end
-	end
-
-	def read_ruby(channel, item_link)
-		open(NAPKIN_URL + "/channels/#{channel}/" + item_link, :http_basic_authentication=>[NAPKIN_ID, NAPKIN_ID]) do |ruby_file|
-			ruby_text = ruby_file.read
-			return ruby_text
+	def get_sketchup_text(path, napkin_sketchup_url = TEST_RSS_ROOT)
+		url = napkin_sketchup_url + path
+		open(url, :http_basic_authentication=>[NAPKIN_ID, NAPKIN_ID]) do |get_file|
+			sketchup_text = get_file.read
+			return sketchup_text
 		end
 	end
 
