@@ -33,7 +33,12 @@ namespace ndp1
             _serLcd.Write("hello", "world");
 
             _emic2 = new Emic2();
+
+            Thread.Sleep(500);
             _emic2.Say("hello");
+
+            Thread.Sleep(2000);
+            _emic2.Say("this is radio free chris");
 
             _led = new OutputPort(Pins.ONBOARD_LED, false);
             _button = new InterruptPort(Pins.ONBOARD_SW1, false, Port.ResistorMode.Disabled, Port.InterruptMode.InterruptEdgeBoth);
@@ -72,7 +77,12 @@ namespace ndp1
 
         private static readonly int _cycleDelayMillisecondsInitial = 15 * 1000;
         private static Thread _cycleThread;
-        private static readonly int _configCycle = 3;
+
+        private static readonly int _blinkM_D_Cycle = 1;
+        private static readonly int _blinkM_E_Cycle = 3;
+        private static readonly int _blinkM_F_Cycle = 5;
+
+        private static readonly int _blinkM_Cycle_Mod = 7;
 
         private static DeviceVitals _vitals;
 
@@ -126,15 +136,19 @@ namespace ndp1
             _emic2.Say("cycle " + _vitals.CycleCount);
             _samplers.Sample("memory");
 
-            if (cycleCount % _configCycle == 0)
+            if (cycleCount % _blinkM_Cycle_Mod == _blinkM_D_Cycle)
             {
                 UpdateBlinkM(_blinkM_D, _i2cDevice, _credential);
-                _samplers.Sample("memory");
-                UpdateBlinkM(_blinkM_E, _i2cDevice, _credential);
-                _samplers.Sample("memory");
-                UpdateBlinkM(_blinkM_F, _i2cDevice, _credential);
-                _samplers.Sample("memory");
             }
+            if (cycleCount % _blinkM_Cycle_Mod == _blinkM_E_Cycle)
+            {
+                UpdateBlinkM(_blinkM_E, _i2cDevice, _credential);
+            }
+            if (cycleCount % _blinkM_Cycle_Mod == _blinkM_F_Cycle)
+            {
+                UpdateBlinkM(_blinkM_F, _i2cDevice, _credential);
+            }
+            _samplers.Sample("memory");
 
             if (cycleCount % _vitals.PostCycle == 0)
             {
