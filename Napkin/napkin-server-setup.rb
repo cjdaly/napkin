@@ -65,49 +65,10 @@ def post_config(
   puts "POST Incoming:\n#{response.to_s()}\n"
 end
 
-# post_config('', 'ndp1')
-# put_config('ndp1', 'blinkM_13_hsb', "0,255,42")
-# put_config('ndp1', 'blinkM_14_hsb', "80,255,42")
-# put_config('ndp1', 'blinkM_15_hsb', "160,255,42")
-# put_config('ndp1', 'device_location', "man cave")
 
-# post_config('', 'cerb1')
-# put_config('cerb1', 'device_location', "man cave")
-# put_config('cerb1', 'MulticolorLed_rBg', "0,16,16")
-# put_config('cerb1', 'post_cycle', "50")
-# put_config('cerb1', 'cycle_delay_milliseconds', "5000")
-
-# post_config('', 'cerb2')
-# put_config('cerb2', 'device_location', "man cave")
-# put_config('cerb2', 'button_led', "off")
-# put_config('cerb2', 'post_cycle', "60")
-# put_config('cerb2', 'cycle_delay_milliseconds', "5000")
-
-# post_config('', 'cerbee1')
-# put_config('cerbee1', 'device_location', "garage")
-# put_config('cerbee1', 'post_cycle', "60")
-# put_config('cerbee1', 'cycle_delay_milliseconds', "5000")
-
-# post_config('', 'cerbee2')
-# put_config('cerbee2', 'device_location', "man cave")
-# put_config('cerbee2', 'post_cycle', "60")
-# put_config('cerbee2', 'cycle_delay_milliseconds', "5000")
-
-# post_config('', 'bone1')
-# put_config('bone1', 'device_location', "tv room")
-# put_config('bone1', 'test', "foobar")
-# put_config('bone1', 'status', 126.chr + " hello " + 127.chr)
-
-keysets_test = {
-  'napkin#id' => "test",
-  'napkin/keysets#keyset_name' =>"test keyset",
-  'napkin/keysets#keyset_description' =>"blah blah blah...",
-  'napkin/keysets#keyset_index_id' =>"???"
-}
-
-# post_node('keysets', keysets_test)
-
-
+#
+# Tasks
+#
 
 tasks_test = {
   'napkin#id' => "test",
@@ -146,6 +107,85 @@ tasks_config = {
 # post_node('napkin/tasks', tasks_chatter)
 # post_node('napkin/tasks', tasks_config)
 
+
+#
+# Keysets
+#
+
+keysets_test = {
+  'napkin#id' => "test",
+  'napkin/keysets#keyset_name' =>"test keyset",
+  'napkin/keysets#keyset_description' =>"blah blah blah...",
+  'napkin/keysets#keyset_index_id' =>"???"
+}
+
+# post_node('keysets', keysets_test)
+
+
+#
+# Config
+#
+
+# post_config('', 'ndp1')
+# put_config('ndp1', 'blinkM_13_hsb', "0,255,42")
+# put_config('ndp1', 'blinkM_14_hsb', "80,255,42")
+# put_config('ndp1', 'blinkM_15_hsb', "160,255,42")
+# put_config('ndp1', 'device_location', "man cave")
+
+# post_config('', 'cerb1')
+# put_config('cerb1', 'device_location', "man cave")
+# put_config('cerb1', 'MulticolorLed_rBg', "0,16,16")
+# put_config('cerb1', 'post_cycle', "50")
+# put_config('cerb1', 'cycle_delay_milliseconds', "5000")
+
+# post_config('', 'cerb2')
+# put_config('cerb2', 'device_location', "man cave")
+# put_config('cerb2', 'button_led', "off")
+# put_config('cerb2', 'post_cycle', "60")
+# put_config('cerb2', 'cycle_delay_milliseconds', "5000")
+
+# post_config('', 'cerbee1')
+# put_config('cerbee1', 'device_location', "garage")
+# put_config('cerbee1', 'post_cycle', "60")
+# put_config('cerbee1', 'cycle_delay_milliseconds', "5000")
+
+# post_config('', 'cerbee2')
+# put_config('cerbee2', 'device_location', "man cave")
+# put_config('cerbee2', 'post_cycle', "60")
+# put_config('cerbee2', 'cycle_delay_milliseconds', "5000")
+
+# post_config('', 'bone1')
+# put_config('bone1', 'device_location', "tv room")
+# put_config('bone1', 'test', "foobar")
+# put_config('bone1', 'status', 126.chr + " hello " + 127.chr)
+
+#
+# Sketchup
+#
+
+sketchup_test1 = {
+  'napkin#id' => "test1",
+  'sketchup.models~title' =>"Sketchup Test Model",
+  'sketchup.models~kind' =>"top"
+}
+sketchup_test1_timeline = {
+  'napkin#id' => "timeline",
+  'sketchup.models~title' =>"Timeline",
+  'sketchup.models~kind' =>"timeline"
+}
+sketchup_test1_dataline = {
+  'napkin#id' => "dataline",
+  'sketchup.models~title' =>"Data",
+  'sketchup.models~kind' =>"dataline"
+}
+# post_node('sketchup/models', sketchup_test1)
+# post_node('sketchup/models/test1', sketchup_test1_timeline)
+# post_node('sketchup/models/test1', sketchup_test1_dataline)
+
+#
+# Tracker
+#
+
 props_zh = {
   'napkin#id' => "zh",
   'tracker/feeds/feed#name' =>"Zerohedge",
@@ -165,6 +205,14 @@ props_jesse = {
   # 'tracker/feeds/feed#last_refresh_time_i' => 0
 }
 
+props_krugman = {
+  'napkin#id' => "krugman",
+  'tracker/feeds/feed#name' =>"Paul Krugman",
+  'tracker/feeds/feed#url' => "http://krugman.blogs.nytimes.com/feed",
+  'tracker/feeds/feed#refresh_enabled' => true,
+  'tracker/feeds/feed#refresh_frequency_minutes' => 115
+}
+
 props_google_news = {
   'napkin#id' => "gn",
   'tracker/feeds/feed#name' =>"Google News",
@@ -175,5 +223,6 @@ props_google_news = {
 
 # post_node('tracker/feeds', props_zh)
 # post_node('tracker/feeds', props_jesse)
+# post_node('tracker/feeds', props_krugman)
 # post_node('tracker/feeds', props_google_news)
 

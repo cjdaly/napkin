@@ -97,11 +97,14 @@ module Napkin
       end
 
       if (current_segment_index != segments.length) then
-        missing_segment = segments[current_segment_index]
-        halt 404, "Node not found: #{missing_segment} in #{path}"
-      else
-        return response_text
+        if (response_text == "") then
+          missing_segment = segments[current_segment_index]
+          # halt 404, "Node not found: #{missing_segment} in #{path}"
+          response_text += "\nNode not found: #{missing_segment} in #{path}"
+        end
       end
+
+      return response_text
     end
 
     def get_handler_class(nn, method)

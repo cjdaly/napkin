@@ -24,9 +24,17 @@ module Napkin
       def at_destination?
         return @segments.length() == @segment_index + 1
       end
+      
+      def next_stop_destination?
+        return @segments.length() == @segment_index + 2
+      end
 
-      def get_segment
-        return @segments[@segment_index]
+      def get_segment(index = @segment_index)
+        return @segments[index]
+      end
+      
+      def get_next_segment
+        return get_segment(@segment_index + 1)
       end
 
       def handle
