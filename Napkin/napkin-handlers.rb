@@ -24,7 +24,7 @@ module Napkin
       def at_destination?
         return @segments.length() == @segment_index + 1
       end
-      
+
       def next_stop_destination?
         return @segments.length() == @segment_index + 2
       end
@@ -32,9 +32,30 @@ module Napkin
       def get_segment(index = @segment_index)
         return @segments[index]
       end
-      
+
       def get_next_segment
         return get_segment(@segment_index + 1)
+      end
+
+      def get_path(start_index=0, end_index=-1)
+        if (end_index == -1) then
+          end_index = @segments.length - 1
+        end
+
+        path = ""
+        index = start_index
+        while index <= end_index do
+          if path != "" then
+            path << "/"
+          end
+          path << @segments[index]
+          index += 1
+        end
+        return path
+      end
+
+      def get_current_path
+        return get_path(0, @segment_index)
       end
 
       def handle
@@ -57,16 +78,16 @@ module Napkin
 
         count = @nn.node.outgoing(NAPKIN_SUB).count
         puts "FIRST (of #{count}):"
-        
+
         nodes = @nn.node.outgoing(NAPKIN_SUB).sort_by {|n| n.neo_id }
         if (nodes.length > 10) then
           nodes = nodes[-10..-1]
         end
-        
+
         nodes.each_with_index do |n, i|
           result += "   [sub #{i}] --- id:#{n[NAPKIN_ID]}, neo_id:#{n.neo_id}\n"
         end
-        
+
         return result
       end
 

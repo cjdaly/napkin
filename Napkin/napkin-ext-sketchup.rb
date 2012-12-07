@@ -53,8 +53,6 @@ module Napkin
           return result
         end
 
-        info = SketchupInfo.new(@request.query_string)
-
         curr_segment = get_segment
         next_segment = get_next_segment
 
@@ -62,6 +60,8 @@ module Napkin
         nn.set_key_prefix('sketchup.models', '~')
         title = nn['title']
         kind = nn['kind']
+
+        info = SketchupInfo.new(@request.query_string)
 
         if (next_segment == "rss.xml") then
           result << "<?xml version=\"1.0\"?>\n"
@@ -141,7 +141,7 @@ module Napkin
       # top-level model node
       #
       def handle_top_preamble(info, result="")
-        result << "puts 'in handle_top_preamble'\n"
+        result << "set_data('top_group', Sketchup.active_model.entities.add_group)\n"
         return result
       end
 
@@ -156,14 +156,16 @@ module Napkin
       end
 
       def handle_top_postamble(info, result="")
-        result << "puts 'in handle_top_postamble'\n"
+        result << "g = get_data('top_group')\n"
+        result << "g.entities.transform_entities [0,100,0], g\n"
         return result
       end
 
       # timeline
       #
       def handle_timeline_preamble(info, result="")
-        result << "puts 'in handle_timeline_preamble'\n"
+        result << "g = get_data('top_group')\n"
+        result << "set_data('timeline_group', g.entities.add_group)\n"
         return result
       end
 
@@ -179,9 +181,8 @@ module Napkin
       end
 
       def handle_timeline_virtual_sub(info, result="")
-        result << "puts 'in handle_timeline_virtual_sub with #{info.param_ref_time_i} : #{info.param_start_time_i} .. #{info.param_end_time_i}'\n"
-        result << "group = Sketchup.active_model.entities.add_group\n"
-        result << "face_group = group.entities.add_group\n"
+        result << "g = get_data('timeline_group')\n"
+        result << "face_group = g.entities.add_group\n"
         result << "x1 = #{info.get_x(info.param_start_time_i)}\n"
         result << "x2 = x1 + #{info.param_x} - 1\n"
         result << "y1 = 0\n"
@@ -190,8 +191,10 @@ module Napkin
         result << "face_bounds = [[x1,y1,z],[x2,y1,z],[x2,y2,z],[x1,y2,z]]\n"
         result << "face = face_group.entities.add_face face_bounds\n"
         result << "face_group.material = 'Green'\n"
-        result << "text_group = group.entities.add_group\n"
-        result << "text_group.entities.add_3d_text 'hello', TextAlignLeft, 'Courier New', false, false, 8, 1, 0, true, 0\n"
+        result << "time=Time.at(#{info.param_start_time_i})\n"
+        result << "time_text=time.strftime('%H:%M')\n"
+        result << "text_group = g.entities.add_group\n"
+        result << "text_group.entities.add_3d_text time_text, TextAlignLeft, 'Courier New', true, false, 12, 1, 0, true, 0\n"
         result << "text_group.entities.transform_entities [x1+10,y1+40,1], text_group\n"
         return result
       end
@@ -204,7 +207,8 @@ module Napkin
       # dataline
       #
       def handle_dataline_preamble(info, result="")
-        result << "puts 'in handle_dataline_preamble'\n"
+        result << "g = get_data('top_group')\n"
+        result << "set_data('dataline_group', g.entities.add_group)\n"
         return result
       end
 
@@ -220,20 +224,84 @@ module Napkin
       end
 
       def handle_dataline_virtual_sub(info, result="")
-        result << "puts 'in handle_dataline_virtual_sub'\n"
-        result << "group = Sketchup.active_model.entities.add_group\n"
-        result << "face_group = group.entities.add_group\n"
-        result << "x1 = #{info.get_x(info.param_start_time_i) + 10}\n"
-        result << "x2 = x1 + 10\n"
-        result << "y1 = 80\n"
-        result << "y2 = y1 + 10\n"
-        result << "z = #{info.param_z}\n"
-        result << "face_bounds = [[x1,y1,z],[x2,y1,z],[x2,y2,z],[x1,y2,z]]\n"
-        result << "face = face_group.entities.add_face face_bounds\n"
-        result << "face.reverse!\n"
-        result << "face.pushpull 100\n"
-        result << "face_group.material = 'Blue'\n"
+        result << "g = get_data('dataline_group')\n"
+        result << "face_groups = g.entities.add_group\n"
+        result << handle_datapoints(info)
         return result
+      end
+
+      def handle_datapoints(info, result="")
+        nn = Napkin::NodeUtil::NodeNav.new
+        nn.go_sub_path!("chatter/cerbee1")
+
+        nn.node.outgoing(NAPKIN_SUB).each do |sub|
+          post_time_i = sub['chatter.post~time_i']
+          if (!post_time_i.nil?) then
+            if ((post_time_i >= info.param_start_time_i) && (post_time_i < info.param_end_time_i)) then
+              light_text = sub['chatter.device.sensor.light_sensor_percentage~average']
+              light_f = convert_to_f(light_text)
+              if (!light_f.nil?) then
+                result << "face_group = face_groups.entities.add_group\n"
+                result << "x1 = #{info.get_x(post_time_i).to_s}\n"
+                result << "x2 = x1 + 4\n"
+                result << "y1 = 80\n"
+                result << "y2 = y1 + 4\n"
+                result << "z = #{info.param_z}\n"
+                result << "face_bounds = [[x1,y1,z],[x2,y1,z],[x2,y2,z],[x1,y2,z]]\n"
+                result << "face = face_group.entities.add_face face_bounds\n"
+                result << "face.reverse!\n"
+                result << "face.pushpull #{light_f}\n"
+                result << "face_group.material = 'Gray'\n"
+              end
+
+              temp_text = sub['chatter.device.sensor.temperature~average']
+              temp_f = convert_to_f(temp_text)
+              if (!temp_f.nil?) then
+                result << "face_group = face_groups.entities.add_group\n"
+                result << "x1 = #{info.get_x(post_time_i).to_s}\n"
+                result << "x2 = x1 + 4\n"
+                result << "y1 = 90\n"
+                result << "y2 = y1 + 4\n"
+                result << "z = #{info.param_z}\n"
+                result << "face_bounds = [[x1,y1,z],[x2,y1,z],[x2,y2,z],[x1,y2,z]]\n"
+                result << "face = face_group.entities.add_face face_bounds\n"
+                result << "face.reverse!\n"
+                result << "face.pushpull #{temp_f}\n"
+                result << "face_group.material = 'Blue'\n"
+              end
+
+              humidity_text = sub['chatter.device.sensor.humidity~average']
+              humidity_f = convert_to_f(humidity_text)
+              if (!humidity_f.nil?) then
+                result << "face_group = face_groups.entities.add_group\n"
+                result << "x1 = #{info.get_x(post_time_i).to_s}\n"
+                result << "x2 = x1 + 4\n"
+                result << "y1 = 100\n"
+                result << "y2 = y1 + 4\n"
+                result << "z = #{info.param_z}\n"
+                result << "face_bounds = [[x1,y1,z],[x2,y1,z],[x2,y2,z],[x1,y2,z]]\n"
+                result << "face = face_group.entities.add_face face_bounds\n"
+                result << "face.reverse!\n"
+                result << "face.pushpull #{humidity_f}\n"
+                result << "face_group.material = 'Orange'\n"
+              end
+
+            end
+          end
+        end
+
+        return result
+      end
+
+      def convert_to_f(text)
+        f = nil
+        if (text.is_a? String) then
+          begin
+            f = Float(text)
+          rescue ArgumentError => err
+          end
+        end
+        return f
       end
 
       def handle_dataline_postamble(info, result="")
@@ -264,7 +332,7 @@ module Napkin
         @time_now = Time.now
 
         @param_ref_time_i = get_int_param('ref_time_i', @time_now.to_i - DAY, @query_hash)
-        @param_start_time_i = get_int_param('start_time_i', @time_now.to_i - DAY, @query_hash)
+        @param_start_time_i = get_int_param('start_time_i', @time_now.to_i - (DAY * 5), @query_hash)
         @param_end_time_i = get_int_param('end_time_i', @time_now.to_i, @query_hash)
 
         @param_x = get_int_param('x_per_hour', 100, @query_hash)
@@ -273,7 +341,7 @@ module Napkin
       end
 
       def get_x(time_i)
-        return ((time_i - @param_ref_time_i) / UNIT) * @param_x
+        return ((time_i - @param_ref_time_i) * @param_x) / UNIT
       end
 
       def get_duration_time_i
