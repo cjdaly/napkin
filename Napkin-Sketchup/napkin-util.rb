@@ -13,6 +13,8 @@ class NapkinUtil
 
 	NAPKIN_ID = "sketchy"
 
+	SKETCHUP_DATA = { 'test' => 'hello' }
+
 	def eval_model(model)
 		rss_text = get_sketchup_text(model + "/rss.xml")
 		# puts rss_text
@@ -50,8 +52,14 @@ class NapkinUtil
 			Proc.new {}
 		end
 
-		def helper
-			puts "in helper as #{NAPKIN_ID}"
+		def get_data(key)
+			value = SKETCHUP_DATA[key]
+			puts ("get_data: #{key} = #{value}")
+			return value
+		end
+
+		def set_data(key, value)
+			SKETCHUP_DATA[key] = value
 		end
 	end
 
