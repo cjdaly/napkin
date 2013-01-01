@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.RotaryDIPSwitch</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.RotaryDIPSwitch">
+            <summary>
+            A binary Rotary DIP Switch
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RotaryDIPSwitch._Pins">
+            <summary>
+            Contains references to all pins
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RotaryDIPSwitch._LastState">
+            <summary>
+            Contains the last state
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RotaryDIPSwitch.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin[])">
+            <summary>
+            Defines a binary Rotary DIP Switch
+            </summary>
+            <param name="Pins">An array with the pins for each bit</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RotaryDIPSwitch.RotaryDIPSwitch_OnInterrupt(System.UInt32,System.UInt32,System.DateTime)">
+            <summary>
+            Interrupt triggered when a pin changes state
+            </summary>
+            <param name="Pin">The pin id that's changed</param>
+            <param name="State">The new state</param>
+            <param name="Time">Time of the event</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RotaryDIPSwitch.Read">
+            <summary>
+            Returns the current state of the switch
+            </summary>
+            <returns>It's current state</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RotaryDIPSwitch._Read">
+            <summary>
+            Reads the value of the switch
+            </summary>
+            <returns>The value of the switch</returns>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.RotaryDIPSwitch.OnInterrupt">
+            <summary>
+            Event triggered when the state changes
+            </summary>
+        </member>
+    </members>
+</doc>

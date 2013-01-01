@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.AdafruitMotorshield</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.AdafruitMotorshield">
+            <summary>
+            Adafruit Motor Control Shield
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._EnablePin">
+            <summary>Reference to the Enable Pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor1aPin">
+            <summary>Pin A for motor 1</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor1bPin">
+            <summary>Pin B for motor 1</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor1Pwm">
+            <summary>PWM Pin for motor 1</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor2aPin">
+            <summary>Pin A for motor 2</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor2bPin">
+            <summary>Pin B for motor 2</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor2Pwm">
+            <summary>PWM Pin for motor 2</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor3aPin">
+            <summary>Pin A for motor 3</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor3bPin">
+            <summary>Pin B for motor 3</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor3Pwm">
+            <summary>PWM Pin for motor 3</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor4aPin">
+            <summary>Pin A for motor 4</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor4bPin">
+            <summary>Pin B for motor 4</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._Motor4Pwm">
+            <summary>PWM Pin for motor 4</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield._IcOut">
+            <summary>Reference to the one 74HC595 IC</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.AdafruitMotorshield.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Toolbox.NETMF.Hardware.IPWMPort,Toolbox.NETMF.Hardware.IPWMPort,Toolbox.NETMF.Hardware.IPWMPort,Toolbox.NETMF.Hardware.IPWMPort)">
+            <summary>
+            
+            </summary>
+            <param name="ClockPin">SPI Clock pin</param>
+            <param name="EnablePin">SPI Enable pin</param>
+            <param name="DataPin">SPI Data pin</param>
+            <param name="LatchPin">SPI Latch pin</param>
+            <param name="Motor1Pwm">Motor 1 PWM pin</param>
+            <param name="Motor2Pwm">Motor 2 PWM pin</param>
+            <param name="Motor3Pwm">Motor 3 PWM pin</param>
+            <param name="Motor4Pwm">Motor 4 PWM pin</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.AdafruitMotorshield.SetState(Toolbox.NETMF.Hardware.AdafruitMotorshield.Motors,System.SByte)">
+            <summary>
+            Sets the state of a motor
+            </summary>
+            <param name="Motor">The motor to change</param>
+            <param name="Speed">The speed to move with; -100 (full speed backward) to 100 (full speed forward)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.AdafruitMotorshield.Dispose">
+            <summary>
+            Disposes the AdafruitMotorshield object
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.AdafruitMotorshield.Motors">
+            <summary>
+            Contains all motors
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield.Motors.Motor1">
+            <summary>First motor</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield.Motors.Motor2">
+            <summary>Second motor</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield.Motors.Motor3">
+            <summary>Third motor</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AdafruitMotorshield.Motors.Motor4">
+            <summary>Forth motor</summary>
+        </member>
+    </members>
+</doc>

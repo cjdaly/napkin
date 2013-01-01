@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.Ic74HC595</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.Ic74hc595">
+            <summary>
+            A chain of one or multiple serial to parallel ICs over managed SPI
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595._SpiInterface">
+            <summary>A reference to the SPI Interface</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595._Data">
+            <summary>Contains all pin values</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595._BitBangMode">
+            <summary>When using bitbang mode, this bool is true. <see cref="F:Toolbox.NETMF.Hardware.Ic74hc595._SpiInterface"/> won't be used if this is true.</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595._BBM_SPCK">
+            <summary>When using bitbang mode, this will contain a reference to the SPCK pin. See also <see cref="F:Toolbox.NETMF.Hardware.Ic74hc595._BitBangMode"/></summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595._BBM_CS">
+            <summary>When using bitbang mode, this will contain a reference to the CS pin. See also <see cref="F:Toolbox.NETMF.Hardware.Ic74hc595._BitBangMode"/></summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595._BBM_MOSI">
+            <summary>When using bitbang mode, this will contain a reference to the MOSI pin. See also <see cref="F:Toolbox.NETMF.Hardware.Ic74hc595._BitBangMode"/></summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595._PinDisposalRequired">
+            <summary>Set to true when bitbang pins are created by the constructor</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.#ctor(Microsoft.SPOT.Hardware.SPI.SPI_module,Microsoft.SPOT.Hardware.Cpu.Pin,System.UInt32,System.UInt32)">
+            <summary>
+            Initialises a chain of one or multiple serial to parallel ICs over managed SPI
+            </summary>
+            <param name="SPI_Module">The SPI interface it's connected to</param>
+            <param name="LatchPin">The slave select pin connected to the IC(s)</param>
+            <param name="Bytes">The amount of 8-bit IC(s) connected</param>
+            <param name="SpeedKHz">The max. SPI speed</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,System.UInt32)">
+            <summary>
+            Initialises a chain of one or multiple serial to parallel ICs over bitbanged SPI [WHEN POSSIBLE, USE MANAGED MODE!]
+            </summary>
+            <remarks>
+            Use only when the managed SPI-pins can't be used. This method is way slower and locks the pins for any other purpose until disposed.
+            </remarks>
+            <param name="ClockPin">The clock pin connected to the IC(s)</param>
+            <param name="DataPin">The data pin connected to the IC(s)</param>
+            <param name="LatchPin">The slave select pin connected to the IC(s)</param>
+            <param name="Bytes">The amount of 8-bit IC(s) connected</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.Dispose">
+            <summary>
+            Disposes this object, frees all locked items
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595._Init(System.UInt32)">
+            <summary>
+            Initialises all bits and bytes
+            </summary>
+            <param name="Bytes">The amount of 8-bit IC(s) connected</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595._WriteSPI">
+            <summary>
+            Pushes all data to the SPI bus
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.Write(System.UInt32,System.Boolean)">
+            <summary>
+            Writes a single bit
+            </summary>
+            <param name="Bit">The bit to write</param>
+            <param name="State">The new state for the bit</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595._Write(System.UInt32,System.Boolean)">
+            <summary>
+            Writes a single bit to the buffer
+            </summary>
+            <param name="Bit">The bit to write</param>
+            <param name="State">The new state for the bit</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.WriteByte(System.UInt32,System.UInt32,System.Int32,System.Boolean)">
+            <summary>
+            Writes a byte to the buffer
+            </summary>
+            <param name="StartBit">The first bit to write</param>
+            <param name="Data">The data to write</param>
+            <param name="BitCount">The amount of bits to write</param>
+            <param name="Inverted">When true, bits will be inverted</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.Read(System.UInt32)">
+            <summary>
+            Reads a single bit
+            </summary>
+            <param name="Bit">The bit to read</param>
+            <returns>The current state of the bit</returns>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595.Pins">
+            <summary>Reference to all pins</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.CreateParallelOut(System.UInt32,System.UInt32,System.Boolean)">
+            <summary>
+            Creates a new parallel output port on this IC chain
+            </summary>
+            <param name="StartBit">The first bit to write to</param>
+            <param name="BitCount">The amount of bits</param>
+            <param name="Inverted">When true, bits will be inverted</param>
+            <returns>Parallel output port object</returns>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595GPOPort">
+            <summary>GPO Port wrapper for the SPIShifterOut class</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595GPOPort._Chain">
+            <summary>Reference to the main chain</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595GPOPort._BitNo">
+            <summary>The number of the bit</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595GPOPort.#ctor(Toolbox.NETMF.Hardware.Ic74hc595,System.UInt32)">
+            <summary>
+            Defines a GPO Port
+            </summary>
+            <param name="MainChain">The object of the main chain</param>
+            <param name="BitNo">The number of the bit</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595GPOPort.Write(System.Boolean)">
+            <summary>
+            Writes the pin value
+            </summary>
+            <param name="State">True for high, false for low</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595GPOPort.Dispose">
+            <summary>
+            Frees the pin
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595GPOPort.State">
+            <summary>True when the pin is high, false when low</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595ParallelOut">
+            <summary>
+            Parallel Out class
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595ParallelOut._Chain">
+            <summary>Reference to the main chain</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595ParallelOut._StartBit">
+            <summary>The bit to start at</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595ParallelOut._BitCount">
+            <summary>The amount of bits in this chain</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595ParallelOut._Buffer">
+            <summary>The buffer of the data</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595ParallelOut._Inverted">
+            <summary>When true, bits will be inverted</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595ParallelOut.Dispose">
+            <summary>Frees the pin for other usage</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595ParallelOut.#ctor(Toolbox.NETMF.Hardware.Ic74hc595,System.UInt32,System.UInt32,System.Boolean)">
+            <summary>Initialises a new parallel output port</summary>
+            <param name="MainChain">The object of the main chain</param>
+            <param name="StartBit">The first bit to write</param>
+            <param name="BitCount">The amount of bits to write</param>
+            <param name="Inverted">When true, bits will be inverted</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595ParallelOut.Read">
+            <summary>Returns the last written block of data</summary>
+            <returns>The last written block of data</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595ParallelOut.Write(System.UInt32)">
+            <summary>Writes a block of data to the array</summary>
+            <param name="Value">The block of data to write</param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Ic74hc595.Ic74hc595ParallelOut.Size">
+            <summary>Amount of bits in the array</summary>
+        </member>
+    </members>
+</doc>

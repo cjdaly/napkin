@@ -16,7 +16,8 @@ namespace cerbee2
     public partial class Program : Gadgeteer.Program
     {
         // GTM.Module definitions
-        Gadgeteer.Modules.GHIElectronics.Potentiometer potentiometer;
+        Gadgeteer.Modules.GHIElectronics.Display_HD44780 display_HD44780;
+        Gadgeteer.Modules.GHIElectronics.Music music;
 
         public static void Main()
         {
@@ -32,7 +33,9 @@ namespace cerbee2
         private void InitializeModules()
         {   
             // Initialize GTM.Modules and event handlers here.		
-            potentiometer = new GTM.GHIElectronics.Potentiometer(3);
+            music = new GTM.GHIElectronics.Music(1);
+		
+            display_HD44780 = new GTM.GHIElectronics.Display_HD44780(3);
 
         }
     }

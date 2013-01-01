@@ -21,6 +21,21 @@ namespace NapkinCommon
             WriteEmic2Command('S', message);
         }
 
+        private int _voice = 0;
+        public int Voice
+        {
+            get { return _voice; }
+            set
+            {
+                _voice = value % 9;
+                WriteEmic2Command('N', _voice.ToString());
+            }
+        }
+        public void IncrementVoice()
+        {
+            Voice = Voice + 1;
+        }
+
         public void Info()
         {
             WriteEmic2Command('I');

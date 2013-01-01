@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Tools">
+            <summary>
+            Generic, useful tools
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Tools._HardwareProvider">
+            <summary>Contains the name of the hardware provider</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.Escape(System.String)">
+            <summary>Escapes all non-visible characters</summary>
+            <param name="Input">Input text</param>
+            <returns>Output text</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.Hex2Dec(System.String)">
+            <summary>
+            Converts a Hex string to a number
+            </summary>
+            <param name="HexNumber">The Hex string (ex.: "0F")</param>
+            <returns>The decimal value</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.Bytes2Chars(System.Byte[])">
+            <summary>
+            Converts a byte array to a char array
+            </summary>
+            <param name="Input">The byte array</param>
+            <returns>The char array</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.Chars2Bytes(System.Char[])">
+            <summary>
+            Converts a char array to a byte array
+            </summary>
+            <param name="Input">The char array</param>
+            <returns>The byte array</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.ZeroFill(System.String,System.Int32,System.Char)">
+            <summary>
+            Changes a number into a string and add zeros in front of it, if required
+            </summary>
+            <param name="Number">The input number</param>
+            <param name="Digits">The amount of digits it should be</param>
+            <param name="Character">The character to repeat in front (default: 0)</param>
+            <returns>A string with the right amount of digits</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.ZeroFill(System.Int32,System.Int32,System.Char)">
+            <summary>
+            Changes a number into a string and add zeros in front of it, if required
+            </summary>
+            <param name="Number">The input number</param>
+            <param name="MinLength">The amount of digits it should be</param>
+            <param name="Character">The character to repeat in front (default: 0)</param>
+            <returns>A string with the right amount of digits</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.RawUrlEncode(System.String)">
+            <summary>
+            URL-encode according to RFC 3986
+            </summary>
+            <param name="Input">The URL to be encoded.</param>
+            <returns>Returns a string in which all non-alphanumeric characters except -_.~ have been replaced with a percent (%) sign followed by two hex digits.</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.RawUrlDecode(System.String)">
+            <summary>
+            URL-decode according to RFC 3986
+            </summary>
+            <param name="Input">The URL to be decoded.</param>
+            <returns>Returns a string in which original characters</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.Base64Encode(System.String)">
+            <summary>
+            Encodes a string according to the BASE64 standard
+            </summary>
+            <param name="Input">The input string</param>
+            <returns>The output string</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.Dec2Hex(System.Int32,System.Int32)">
+            <summary>
+            Converts a number to a Hex string
+            </summary>
+            <param name="Input">The number</param>
+            <param name="MinLength">The minimum length of the return string (filled with 0s)</param>
+            <returns>The Hex string</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.UShortsToBytes(System.UInt16[])">
+            <summary>
+            Converts a 16-bit array to an 8 bit array
+            </summary>
+            <param name="Data">The 16-bit array</param>
+            <returns>The 8-bit array</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.BytesToUShorts(System.Byte[])">
+            <summary>
+            Converts an 8-bit array to a 16 bit array
+            </summary>
+            <param name="Data">The 8-bit array</param>
+            <returns>The 16-bit array</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.XorChecksum(System.String)">
+            <summary>Calculates an XOR Checksum</summary>
+            <param name="Data">Input data</param>
+            <returns>XOR Checksum</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.XorChecksum(System.Byte[])">
+            <summary>Calculates an XOR Checksum</summary>
+            <param name="Data">Input data</param>
+            <returns>XOR Checksum</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.MetricPrefix(System.Single,System.Boolean)">
+            <summary>
+            Displays a number with a metric prefix
+            </summary>
+            <param name="Number">The number</param>
+            <param name="BinaryMultiple">If true, will use 1024 as multiplier instead of 1000</param>
+            <returns>The number with a metric prefix</returns>
+            <remarks>See also: http://en.wikipedia.org/wiki/Metric_prefix </remarks>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.Round(System.Single,System.Int32)">
+            <summary>
+            Rounds a value to a certain amount of digits
+            </summary>
+            <param name="Input">The input number</param>
+            <param name="Digits">Amount of digits after the .</param>
+            <returns>The rounded value (as float or double gave precision errors, hence the String type)</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Tools.ColorToRgb(System.Int32)">
+            <summary>
+            Converts an integer color code to RGB
+            </summary>
+            <param name="Color">The integer color (0x000000 to 0xffffff)</param>
+            <returns>A new byte[] { Red, Green, Blue }</returns>
+        </member>
+        <member name="P:Toolbox.NETMF.Tools.HardwareProvider">
+            <summary>
+            Returns the name of the hardware provider
+            </summary>
+        </member>
+    </members>
+</doc>

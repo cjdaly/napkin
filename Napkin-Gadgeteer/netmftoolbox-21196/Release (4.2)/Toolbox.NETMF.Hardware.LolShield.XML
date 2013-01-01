@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.LolShield</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.LolShield">
+            <summary>
+            Lots of Leds shield
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.LolShield._Width">
+            <summary>Width of the LoL Shield</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.LolShield._Height">
+            <summary>Height of the LoL Shield</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.LolShield._LedMap">
+            <summary>Led map; defines the low and high pins for each LED</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.LolShield._LowToHigh">
+            <summary>This array will contain the grid, from a low to high point of view</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.LolShield._Pin">
+            <summary>Reference to all pins</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.LolShield._LoopThread">
+            <summary>Main loop thread</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin[])">
+            <summary>Defines a new LoL Shield</summary>
+            <param name="CpuPins">An array of all relevant CPU Pins</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield._Loop">
+            <summary>
+            Main loop
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.Dispose">
+            <summary>
+            Disposes all pins and stops the display cycle
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.Set(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Sets a pixel to a specific value
+            </summary>
+            <param name="Row">The row</param>
+            <param name="Col">The column</param>
+            <param name="Value">The new value</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.Set(System.Int32,System.Boolean)">
+            <summary>
+            Sets a pixel to a specific value
+            </summary>
+            <param name="PixNo">The index of the pixel</param>
+            <param name="Value">The new value</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.Get(System.Int32,System.Int32)">
+            <summary>
+            Gets the current value of a specific pixel
+            </summary>
+            <param name="Row">The row</param>
+            <param name="Col">The column</param>
+            <returns>The current value</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.Get(System.Int32)">
+            <summary>
+            Gets the current value of a specific pixel
+            </summary>
+            <param name="PixNo">The index of the pixel</param>
+            <returns>The current value</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield._SetState(System.Int32,System.Boolean,System.Boolean)">
+            <summary>Changes the settings of a specific pin</summary>
+            <param name="PinId">The Id of the pin</param>
+            <param name="Active">Should be active?</param>
+            <param name="State">Current state</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.Clear(System.Boolean)">
+            <summary>
+            Clears the display
+            </summary>
+            <param name="Value">When true, it will fill the display instead</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.Invert">
+            <summary>
+            Inverts the display
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.HorizontalLine(System.Int32,System.Boolean)">
+            <summary>
+            Draws a horizontal line
+            </summary>
+            <param name="Row">The row to draw the line in</param>
+            <param name="Value">The value for the line</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.VerticalLine(System.Int32,System.Boolean)">
+            <summary>
+            Draws a vertical line
+            </summary>
+            <param name="Col">The column to draw the line in</param>
+            <param name="Value">The value for the line</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.LoadBitmap(System.Byte[])">
+            <summary>Loads a monochrome bitmap onto the LoL Shield</summary>
+            <param name="Bitmap">An array with bits</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.LoadBitmap(System.Byte[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Loads a monochrome bitmap onto the LoL Shield
+            </summary>
+            <param name="Bitmap">An array with bits</param>
+            <param name="BitmapWidth">The width of the bitmap</param>
+            <param name="StartLeft">The column from where the bitmap must be read</param>
+            <param name="StartTop">The row from where the bitmap must be read</param>
+            <param name="DrawLeft">The first column where we must start displaying</param>
+            <param name="DrawTop">The first row where we must start displaying</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.LolShield.LoadBitmap(System.Byte[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Loads a monochrome bitmap onto the LoL Shield
+            </summary>
+            <param name="Bitmap">An array with bits</param>
+            <param name="BitmapWidth">The width of the bitmap</param>
+            <param name="StartLeft">The column from where the bitmap must be read</param>
+            <param name="StartTop">The row from where the bitmap must be read</param>
+            <param name="DrawLeft">The first column where we must start displaying</param>
+            <param name="DrawTop">The first row where we must start displaying</param>
+            <param name="DrawWidth">The amount of columns we must display</param>
+            <param name="DrawHeight">The amount of rows we must display</param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.LolShield.Width">
+            <summary>Width of the LoL Shield</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.LolShield.Height">
+            <summary>Height of the LoL Shield</summary>
+        </member>
+    </members>
+</doc>

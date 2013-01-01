@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.WearableKeypad</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.WearableKeypad">
+            <summary>
+            Driver for Sparkfun's Wearable Keypad
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WearableKeypad._Pin1">
+            <summary>Reference to pin P5.1</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WearableKeypad._Pin2">
+            <summary>Reference to pin P5.2</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WearableKeypad._Pin3">
+            <summary>Reference to pin P5.3</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WearableKeypad.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>
+            Initializes the driver for Sparkfun's Wearable Keypad
+            </summary>
+            <param name="Pin1">Pin P5.1 from the keypad</param>
+            <param name="Pin2">Pin P5.2 from the keypad</param>
+            <param name="Pin3">Pin P5.3 from the keypad</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WearableKeypad.Read">
+            <summary>
+            Reads the current value
+            </summary>
+            <returns>The value of the keypad (0=up, 1=right, 2=down, 3=left, 4=center) or -1 when nothing is pressed</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WearableKeypad.Dispose">
+            <summary>
+            Disposes this object and frees the pins
+            </summary>
+        </member>
+    </members>
+</doc>

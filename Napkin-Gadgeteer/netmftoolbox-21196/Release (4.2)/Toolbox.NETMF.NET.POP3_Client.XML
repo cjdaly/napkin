@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.NET.POP3_Client</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.NET.POP3_Client">
+            <summary>
+            .NETMF POP3 Client
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.POP3_Client._POP3_User">
+            <summary>Reference to the POP3 username</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.POP3_Client._POP3_Pass">
+            <summary>Reference to the POP3 password</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.POP3_Client._Socket">
+            <summary>Reference to the socket wrapper</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.POP3_Client._MessageCount">
+            <summary>The amount of messages on the server</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.POP3_Client._BoxSize">
+            <summary>The size of the mailbox on the server in bytes</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.#ctor(Toolbox.NETMF.NET.SimpleSocket,System.String,System.String)">
+            <summary>
+            Initializes a mail client
+            </summary>
+            <param name="Socket">The socket to use (default TCP port for POP3 is 110)</param>
+            <param name="Username">Username for the POP3 server</param>
+            <param name="Password">Password for the POP3 server</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.Connect">
+            <summary>Connects to the POP3 server</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client._Stat">
+            <summary>
+            Updates the current mailbox statistics
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client._Top(System.UInt32)">
+            <summary>
+            Fetches the headers of a mail message
+            </summary>
+            <param name="Id">The message Id</param>
+            <returns>The headers as one big string</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.FetchBody(System.UInt32,System.Boolean)">
+            <summary>
+            Fetches the body of a mail message
+            </summary>
+            <param name="Id">The message Id</param>
+            <param name="IncludeHeaders">When true, mail headers will also be included</param>
+            <returns></returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.FetchHeaders(System.UInt32)">
+            <summary>
+            Fetches the headers of a mail message
+            </summary>
+            <param name="Id">The message Id</param>
+            <returns>An array with a header in each index</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.FetchHeaders(System.UInt32,System.String[])">
+            <summary>
+            Fetches specific headers of a mail message
+            </summary>
+            <param name="Id">The message Id</param>
+            <param name="Headers">The names of the headers</param>
+            <returns>An array with a header in each index</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.ListMails(System.UInt32[]@,System.UInt32[]@)">
+            <summary>
+            Fetches a list of emails from the server
+            </summary>
+            <param name="Id">The unique ID of the mail (unique for the current session)</param>
+            <param name="Size">The size of the mail in bytes</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.POP3_Client.Close">
+            <summary>Closes the connection</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.POP3_Client.MessageCount">
+            <summary>The amount of messages on the server</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.POP3_Client.BoxSize">
+            <summary>The size of the mailbox on the server in bytes</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.POP3_Client.IsConnected">
+            <summary>Returns true when connected</summary>
+        </member>
+    </members>
+</doc>

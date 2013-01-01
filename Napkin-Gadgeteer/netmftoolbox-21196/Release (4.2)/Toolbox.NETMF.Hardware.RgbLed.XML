@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.RgbLed</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.RgbLed">
+            <summary>
+            Common RGB-led
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLed._Red">
+            <summary>Reference to the red pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLed._Green">
+            <summary>Reference to the green pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLed._Blue">
+            <summary>Reference to the blue pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLed._CommonAnode">
+            <summary>True when it's common anode, false if it's common cathode</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLed.#ctor(Microsoft.SPOT.Hardware.Cpu.PWMChannel,Microsoft.SPOT.Hardware.Cpu.PWMChannel,Microsoft.SPOT.Hardware.Cpu.PWMChannel,System.Boolean)">
+            <summary>
+            Common RGB-led
+            </summary>
+            <param name="RedPin">The PWM-pin connected to Red</param>
+            <param name="GreenPin">The PWM-pin connected to Green</param>
+            <param name="BluePin">The PWM-pin connected to Blue</param>
+            <param name="CommonAnode">Specifies if the led is common anode</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLed.#ctor(Toolbox.NETMF.Hardware.IPWMPort,Toolbox.NETMF.Hardware.IPWMPort,Toolbox.NETMF.Hardware.IPWMPort,System.Boolean)">
+            <summary>
+            Common RGB-led
+            </summary>
+            <param name="RedPin">The PWM-pin connected to Red</param>
+            <param name="GreenPin">The PWM-pin connected to Green</param>
+            <param name="BluePin">The PWM-pin connected to Blue</param>
+            <param name="CommonAnode">Specifies if the led is common anode</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLed.Write(System.Int32)">
+            <summary>
+            Sets the value of the RGB led
+            </summary>
+            <param name="Value">The RGB value (0x000000 to 0xffffff)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLed.Write(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Sets the value of the RGB led
+            </summary>
+            <param name="Red">Red strength (0 to 255)</param>
+            <param name="Green">Green strength (0 to 255)</param>
+            <param name="Blue">Blue strength (0 to 255)</param>
+        </member>
+    </members>
+</doc>

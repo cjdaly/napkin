@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.Somo</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.Somo">
+            <summary>
+            SOMO-14D Driver
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Somo._DataPin">
+            <summary>Reference to the data pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Somo._ClockPin">
+            <summary>Reference to the clock pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Somo._BusyPin">
+            <summary>Reference to the busy pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Somo._CurrentTrack">
+            <summary>Stores the currently selected track</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Somo.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>
+            New SOMO-14D Module
+            </summary>
+            <param name="Clock">The pin for the clock signal</param>
+            <param name="Data">The pin for the data signal</param>
+            <param name="Busy">The pin for the busy signal (optional)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Somo._BusyPin_OnInterrupt(System.UInt32,System.UInt32,System.DateTime)">
+            <summary>
+            The busy pin interrupt has been triggered
+            </summary>
+            <param name="PinId">The Id of the pin</param>
+            <param name="Value">The current value</param>
+            <param name="Time">Timestamp of the event</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Somo.PlayRepeat(System.UInt16)">
+            <summary>
+            Plays a track infinitely in the backround, until we get a Stop command
+            </summary>
+            <param name="TrackNo"></param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Somo.PlayTrack(System.UInt16,System.Boolean)">
+            <summary>
+            Plays a specific track
+            </summary>
+            <param name="TrackNo">The number of the track (0 to 511)</param>
+            <param name="Wait">When the Busy pin is defined, and this is true, this method won't return until the track is finished.</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Somo.SetVolume(System.SByte)">
+            <summary>
+            Sets the volume
+            </summary>
+            <param name="Volume">The volume (0 to 7)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Somo.PlayPause">
+            <summary>
+            Plays or pauses the current track
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Somo.Stop">
+            <summary>
+            Stops the current track
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Somo._SendByte(System.UInt16)">
+            <summary>
+            Sends a byte, bitbanged over the serial protocol
+            </summary>
+            <param name="Byte">The 16-bit byte to send</param>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.Somo.OnStartPlaying">
+            <summary>Event is triggered when a track starts playing</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.Somo.OnStopPlaying">
+            <summary>Event is triggered when a track stops playing</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Somo.IsPlaying">
+            <summary>
+            Returns true when the module is playing. Requires the Busy signal.
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Somo.CurrentTrack">
+            <summary>
+            The currently selected track
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.Ic74HC165</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.Ic74hc165">
+            <summary>
+            A chain of one or multiple parallel to serial ICs over managed SPI
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165._SpiInterface">
+            <summary>A reference to the SPI Interface</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165._Data">
+            <summary>Contains all pin values</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165._BitBangMode">
+            <summary>When using bitbang mode, this bool is true. <see cref="F:Toolbox.NETMF.Hardware.Ic74hc165._SpiInterface"/> won't be used if this is true.</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165._BBM_SPCK">
+            <summary>When using bitbang mode, this will contain a reference to the SPCK pin. See also <see cref="F:Toolbox.NETMF.Hardware.Ic74hc165._BitBangMode"/></summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165._BBM_CS">
+            <summary>When using bitbang mode, this will contain a reference to the CS pin. See also <see cref="F:Toolbox.NETMF.Hardware.Ic74hc165._BitBangMode"/></summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165._BBM_MISO">
+            <summary>When using bitbang mode, this will contain a reference to the MISO pin. See also <see cref="F:Toolbox.NETMF.Hardware.Ic74hc165._BitBangMode"/></summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165._PinDisposalRequired">
+            <summary>Set to true when bitbang pins are created by the constructor</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165.#ctor(Microsoft.SPOT.Hardware.SPI.SPI_module,Microsoft.SPOT.Hardware.Cpu.Pin,System.UInt32,System.UInt32)">
+            <summary>
+            Initialises a chain of one or multiple parallel to serial ICs over managed SPI
+            </summary>
+            <param name="SPI_Module">The SPI interface it's connected to</param>
+            <param name="LatchPin">The slave select pin connected to the IC(s)</param>
+            <param name="Bytes">The amount of 8-bit IC(s) connected</param>
+            <param name="SpeedKHz">The max. SPI speed</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,System.UInt32)">
+            <summary>
+            Initialises a chain of one or multiple parallel to serial ICs over bitbanged SPI [WHEN POSSIBLE, USE MANAGED MODE!]
+            </summary>
+            <remarks>
+            Use only when the managed SPI-pins can't be used. This method is way slower and locks the pins for any other purpose until disposed.
+            </remarks>
+            <param name="ClockPin">The clock pin connected to the IC(s)</param>
+            <param name="DataPin">The data pin connected to the IC(s)</param>
+            <param name="LatchPin">The slave select pin connected to the IC(s)</param>
+            <param name="Bytes">The amount of 8-bit IC(s) connected</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165._Init(System.UInt32)">
+            <summary>
+            Initialises all bits and bytes
+            </summary>
+            <param name="Bytes">The amount of 8-bit IC(s) connected</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165.Dispose">
+            <summary>
+            Disposes this object, frees all locked items
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165.EnableInterrupts">
+            <summary>
+            Enables interrupt scanning
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165.DisableInterrupts">
+            <summary>
+            Disables interrupt scanning
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165._IRQEnabled">
+            <summary>True when the interrupt loop is active</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165._IRQStarter">
+            <summary>
+            Contains a reference to the interrupt thread
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165._IRQThread">
+            <summary>
+            The interrupt thread itself
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165._ReadSPI">
+            <summary>
+            Reads all data from the SPI interface
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165.Read(System.UInt32)">
+            <summary>
+            Reads a single bit
+            </summary>
+            <param name="Bit">The bit to read</param>
+            <returns>The current state of the bit</returns>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165.Pins">
+            <summary>Reference to all pins</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.Ic74hc165.Ic74hc165IRQPort">
+            <summary>IRQ Port wrapper for the SPIShifterIn class</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165.Ic74hc165IRQPort._Chain">
+            <summary>Reference to the main chain</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165.Ic74hc165IRQPort._BitNo">
+            <summary>The number of the bit</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Ic74hc165.Ic74hc165IRQPort._LastValue">
+            <summary>Contains the last value, used for the OnStateChange event</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165.Ic74hc165IRQPort.Dispose">
+            <summary>Frees the pin</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165.Ic74hc165IRQPort.#ctor(Toolbox.NETMF.Hardware.Ic74hc165,System.UInt32)">
+            <summary>
+            Defines a GPO Port
+            </summary>
+            <param name="MainChain">The object of the main chain</param>
+            <param name="BitNo">The number of the bit</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Ic74hc165.Ic74hc165IRQPort.Read">
+            <summary>Reads the pin value</summary>
+            <returns>True when high, false when low</returns>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Ic74hc165.Ic74hc165IRQPort.InvertReadings">
+            <summary>When true, the read value is inverted (useful when working with pull-up resistors)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Ic74hc165.Ic74hc165IRQPort.ID">
+            <summary>Use this to give this IRQ port a unique identifier (default: blank)</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.Ic74hc165.Ic74hc165IRQPort.OnStateChange">
+            <summary>Event triggered when a IRQ port state changes</summary>
+        </member>
+    </members>
+</doc>

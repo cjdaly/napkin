@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.Hd44780Lcd</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.Hd44780Lcd">
+            <summary>
+            HD44780 Compatible dot matrix LCD
+            </summary>
+            <remarks>
+            I found reading the datasheet a bit complex. It's a big document with a lot of info.
+            For this reason, I added comments referring to pages of the datasheet.
+            I used the datasheet from http://lcd-linux.sourceforge.net/pdfdocs/hd44780.pdf
+            </remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._PinDisposalRequired">
+            <summary>True when we use a Cpu.Pin constructor</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._PinMode">
+            <summary>When true, we use pin mode</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._Data">
+            <summary>Reference to the data block</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._Db4Pin">
+            <summary>Reference to the 4th data pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._Db5Pin">
+            <summary>Reference to the 5th data pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._Db6Pin">
+            <summary>Reference to the 6th data pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._Db7Pin">
+            <summary>Reference to the 7th data pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._CePin">
+            <summary>Reference to the clock enable pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._RsPin">
+            <summary>Reference to the register select pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._RwPin">
+            <summary>Reference to the read/write pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._FunctionSetN">
+            <summary>Display lines (false = 1, true = 2)</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._FunctionSetF">
+            <summary>Character font (false = 5x8, true = 5x10)</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd.#ctor(Toolbox.NETMF.Hardware.IParallelOut,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,System.Int32,System.Int32)">
+            <summary>
+            Initializes a HD44780 compatible LCD with a parallel output port
+            </summary>
+            <param name="Data">Data port</param>
+            <param name="ClockEnablePin">Clock enable pin</param>
+            <param name="RegisterSelectPin">Register select pin</param>
+            <param name="ReadWritePin">Read/write pin (optional; this driver is always in 'write' mode)</param>
+            <param name="Columns">The amount of columns (default: 16)</param>
+            <param name="Rows">The amount of rows (default: 2)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd.#ctor(Toolbox.NETMF.Hardware.IParallelOut,Toolbox.NETMF.Hardware.IGPOPort,Toolbox.NETMF.Hardware.IGPOPort,Toolbox.NETMF.Hardware.IGPOPort,System.Int32,System.Int32)">
+            <summary>
+            Initializes a HD44780 compatible LCD with a parallel output port
+            </summary>
+            <param name="Data">Data port</param>
+            <param name="ClockEnablePin">Clock enable pin</param>
+            <param name="RegisterSelectPin">Register select pin</param>
+            <param name="ReadWritePin">Read/write pin (optional; this driver is always in 'write' mode)</param>
+            <param name="Columns">The amount of columns (default: 16)</param>
+            <param name="Rows">The amount of rows (default: 2)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,System.Int32,System.Int32)">
+            <summary>
+            Initializes a HD44780 compatible LCD by bitbanging
+            </summary>
+            <param name="Data4">Data pin 4</param>
+            <param name="Data5">Data pin 5</param>
+            <param name="Data6">Data pin 6</param>
+            <param name="Data7">Data pin 7</param>
+            <param name="ClockEnablePin">Clock enable pin</param>
+            <param name="RegisterSelectPin">Register select pin</param>
+            <param name="ReadWritePin">Read/write pin (optional; this driver is always in 'write' mode)</param>
+            <param name="Columns">The amount of columns (default: 16)</param>
+            <param name="Rows">The amount of rows (default: 2)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd.#ctor(Toolbox.NETMF.Hardware.IGPOPort,Toolbox.NETMF.Hardware.IGPOPort,Toolbox.NETMF.Hardware.IGPOPort,Toolbox.NETMF.Hardware.IGPOPort,Toolbox.NETMF.Hardware.IGPOPort,Toolbox.NETMF.Hardware.IGPOPort,Toolbox.NETMF.Hardware.IGPOPort,System.Int32,System.Int32)">
+            <summary>
+            Initializes a HD44780 compatible LCD by bitbanging
+            </summary>
+            <param name="Data4">Data pin 4</param>
+            <param name="Data5">Data pin 5</param>
+            <param name="Data6">Data pin 6</param>
+            <param name="Data7">Data pin 7</param>
+            <param name="ClockEnablePin">Clock enable pin</param>
+            <param name="RegisterSelectPin">Register select pin</param>
+            <param name="ReadWritePin">Read/write pin (optional; this driver is always in 'write' mode)</param>
+            <param name="Columns">The amount of columns (default: 16)</param>
+            <param name="Rows">The amount of rows (default: 2)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd.Dispose">
+            <summary>
+            Disposes this object, freeing all pins
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd._Initialization">
+            <summary>
+            Initializes the display
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd.Write(System.Byte,System.Boolean)">
+            <summary>Sends data to the display</summary>
+            <param name="Data">The data to send</param>
+            <param name="CommandMode">When true, the data will be interpreted as a command</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd.Write(System.String,System.Boolean)">
+            <summary>Sends data to the display</summary>
+            <param name="Data">The data to send</param>
+            <param name="CommandMode">When true, the data will be interpreted as a command</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd.Write(System.Byte[],System.Boolean)">
+            <summary>Sends data to the display</summary>
+            <param name="Data">The data to send</param>
+            <param name="CommandMode">When true, the data will be interpreted as a command</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd._Write4Bits(System.Byte)">
+            <summary>
+            Writes four bits to the LCD interface
+            </summary>
+            <param name="Byte">The byte to send (only the last 4 bits will be used)</param>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._DisplayControlD">
+            <summary>Entire display on/off</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._DisplayControlC">
+            <summary>Cursor on/off</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Hd44780Lcd._DisplayControlB">
+            <summary>Blinking of cursor position character on/off</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd._UpdateDisplayControl">
+            <summary>
+            Updates the display control bits
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd.ClearDisplay">
+            <summary>
+            Clears the entire display
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Hd44780Lcd.ChangePosition(System.Byte,System.Byte)">
+            <summary>
+            Changes the cursor location
+            </summary>
+            <param name="Row">Row</param>
+            <param name="Column">Column</param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Hd44780Lcd.Columns">
+            <summary>The amount of columns on the display</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Hd44780Lcd.Rows">
+            <summary>The amount of rows on the display</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Hd44780Lcd.Characters">
+            <summary>The amount of characters on the display</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Hd44780Lcd.ShowCursor">
+            <summary>When true, a cursor will be shown on the display</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Hd44780Lcd.BlinkPosition">
+            <summary>When true, the cursor position character will blink</summary>
+        </member>
+    </members>
+</doc>

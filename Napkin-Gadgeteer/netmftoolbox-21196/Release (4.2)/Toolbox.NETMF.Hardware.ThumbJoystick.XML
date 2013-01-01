@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.ThumbJoystick</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.ThumbJoystick">
+            <summary>
+            Analog thumb joystick
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThumbJoystick._Horizontal">
+            <summary>Reference to the horizontal pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThumbJoystick._Vertical">
+            <summary>Reference to the vertical pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThumbJoystick._Push">
+            <summary>Reference to the push pin</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThumbJoystick.#ctor(Microsoft.SPOT.Hardware.Cpu.AnalogChannel,Microsoft.SPOT.Hardware.Cpu.AnalogChannel,Microsoft.SPOT.Hardware.Cpu.Pin,System.Boolean,System.Boolean)">
+            <summary>
+            Analog thumb joystick
+            </summary>
+            <param name="HorizontalPin">Analog pin for the horizontal bar</param>
+            <param name="VerticalPin">Analog pin for the vertical bar</param>
+            <param name="PushPin">Pin for the push button (optionally this class handles the push button)</param>
+            <param name="InvertHorizontal">When true, the horizontal value will be inverted</param>
+            <param name="InvertVertical">When true, the vertical value will be inverted</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThumbJoystick.#ctor(Toolbox.NETMF.Hardware.IADCPort,Toolbox.NETMF.Hardware.IADCPort,Microsoft.SPOT.Hardware.Cpu.Pin,System.Boolean,System.Boolean)">
+            <summary>
+            Analog thumb joystick
+            </summary>
+            <param name="HorizontalPin">Analog pin for the horizontal bar</param>
+            <param name="VerticalPin">Analog pin for the vertical bar</param>
+            <param name="PushPin">Pin for the push button (optionally this class handles the push button)</param>
+            <param name="InvertHorizontal">When true, the horizontal value will be inverted</param>
+            <param name="InvertVertical">When true, the vertical value will be inverted</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThumbJoystick.Dispose">
+            <summary>
+            Disposes this object
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThumbJoystick.InvertHorizontal">
+            <summary>When true, the horizontal value will be inverted</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThumbJoystick.InvertVertical">
+            <summary>When true, the vertical value will be inverted</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThumbJoystick.HorizontalValue">
+            <summary>
+            Returns the horizontal state (-50 to 50)
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThumbJoystick.VerticalValue">
+            <summary>
+            Returns the vertical state (-50 to 50)
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThumbJoystick.PushValue">
+            <summary>
+            Returns the pushed state (false or true)
+            </summary>
+        </member>
+    </members>
+</doc>

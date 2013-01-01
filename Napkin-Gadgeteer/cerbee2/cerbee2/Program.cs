@@ -14,12 +14,12 @@ using Microsoft.SPOT.Touch;
 using Gadgeteer.Networking;
 using GT = Gadgeteer;
 using GTM = Gadgeteer.Modules;
-using Gadgeteer.Modules.GHIElectronics;
 
 using Toolbox.NETMF.Hardware;
 using Toolbox.NETMF.NET;
 
 using NapkinCommon;
+using Gadgeteer.Modules.GHIElectronics;
 
 namespace cerbee2
 {
@@ -30,9 +30,12 @@ namespace cerbee2
 
         void ProgramStarted()
         {
-            SDCardTest();
+            // SDCardTest();
 
-            InitSerLcd();
+            // InitSerLcd();
+
+            display_HD44780.Clear();
+            display_HD44780.PrintString("Hello");
 
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
@@ -53,10 +56,10 @@ namespace cerbee2
             Debug.Print("cycle thread starting!");
             Thread.Sleep(_cycleDelayMillisecondsInitial);
 
-            TestSerLcd("Marah is 5");
-            
+            // TestSerLcd("Marah is 5");
+
             Debug.Print("Starting cycle: " + _cycleCount + " on device: " + DeviceId);
-            JoinNetwork();
+            // JoinNetwork();
 
             bool exit = false;
             while (!exit)
@@ -68,19 +71,11 @@ namespace cerbee2
 
         private void Cycle()
         {
-           
+
             _cycleCount++;
             Debug.Print("Starting cycle: " + _cycleCount + " on device: " + DeviceId);
 
-            double potentiometerPercentage = potentiometer.ReadPotentiometerPercentage();
-            double potentiometerVoltage = potentiometer.ReadPotentiometerVoltage();
-
-            ClearSerLcd();
-            WriteSerLcd("cycle: " + _cycleCount);
-            int intPotPct = (int)(potentiometerPercentage * 100);
-            WriteSerLcd("pot: " + intPotPct, 64);
-            
-            PingServer();
+            // PingServer();
         }
 
         private void JoinNetwork()

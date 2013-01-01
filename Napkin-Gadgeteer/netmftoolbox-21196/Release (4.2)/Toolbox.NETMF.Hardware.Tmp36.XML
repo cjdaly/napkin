@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.Tmp36</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.Tmp36">
+            <summary>
+            TMP36 Temperature Sensor
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Tmp36._AnalogPort">
+            <summary>
+            Reference to the analog input
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Tmp36.#ctor(Microsoft.SPOT.Hardware.Cpu.AnalogChannel)">
+            <summary>
+            TMP 36GZ Temperature Sensor
+            </summary>
+            <param name="AnalogPort">The port the sensor is connected to</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Tmp36.#ctor(Toolbox.NETMF.Hardware.IADCPort)">
+            <summary>
+            TMP 36GZ Temperature Sensor
+            </summary>
+            <param name="AnalogPort">The port the sensor is connected to</param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Tmp36.Temperature">
+            <summary>
+            Returns the current temperature in Celcius
+            </summary>
+            <example>
+            To read others then Celcius, try this:
+            <code><![CDATA[
+            float celcius = [this].Temperature;
+            float kelvin = (float)(celcius + 273.15);
+            float fahrenheit = (float)((celcius * 1.8) + 32.0);
+            ]]></code>
+            </example>
+        </member>
+    </members>
+</doc>
