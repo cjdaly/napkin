@@ -32,10 +32,9 @@ namespace cerbee2
         {
             // SDCardTest();
 
-            // InitSerLcd();
+            Thread.Sleep(1000);
 
-            display_HD44780.Clear();
-            display_HD44780.PrintString("Hello");
+            // InitSerLcd();
 
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
@@ -74,6 +73,10 @@ namespace cerbee2
 
             _cycleCount++;
             Debug.Print("Starting cycle: " + _cycleCount + " on device: " + DeviceId);
+
+            music.SineTest();
+            Thread.Sleep(2000);
+            music.StopPlaying();
 
             // PingServer();
         }

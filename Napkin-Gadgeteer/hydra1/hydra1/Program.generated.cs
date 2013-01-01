@@ -19,10 +19,11 @@ namespace hydra1
         Gadgeteer.Modules.GHIElectronics.UsbClientDP usbClientDP;
         Gadgeteer.Modules.Seeed.OledDisplay oledDisplay;
         Gadgeteer.Modules.GHIElectronics.SDCard sdCard;
-        Gadgeteer.Modules.GHIElectronics.Display_HD44780 display_HD44780;
+        Gadgeteer.Modules.GHIElectronics.Display_HD44780 display_HD44780_a;
         Gadgeteer.Modules.GHIElectronics.Button button;
         Gadgeteer.Modules.GHIElectronics.Joystick joystick;
         Gadgeteer.Modules.GHIElectronics.RFID rfid;
+        Gadgeteer.Modules.GHIElectronics.Display_HD44780 display_HD44780_b;
 
         public static void Main()
         {
@@ -46,7 +47,9 @@ namespace hydra1
 		
             sdCard = new GTM.GHIElectronics.SDCard(8);
 		
-            display_HD44780 = new GTM.GHIElectronics.Display_HD44780(9);
+            display_HD44780_a = new GTM.GHIElectronics.Display_HD44780(9);
+		
+            display_HD44780_b = new GTM.GHIElectronics.Display_HD44780(11);
 		
             button = new GTM.GHIElectronics.Button(12);
 		

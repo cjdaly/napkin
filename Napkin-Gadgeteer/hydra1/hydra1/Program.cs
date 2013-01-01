@@ -36,6 +36,25 @@ namespace hydra1
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
+
+            display_HD44780_a.TurnBacklightOn();
+            display_HD44780_a.Clear();
+            display_HD44780_a.CursorHome();
+            display_HD44780_a.PrintString("Hello World!");
+
+            //
+
+            display_HD44780_b.TurnBacklightOn();
+            display_HD44780_b.Clear();
+            display_HD44780_b.CursorHome();
+            display_HD44780_b.PrintString("Test 1 2 3 ...");
+
+
+            //
+            Font font = Resources.GetFont(Resources.FontResources.NinaB);
+            oledDisplay.SimpleGraphics.DisplayText("Hello World!", font, GT.Color.White, 0, 0);
+            oledDisplay.SimpleGraphics.DisplayText("Hello Marah!", font, GT.Color.Orange, 0, 20);
+            oledDisplay.SimpleGraphics.DisplayText("Hello Sage!", font, GT.Color.Red, 0, 40);
         }
     }
 }
