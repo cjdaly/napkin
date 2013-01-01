@@ -36,6 +36,8 @@ namespace cerbee2
 
             // InitSerLcd();
 
+            //_emic2 = new Emic2(Serial.COM3);
+
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
 
@@ -48,6 +50,8 @@ namespace cerbee2
         private int _cycleCount = 0;
 
         private WiFlyGSX _wifly;
+
+        //private Emic2 _emic2;
 
         private void CycleDriver()
         {
@@ -77,6 +81,8 @@ namespace cerbee2
             music.SineTest();
             Thread.Sleep(2000);
             music.StopPlaying();
+
+            //_emic2.Say("cycle " + _cycleCount);
 
             // PingServer();
         }
