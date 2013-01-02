@@ -24,6 +24,7 @@ namespace hydra1
         Gadgeteer.Modules.GHIElectronics.Joystick joystick;
         Gadgeteer.Modules.GHIElectronics.RFID rfid;
         Gadgeteer.Modules.GHIElectronics.Display_HD44780 display_HD44780_b;
+        Gadgeteer.Modules.GHIElectronics.ColorSense colorSense;
 
         public static void Main()
         {
@@ -42,6 +43,8 @@ namespace hydra1
             usbClientDP = new GTM.GHIElectronics.UsbClientDP(2);
 		
             oledDisplay = new GTM.Seeed.OledDisplay(4);
+		
+            colorSense = new GTM.GHIElectronics.ColorSense(6);
 		
             rfid = new GTM.GHIElectronics.RFID(7);
 		

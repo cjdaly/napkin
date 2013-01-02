@@ -83,14 +83,18 @@
     <Reference Include="System" />
     <Reference Include="System.Http" />
     <Reference Include="System.IO" />
-    <Reference Include="Toolbox.NETMF">
-      <HintPath>..\..\netmftoolbox-18413\Release (4.2)\Toolbox.NETMF.dll</HintPath>
+    <Reference Include="Toolbox.NETMF.Core">
+      <HintPath>..\..\netmftoolbox-21196\Release (4.2)\Toolbox.NETMF.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Toolbox.NETMF.Hardware.WiFlyGSX">
-      <HintPath>..\..\netmftoolbox-18413\Release (4.2)\Toolbox.NETMF.Hardware.WiFlyGSX.dll</HintPath>
+    <Reference Include="Toolbox.NETMF.Hardware.WiFlyGSX, Version=4.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\netmftoolbox-21196\Release (4.2)\Toolbox.NETMF.Hardware.WiFlyGSX.dll</HintPath>
     </Reference>
-    <Reference Include="Toolbox.NETMF.NET">
-      <HintPath>..\..\netmftoolbox-18413\Release (4.2)\Toolbox.NETMF.NET.dll</HintPath>
+    <Reference Include="Toolbox.NETMF.NET.Core">
+      <HintPath>..\..\netmftoolbox-21196\Release (4.2)\Toolbox.NETMF.NET.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Toolbox.NETMF.NET.HTTP_Client">
+      <HintPath>..\..\netmftoolbox-21196\Release (4.2)\Toolbox.NETMF.NET.HTTP_Client.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

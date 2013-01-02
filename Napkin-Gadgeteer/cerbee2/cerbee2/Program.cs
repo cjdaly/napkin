@@ -30,7 +30,6 @@ namespace cerbee2
 
         void ProgramStarted()
         {
-            // SDCardTest();
 
             Thread.Sleep(1000);
 
@@ -58,6 +57,8 @@ namespace cerbee2
 
             Debug.Print("cycle thread starting!");
             Thread.Sleep(_cycleDelayMillisecondsInitial);
+
+            SDCardTest();
 
             // TestSerLcd("Marah is 5");
 
@@ -87,14 +88,20 @@ namespace cerbee2
             // PingServer();
         }
 
+        private string GetWifiPassword()
+        {
+            // TODO: get from SD card
+            return "foo";
+        }
+
         private void JoinNetwork()
         {
             try
             {
                 _wifly = new WiFlyGSX();
                 _wifly.EnableDHCP();
-                //_wifly.JoinNetwork("WIFI24G", 0, WiFlyGSX.AuthMode.WPA2_PSK, "???");
-                _wifly.JoinNetwork("linksys-dd", 0, WiFlyGSX.AuthMode.Open);
+                _wifly.JoinNetwork("WIFI24G", 0, WiFlyGSX.AuthMode.WPA2_PSK, GetWifiPassword());
+                //_wifly.JoinNetwork("linksys-dd", 0, WiFlyGSX.AuthMode.Open);
 
                 for (int i = 0; i < 4; i++)
                 {

@@ -37,14 +37,12 @@ namespace hydra1
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
 
-            display_HD44780_a.TurnBacklightOn();
             display_HD44780_a.Clear();
             display_HD44780_a.CursorHome();
             display_HD44780_a.PrintString("Hello World!");
 
             //
 
-            display_HD44780_b.TurnBacklightOn();
             display_HD44780_b.Clear();
             display_HD44780_b.CursorHome();
             display_HD44780_b.PrintString("Test 1 2 3 ...");
@@ -55,6 +53,16 @@ namespace hydra1
             oledDisplay.SimpleGraphics.DisplayText("Hello World!", font, GT.Color.White, 0, 0);
             oledDisplay.SimpleGraphics.DisplayText("Hello Marah!", font, GT.Color.Orange, 0, 20);
             oledDisplay.SimpleGraphics.DisplayText("Hello Sage!", font, GT.Color.Red, 0, 40);
+
+            ColorSense.ColorChannels colorChannels = colorSense.ReadColorChannels();
+            Debug.Print("color: " + colorChannels.ToString());
+
+            Thread.Sleep(1000);
+            Mainboard.SetDebugLED(true);
+            Thread.Sleep(1000);
+
+            colorChannels = colorSense.ReadColorChannels();
+            Debug.Print("color: " + colorChannels.ToString());
         }
     }
 }
