@@ -21,36 +21,34 @@ namespace hydra1
         void ProgramStarted()
         {
 
-            Debug.Print("Program Started");
 
-            display_HD44780.Clear();
-            display_HD44780.CursorHome();
-            display_HD44780.PrintString("Hello World!");
-
-
-            //
             Font font = Resources.GetFont(Resources.FontResources.NinaB);
             oledDisplay.SimpleGraphics.DisplayText("Hello World!", font, GT.Color.White, 0, 0);
             oledDisplay.SimpleGraphics.DisplayText("Hello Marah!", font, GT.Color.Orange, 0, 20);
             oledDisplay.SimpleGraphics.DisplayText("Hello Sage!", font, GT.Color.Red, 0, 40);
 
+            //
 
-            button.ButtonPressed += new Button.ButtonEventHandler(button_ButtonPressed);
-            button.ButtonReleased += new Button.ButtonEventHandler(button_ButtonReleased);
+            GT.StorageDevice sd = sdCard.GetStorageDevice();
+            string[] dirs = sd.ListDirectories("music");
+            foreach (string dir in dirs)
+            {
+                Debug.Print("dir: " + dir);
+            }
 
-            Debug.Print("MEM: " + Debug.GC(false));
-        }
+            string[] files = sd.ListFiles("music");
+            foreach (string file in files)
+            {
+                Debug.Print("file: " + file);
+            }
 
-        void button_ButtonReleased(Button sender, Button.ButtonState state)
-        {
-            Mainboard.SetDebugLED(false);
-            button.TurnLEDOff();
-        }
-
-        void button_ButtonPressed(Button sender, Button.ButtonState state)
-        {
-            Mainboard.SetDebugLED(true);
-            button.TurnLEDOn();
+            Debug.Print("Mem: " + Debug.GC(false));
+            byte[] songBytes = sd.ReadFile("music\\majesty.mp3");
+            //byte[] songBytes = sd.ReadFile("music\\maggie.mp3");
+            //byte[] songBytes = sd.ReadFile("music\\dig-it.mp3");
+            Debug.Print("song bytes: " + songBytes.Length);
+            Debug.Print("Mem: " + Debug.GC(false));
+            music.Play(songBytes);
         }
     }
 }

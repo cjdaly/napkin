@@ -68,23 +68,16 @@
     <Reference Include="GHIElectronics.Gadgeteer.FEZHydra, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="GTM.GHIElectronics.Button, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="GTM.GHIElectronics.Display_HD44780, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
     <Reference Include="GTM.GHIElectronics.Music, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="GTM.GHIElectronics.RFID, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="GTM.GHIElectronics.SDCard, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="GTM.GHIElectronics.UsbClientDP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="GTM.Seeed.OledDisplay, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="GTM.Seeed.OledDisplay, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Microsoft.SPOT.Graphics" />
