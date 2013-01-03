@@ -144,6 +144,8 @@ namespace cerbee2
 
         private void SDCardTest()
         {
+            Debug.Print("MEM: " + Debug.GC(false));
+
             string[] vols = Mainboard.GetStorageDeviceVolumeNames();
             foreach (string vol in vols)
             {
@@ -151,20 +153,30 @@ namespace cerbee2
                 bool result = Mainboard.MountStorageDevice(vol);
                 Debug.Print("mounted: " + result);
             }
+            Debug.Print("MEM: " + Debug.GC(false));
 
             VolumeInfo[] volInfos = VolumeInfo.GetVolumes();
             foreach (VolumeInfo volInfo in volInfos)
             {
+                Thread.Sleep(50);
+                Debug.Print("MEM: " + Debug.GC(false));
+
                 string rootDir = volInfo.RootDirectory;
                 Debug.Print("root dir: " + rootDir);
 
                 string[] fileNames = Directory.GetFiles(rootDir);
                 foreach (string fileName in fileNames)
                 {
+                    Thread.Sleep(50);
+                    Debug.Print("MEM: " + Debug.GC(false));
+
                     Debug.Print("file name: " + fileName);
 
                     String filePath = Path.Combine(rootDir, fileName);
                     Debug.Print("file path: " + fileName);
+
+                    Thread.Sleep(50);
+                    Debug.Print("MEM: " + Debug.GC(false));
 
                     string fileText = GetFileText(filePath);
                     Debug.Print(">>>");

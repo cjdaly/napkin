@@ -20,32 +20,12 @@ namespace hydra1
         // This method is run when the mainboard is powered up or reset.   
         void ProgramStarted()
         {
-            /*******************************************************************************************
-            Modules added in the Program.gadgeteer designer view are used by typing 
-            their name followed by a period, e.g.  button.  or  camera.
-            
-            Many modules generate useful events. Type +=<tab><tab> to add a handler to an event, e.g.:
-                button.ButtonPressed +=<tab><tab>
-            
-            If you want to do something periodically, use a GT.Timer and handle its Tick event, e.g.:
-                GT.Timer timer = new GT.Timer(1000); // every second (1000ms)
-                timer.Tick +=<tab><tab>
-                timer.Start();
-            *******************************************************************************************/
 
-
-            // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
 
-            display_HD44780_a.Clear();
-            display_HD44780_a.CursorHome();
-            display_HD44780_a.PrintString("Hello World!");
-
-            //
-
-            display_HD44780_b.Clear();
-            display_HD44780_b.CursorHome();
-            display_HD44780_b.PrintString("Test 1 2 3 ...");
+            display_HD44780.Clear();
+            display_HD44780.CursorHome();
+            display_HD44780.PrintString("Hello World!");
 
 
             //
@@ -54,15 +34,23 @@ namespace hydra1
             oledDisplay.SimpleGraphics.DisplayText("Hello Marah!", font, GT.Color.Orange, 0, 20);
             oledDisplay.SimpleGraphics.DisplayText("Hello Sage!", font, GT.Color.Red, 0, 40);
 
-            ColorSense.ColorChannels colorChannels = colorSense.ReadColorChannels();
-            Debug.Print("color: " + colorChannels.ToString());
 
-            Thread.Sleep(1000);
+            button.ButtonPressed += new Button.ButtonEventHandler(button_ButtonPressed);
+            button.ButtonReleased += new Button.ButtonEventHandler(button_ButtonReleased);
+
+            Debug.Print("MEM: " + Debug.GC(false));
+        }
+
+        void button_ButtonReleased(Button sender, Button.ButtonState state)
+        {
+            Mainboard.SetDebugLED(false);
+            button.TurnLEDOff();
+        }
+
+        void button_ButtonPressed(Button sender, Button.ButtonState state)
+        {
             Mainboard.SetDebugLED(true);
-            Thread.Sleep(1000);
-
-            colorChannels = colorSense.ReadColorChannels();
-            Debug.Print("color: " + colorChannels.ToString());
+            button.TurnLEDOn();
         }
     }
 }

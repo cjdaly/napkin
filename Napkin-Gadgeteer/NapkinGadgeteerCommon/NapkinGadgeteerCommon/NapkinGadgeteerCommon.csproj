@@ -35,13 +35,13 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Gadgeteer, Version=2.42.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="GTM.GHIElectronics.Button, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="GTM.GHIElectronics.LED7R, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="GTM.GHIElectronics.LightSensor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="GTM.GHIElectronics.Potentiometer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="GTM.Seeed.Barometer, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="GTM.Seeed.MoistureSensor, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="GTM.Seeed.TemperatureHumidity, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="GTM.GHIElectronics.Button, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="GTM.GHIElectronics.LED7R, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="GTM.GHIElectronics.LightSensor, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="GTM.GHIElectronics.Potentiometer, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="GTM.Seeed.Barometer, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="GTM.Seeed.MoistureSensor, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="GTM.Seeed.TemperatureHumidity, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.SPOT.Native">
     </Reference>
   </ItemGroup>
