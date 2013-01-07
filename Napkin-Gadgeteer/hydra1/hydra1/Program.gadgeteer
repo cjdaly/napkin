@@ -94,29 +94,14 @@
         </socketUses>
       </module>
     </gadgeteerModelHasGadgeteerHardware>
-    <gadgeteerModelHasGadgeteerHardware Id="0a56c060-5682-42ff-a5c6-3580de43b88d">
-      <module Id="e4b656ce-d69d-4186-aae4-ac1b7a128557" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;OledDisplay&quot; Type=&quot;Gadgeteer.Modules.Seeed.OledDisplay&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\Seeed\Seeed .NET Gadgeteer SDK\Modules\OledDisplay\Resources\Image.jpg&quot; BoardWidth=&quot;37&quot; BoardHeight=&quot;43&quot; MinimumGadgeteerCoreVersion=&quot;2.42.500&quot; HelpUrl=&quot;&quot; UniqueId=&quot;a1b59e38-a62f-450a-8bff-7baa80bbb950&quot; Manufacturer=&quot;Seeed&quot; Description=&quot;A OledDisplay module&quot; InstanceName=&quot;oledDisplay&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.Seeed.OledDisplay&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;Gadgeteer.Serial&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;90&quot; Left=&quot;18.5&quot; Top=&quot;38.7&quot; TypesLabel=&quot;S&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;S&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;3&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;4&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;6&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;true&quot;&gt;7&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;true&quot;&gt;9&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="oledDisplay" moduleType="Gadgeteer.Modules.Seeed.OledDisplay" moduleDefinitionId="a1b59e38-a62f-450a-8bff-7baa80bbb950">
-        <socketUses>
-          <moduleHasSocketUses Id="e03522e4-2fa7-4e4e-951d-ba8015d896d7">
-            <socketUse Id="b86bf04b-6f7f-451b-af67-ed17d2b8aa5c" label="S">
-              <socket>
-                <socketUseReferencesSocket Id="756cac5a-93fe-4075-b759-50505e0780b5">
-                  <socketMoniker Id="7ed6543f-56e0-482f-8cbb-730e911505f7" />
-                </socketUseReferencesSocket>
-              </socket>
-            </socketUse>
-          </moduleHasSocketUses>
-        </socketUses>
-      </module>
-    </gadgeteerModelHasGadgeteerHardware>
     <gadgeteerModelHasGadgeteerHardware Id="ca084eba-dc45-413d-96b9-6de0cfbf171c">
       <module Id="6ee84d67-70d7-4d7f-8071-5a7543e2f90f" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;RFID&quot; Type=&quot;Gadgeteer.Modules.GHIElectronics.RFID&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\GHI Electronics\GHI .NET Gadgeteer SDK\Modules\RFID\Resources\Image.jpg&quot; BoardWidth=&quot;37.5&quot; BoardHeight=&quot;37.5&quot; MinimumGadgeteerCoreVersion=&quot;2.42.500&quot; HelpUrl=&quot;http://www.ghielectronics.com/catalog/product/366&quot; UniqueId=&quot;b8638b34-4f18-4500-b538-ee781a8d5db8&quot; Manufacturer=&quot;GHI Electronics&quot; Description=&quot;A RFID module&quot; InstanceName=&quot;rfid&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.GHIElectronics.RFID&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;Gadgeteer.Serial&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;90&quot; Left=&quot;19&quot; Top=&quot;33&quot; TypesLabel=&quot;U&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;U&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;3&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;4&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;5&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="rfid" moduleType="Gadgeteer.Modules.GHIElectronics.RFID" moduleDefinitionId="b8638b34-4f18-4500-b538-ee781a8d5db8">
         <socketUses>
           <moduleHasSocketUses Id="56be7e9c-2fad-4294-b3fe-6ccb22819e69">
             <socketUse Id="9dd5e037-9dee-479c-90bd-050ea96c9721" label="U">
               <socket>
-                <socketUseReferencesSocket Id="f5b5cc76-e376-4e75-b276-f94d2f023cd3">
-                  <socketMoniker Id="93b84545-8d50-4a82-8d9f-1c2b2d7cbdb7" />
+                <socketUseReferencesSocket Id="25b8cf4a-0553-498e-8e8f-83166fc70841">
+                  <socketMoniker Id="ad937dc4-dc0d-43bf-86f0-4083235500ab" />
                 </socketUseReferencesSocket>
               </socket>
             </socketUse>
@@ -130,8 +115,8 @@
           <moduleHasSocketUses Id="63225296-5b2f-4d88-a0ab-2697a281f820">
             <socketUse Id="5d324632-6da2-4574-b47f-7d2aa8e54952" label="XY">
               <socket>
-                <socketUseReferencesSocket Id="fd5d5f16-6a78-403e-ab71-4b7161ad7955">
-                  <socketMoniker Id="c2982efe-bef4-4f0b-98ba-c4e487055ca4" />
+                <socketUseReferencesSocket Id="4951557a-0c75-4903-bde8-7e5bef5ddba8">
+                  <socketMoniker Id="66f4ee50-9531-4acb-aac3-422b49c3eb5a" />
                 </socketUseReferencesSocket>
               </socket>
             </socketUse>
@@ -145,8 +130,53 @@
           <moduleHasSocketUses Id="58a95df5-9251-4110-b016-09f362745933">
             <socketUse Id="adb28c4c-fadc-4a1a-82b7-28d44446d9d2" label="A">
               <socket>
-                <socketUseReferencesSocket Id="100a989d-a849-4552-bb41-a92047b546bd">
-                  <socketMoniker Id="66f4ee50-9531-4acb-aac3-422b49c3eb5a" />
+                <socketUseReferencesSocket Id="68be53c5-9da3-4f4e-b143-b3476d8af802">
+                  <socketMoniker Id="c2982efe-bef4-4f0b-98ba-c4e487055ca4" />
+                </socketUseReferencesSocket>
+              </socket>
+            </socketUse>
+          </moduleHasSocketUses>
+        </socketUses>
+      </module>
+    </gadgeteerModelHasGadgeteerHardware>
+    <gadgeteerModelHasGadgeteerHardware Id="1046e1dc-b484-4a13-9193-f03ba311a53d">
+      <module Id="c7221344-8078-4d37-a0f8-b6a5a165144a" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;XBee&quot; Type=&quot;Gadgeteer.Modules.GHIElectronics.XBee&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\GHI Electronics\GHI .NET Gadgeteer SDK\Modules\XBee\Resources\Image.jpg&quot; BoardWidth=&quot;42&quot; BoardHeight=&quot;37&quot; MinimumGadgeteerCoreVersion=&quot;2.42.500&quot; HelpUrl=&quot;http://www.ghielectronics.com/catalog/product/314&quot; UniqueId=&quot;13ee1e15-777c-4dac-ad38-753e58244d56&quot; Manufacturer=&quot;GHI Electronics&quot; Description=&quot;A XBee module&quot; InstanceName=&quot;xBee&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.GHIElectronics.XBee&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;Gadgeteer.Serial&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;90&quot; Left=&quot;21&quot; Top=&quot;33&quot; TypesLabel=&quot;KU&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;K&lt;/Type&gt;&#xD;&#xA;        &lt;Type&gt;U&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;3&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;4&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;5&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;6&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;7&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="xBee" moduleType="Gadgeteer.Modules.GHIElectronics.XBee" moduleDefinitionId="13ee1e15-777c-4dac-ad38-753e58244d56">
+        <socketUses>
+          <moduleHasSocketUses Id="90603c2f-a41d-40fd-8796-85ba393e813a">
+            <socketUse Id="de756362-d45f-4939-8e7e-0f5133b31f67" label="KU">
+              <socket>
+                <socketUseReferencesSocket Id="b01e1baf-d29f-458c-92ef-3cd63e067213">
+                  <socketMoniker Id="f6fc1b71-acfe-4f65-b5df-87470d1f1cf6" />
+                </socketUseReferencesSocket>
+              </socket>
+            </socketUse>
+          </moduleHasSocketUses>
+        </socketUses>
+      </module>
+    </gadgeteerModelHasGadgeteerHardware>
+    <gadgeteerModelHasGadgeteerHardware Id="70d034f6-8071-43e0-9fb7-02afefa59cd9">
+      <module Id="69f65486-74c4-4ec5-8678-5ceb39b5e528" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;Button&quot; Type=&quot;Gadgeteer.Modules.GHIElectronics.Button&quot; HardwareVersion=&quot;1.2&quot; Image=&quot;C:\Program Files (x86)\GHI Electronics\GHI .NET Gadgeteer SDK\Modules\Button\Resources\Image.jpg&quot; BoardWidth=&quot;22&quot; BoardHeight=&quot;22&quot; MinimumGadgeteerCoreVersion=&quot;2.42.500&quot; HelpUrl=&quot;http://www.ghielectronics.com/catalog/product/274&quot; UniqueId=&quot;c241cd69-3f38-453d-bdc4-5679f4265302&quot; Manufacturer=&quot;GHI Electronics&quot; Description=&quot;A Button module with an embedded LED&quot; InstanceName=&quot;button&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.GHIElectronics.Button&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;270&quot; Left=&quot;11.18&quot; Top=&quot;11.53&quot; TypesLabel=&quot;XY&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;X&lt;/Type&gt;&#xD;&#xA;        &lt;Type&gt;Y&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;3&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;4&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="button1" moduleType="Gadgeteer.Modules.GHIElectronics.Button" moduleDefinitionId="c241cd69-3f38-453d-bdc4-5679f4265302">
+        <socketUses>
+          <moduleHasSocketUses Id="790fcd0d-bd68-492c-92a2-7de133457f63">
+            <socketUse Id="e5ed4b5b-ded8-48eb-a4c9-51a09925a28f" label="XY">
+              <socket>
+                <socketUseReferencesSocket Id="0a12eec7-3a57-43ec-b8bf-c8aefc1b2918">
+                  <socketMoniker Id="efe1a5ce-4dc2-4f71-9543-38a26d7f498e" />
+                </socketUseReferencesSocket>
+              </socket>
+            </socketUse>
+          </moduleHasSocketUses>
+        </socketUses>
+      </module>
+    </gadgeteerModelHasGadgeteerHardware>
+    <gadgeteerModelHasGadgeteerHardware Id="3584255c-dce6-4a81-a1b7-288fac43dcfd">
+      <module Id="8362df6c-11f7-4507-97f4-ce688f64f54d" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;OledDisplay&quot; Type=&quot;Gadgeteer.Modules.Seeed.OledDisplay&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\Seeed\Seeed .NET Gadgeteer SDK\Modules\OledDisplay\Resources\Image.jpg&quot; BoardWidth=&quot;37&quot; BoardHeight=&quot;43&quot; MinimumGadgeteerCoreVersion=&quot;2.42.500&quot; HelpUrl=&quot;&quot; UniqueId=&quot;a1b59e38-a62f-450a-8bff-7baa80bbb950&quot; Manufacturer=&quot;Seeed&quot; Description=&quot;A OledDisplay module&quot; InstanceName=&quot;oledDisplay&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.Seeed.OledDisplay&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;Gadgeteer.Serial&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;90&quot; Left=&quot;18.5&quot; Top=&quot;38.7&quot; TypesLabel=&quot;S&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;S&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;3&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;4&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;6&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;true&quot;&gt;7&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;true&quot;&gt;9&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="oledDisplay" moduleType="Gadgeteer.Modules.Seeed.OledDisplay" moduleDefinitionId="a1b59e38-a62f-450a-8bff-7baa80bbb950">
+        <socketUses>
+          <moduleHasSocketUses Id="86c9ff08-ca33-435a-907e-afb769b88c4b">
+            <socketUse Id="5381fbf2-cacb-4725-9aa2-059466a56d6c" label="S">
+              <socket>
+                <socketUseReferencesSocket Id="66d8549d-1361-489e-ba5d-65063c39c309">
+                  <socketMoniker Id="7ed6543f-56e0-482f-8cbb-730e911505f7" />
                 </socketUseReferencesSocket>
               </socket>
             </socketUse>

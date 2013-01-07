@@ -86,6 +86,9 @@
     <Reference Include="GTM.GHIElectronics.UsbClientDP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="GTM.GHIElectronics.XBee, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="GTM.Seeed.OledDisplay, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -102,6 +105,18 @@
     <Reference Include="System" />
     <Reference Include="System.Http" />
     <Reference Include="System.IO" />
+    <Reference Include="Toolbox.NETMF.Core">
+      <HintPath>..\..\netmftoolbox-21196\Release (4.2)\Toolbox.NETMF.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Toolbox.NETMF.Hardware.WiFlyGSX">
+      <HintPath>..\..\netmftoolbox-21196\Release (4.2)\Toolbox.NETMF.Hardware.WiFlyGSX.dll</HintPath>
+    </Reference>
+    <Reference Include="Toolbox.NETMF.NET.Core">
+      <HintPath>..\..\netmftoolbox-21196\Release (4.2)\Toolbox.NETMF.NET.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Toolbox.NETMF.NET.HTTP_Client">
+      <HintPath>..\..\netmftoolbox-21196\Release (4.2)\Toolbox.NETMF.NET.HTTP_Client.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -123,5 +138,15 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Napkin-NetMF-Common\NapkinCommon\NapkinCommon\NapkinCommon.csproj">
+      <Project>{A051E60E-D7AC-4350-8199-92722001B579}</Project>
+      <Name>NapkinCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NapkinGadgeteerCommon\NapkinGadgeteerCommon\NapkinGadgeteerCommon.csproj">
+      <Project>{6AF9F241-E845-42C8-B1DF-034BCD78803F}</Project>
+      <Name>NapkinGadgeteerCommon</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
