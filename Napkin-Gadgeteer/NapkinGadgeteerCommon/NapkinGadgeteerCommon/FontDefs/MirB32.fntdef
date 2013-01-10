@@ -1,0 +1,4 @@
+#AddFontToProcess "C:\\projects\\Fonts\\TrueType\\Miramo.ttf"
+AddFontToProcess "C:\\Program Files (x86)\\Microsoft .NET Micro Framework\\v4.2\\Tools\\Fonts\\TrueType\\Miramob.ttf"
+SelectFont "HE:32,FN:Miramonte Bold"
+ImportRange 32 126

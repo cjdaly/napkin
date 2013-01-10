@@ -56,4 +56,12 @@
       <Name>NapkinCommon</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="FontDefs\build-fonts.bat" />
+    <None Include="FontDefs\Mir32.fntdef" />
+    <None Include="FontDefs\Mir64.fntdef" />
+    <None Include="FontDefs\MirB32.fntdef" />
+    <None Include="FontDefs\MirB64.fntdef" />
+  </ItemGroup>
 </Project>

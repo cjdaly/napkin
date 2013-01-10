@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Ports;
 using System.Collections;
 using System.Threading;
 using Microsoft.SPOT;
@@ -17,6 +18,7 @@ using GTM = Gadgeteer.Modules;
 using Gadgeteer.Modules.GHIElectronics;
 using Gadgeteer.Modules.Seeed;
 
+using NapkinCommon;
 using NapkinGadgeteerCommon;
 
 namespace hydra1
@@ -30,6 +32,8 @@ namespace hydra1
         {
             get { return "http://" + NapkinServerName + ":" + NapkinServerPort.ToString(); }
         }
+
+        private Emic2 _emic2;
 
         private Thread _wiflyThread;
 
@@ -54,9 +58,14 @@ namespace hydra1
             _joystickDriver = new JoystickDriver(joystick);
             _joystickDriver.JoystickMotion += new JoystickDriver.JoystickMotionHandler(_joystickDriver_JoystickMotion);
 
-            Font fontSmall = Resources.GetFont(Resources.FontResources.small);
-            Font fontNinaB = Resources.GetFont(Resources.FontResources.NinaB);
-            _oledDriver = new OledDisplayDriver(oledDisplay, fontSmall, fontNinaB);
+            _emic2 = new Emic2(Serial.COM1);
+
+            Font fontTitle = Resources.GetFont(Resources.FontResources.NinaB);
+            Font fontBody = Resources.GetFont(Resources.FontResources.MirB64);
+            Font fontStatus = Resources.GetFont(Resources.FontResources.small);
+            _oledDriver = new OledDisplayDriver(oledDisplay, fontTitle, fontBody, fontStatus);
+            _oledDriver.SetTitle("Hello");
+            _oledDriver.SetBody("Foo");
 
             button1.ButtonPressed += new Button.ButtonEventHandler(button1_ButtonPressed);
             button1.ButtonReleased += new Button.ButtonEventHandler(button1_ButtonReleased);
@@ -66,6 +75,7 @@ namespace hydra1
 
             rfid.CardIDReceived += new RFID.CardIDReceivedEventHandler(rfid_CardIDReceived);
 
+            music.SetVolume(250);
             music.musicFinished += new Music.MusicFinishedPlayingEventHandler(music_musicFinished);
 
             GT.StorageDevice sd = sdCard.GetStorageDevice();
@@ -119,6 +129,7 @@ namespace hydra1
 
         void button1_ButtonReleased(Button sender, Button.ButtonState state)
         {
+            _emic2.Say("hello");
         }
 
         //
@@ -135,6 +146,7 @@ namespace hydra1
 
         void button_ButtonReleased(Button sender, Button.ButtonState state)
         {
+            _emic2.Say("goodbye");
         }
 
         //

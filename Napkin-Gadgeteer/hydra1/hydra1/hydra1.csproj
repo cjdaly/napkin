@@ -133,6 +133,10 @@
     <None Include="Program.gadgeteer.diagram">
       <DependentUpon>Program.gadgeteer</DependentUpon>
     </None>
+    <None Include="Resources\Mir32.tinyfnt" />
+    <None Include="Resources\Mir64.tinyfnt" />
+    <None Include="Resources\MirB32.tinyfnt" />
+    <None Include="Resources\MirB64.tinyfnt" />
     <None Include="Resources\NinaB.tinyfnt" />
     <None Include="Resources\small.tinyfnt" />
   </ItemGroup>

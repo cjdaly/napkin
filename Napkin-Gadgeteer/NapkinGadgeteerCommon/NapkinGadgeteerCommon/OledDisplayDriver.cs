@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading;
 using Microsoft.SPOT;
 using Gadgeteer.Modules.Seeed;
+using SGI = Gadgeteer.Modules.Module.DisplayModule.SimpleGraphicsInterface;
 
 namespace NapkinGadgeteerCommon
 {
@@ -10,67 +11,99 @@ namespace NapkinGadgeteerCommon
     {
         private OledDisplay _oledDisplay;
 
-        private ArrayList _lines = new ArrayList();
-        private readonly int _linesMax = 8;
-        private Boolean _refresh = false;
+        private Font _fontTitle;
+        private Font _fontBody;
+        private Font _fontStatus;
 
-        private Font _fontSmall;
-        private Font _fontNinaB;
+        //private Thread _thread;
 
-        private Gadgeteer.Color _textColor;
-
-        private Thread _thread;
-
-        public OledDisplayDriver(OledDisplay oledDisplay, Font fontSmall, Font fontNinaB)
+        public OledDisplayDriver(OledDisplay oledDisplay, Font fontTitle, Font fontBody, Font fontStatus)
         {
             _oledDisplay = oledDisplay;
-            _fontSmall = fontSmall;
-            _fontNinaB = fontNinaB;
+            _fontTitle = fontTitle;
+            _fontBody = fontBody;
+            _fontStatus = fontStatus;
 
-            _textColor = Gadgeteer.Color.White;
-
-            _thread = new Thread(DriverLoop);
-            _thread.Start();
+            //_thread = new Thread(DriverLoop);
+            //_thread.Start();
         }
 
-        public void AddLine(string line)
+        //
+        //
+
+        private Gadgeteer.Color _titleBackgroundColor = Gadgeteer.Color.DarkGray;
+        private Gadgeteer.Color _titleColor = Gadgeteer.Color.Orange;
+
+        private string _title = "";
+        public void SetTitle(string title)
         {
-            lock (this)
+            _title = title;
+            SGI sgi = _oledDisplay.SimpleGraphics;
+            sgi.DisplayRectangle(_titleBackgroundColor, 0, _titleBackgroundColor, 0, 0, sgi.Width, 16);
+            sgi.DisplayText(_title, _fontTitle, _titleColor, 0, 0);
+        }
+
+        //
+        //
+
+        private Gadgeteer.Color _bodyBackgroundColor = Gadgeteer.Color.Brown;
+        private Gadgeteer.Color _bodyColor = Gadgeteer.Color.Yellow;
+
+        private string _body = "";
+        public void SetBody(string body)
+        {
+            _body = body;
+            SGI sgi = _oledDisplay.SimpleGraphics;
+            sgi.DisplayRectangle(_bodyBackgroundColor, 0, _bodyBackgroundColor, 0, 20, sgi.Width, 64);
+            sgi.DisplayText(_body, _fontBody, _bodyColor, 0, 20);
+        }
+
+        //
+        //
+
+        private Gadgeteer.Color _statusBackgroundColor = Gadgeteer.Color.Purple;
+        private Gadgeteer.Color _statusColor = Gadgeteer.Color.White;
+
+        private ArrayList _statusLines = new ArrayList();
+        private readonly int _statusLineCount = 4;
+
+        public void AddLine(string message = "")
+        {
+            _statusLines.Add(message);
+            if (_statusLines.Count > _statusLineCount)
             {
-                _lines.Add(line);
-                if (_lines.Count > _linesMax)
-                {
-                    _lines.RemoveAt(0);
-                }
-                _refresh = true;
+                _statusLines.RemoveAt(0);
+            }
+
+            SGI sgi = _oledDisplay.SimpleGraphics;
+
+            uint height = sgi.Height;
+            uint width = sgi.Width;
+
+            if (_statusLines.Count == 1)
+            {
+                _statusLines.Add("DISPLAY x: " + width + ", y: " + height);
+            }
+
+            uint yStart = 88;
+            sgi.DisplayRectangle(_statusBackgroundColor, 0, _statusBackgroundColor, 0, yStart, width, height - yStart);
+            int lineNum = 0;
+            foreach (string line in _statusLines)
+            {
+                uint lineY = (uint)(yStart + (lineNum * 10) - 2);
+                sgi.DisplayText(line, _fontStatus, _statusColor, 0, lineY);
+                lineNum++;
             }
         }
+
+        //
+        //
 
         private void DriverLoop()
         {
             while (true)
             {
-                lock (this)
-                {
-                    if (_refresh)
-                    {
-                        Refresh();
-                    }
-                    _refresh = false;
-                }
                 Thread.Sleep(200);
-            }
-        }
-
-        private void Refresh()
-        {
-            uint x = 0;
-            uint y = 60;
-            _oledDisplay.SimpleGraphics.Clear();
-            foreach (string line in _lines)
-            {
-                _oledDisplay.SimpleGraphics.DisplayText(line, _fontSmall, _textColor, x, y);
-                y += 8;
             }
         }
 

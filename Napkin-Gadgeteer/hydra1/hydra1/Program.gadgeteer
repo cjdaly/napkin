@@ -79,21 +79,6 @@
         </socketUses>
       </module>
     </gadgeteerModelHasGadgeteerHardware>
-    <gadgeteerModelHasGadgeteerHardware Id="b4609f99-53c0-4e6c-a815-6d7ada9a5622">
-      <module Id="f7e0083a-a824-41b3-adf4-428f49e34f37" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;Music&quot; Type=&quot;Gadgeteer.Modules.GHIElectronics.Music&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\GHI Electronics\GHI .NET Gadgeteer SDK\Modules\Music\Resources\Image.jpg&quot; BoardWidth=&quot;50&quot; BoardHeight=&quot;39&quot; MinimumGadgeteerCoreVersion=&quot;2.42.500&quot; HelpUrl=&quot;http://www.ghielectronics.com/catalog/product/317&quot; UniqueId=&quot;f026285c-59a9-405a-92b5-95d33ec0700e&quot; Manufacturer=&quot;GHI Electronics&quot; Description=&quot;A Music module&quot; InstanceName=&quot;music&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.GHIElectronics.Music&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;Gadgeteer.SPI&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;180&quot; Left=&quot;45&quot; Top=&quot;19&quot; TypesLabel=&quot;S&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;S&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins /&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="music" moduleType="Gadgeteer.Modules.GHIElectronics.Music" moduleDefinitionId="f026285c-59a9-405a-92b5-95d33ec0700e">
-        <socketUses>
-          <moduleHasSocketUses Id="ea7b7a71-27b7-4dad-a11d-0937ad58cad9">
-            <socketUse Id="225ce4db-1b5b-47a5-a467-1d443a74f087" label="S">
-              <socket>
-                <socketUseReferencesSocket Id="f3cf05c7-a9a0-4cf1-a899-0de24d938f19">
-                  <socketMoniker Id="e33932e1-a6d8-4428-a319-1179c1c42a54" />
-                </socketUseReferencesSocket>
-              </socket>
-            </socketUse>
-          </moduleHasSocketUses>
-        </socketUses>
-      </module>
-    </gadgeteerModelHasGadgeteerHardware>
     <gadgeteerModelHasGadgeteerHardware Id="ca084eba-dc45-413d-96b9-6de0cfbf171c">
       <module Id="6ee84d67-70d7-4d7f-8071-5a7543e2f90f" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;RFID&quot; Type=&quot;Gadgeteer.Modules.GHIElectronics.RFID&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\GHI Electronics\GHI .NET Gadgeteer SDK\Modules\RFID\Resources\Image.jpg&quot; BoardWidth=&quot;37.5&quot; BoardHeight=&quot;37.5&quot; MinimumGadgeteerCoreVersion=&quot;2.42.500&quot; HelpUrl=&quot;http://www.ghielectronics.com/catalog/product/366&quot; UniqueId=&quot;b8638b34-4f18-4500-b538-ee781a8d5db8&quot; Manufacturer=&quot;GHI Electronics&quot; Description=&quot;A RFID module&quot; InstanceName=&quot;rfid&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.GHIElectronics.RFID&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;Gadgeteer.Serial&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;90&quot; Left=&quot;19&quot; Top=&quot;33&quot; TypesLabel=&quot;U&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;U&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;3&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;4&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;5&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="rfid" moduleType="Gadgeteer.Modules.GHIElectronics.RFID" moduleDefinitionId="b8638b34-4f18-4500-b538-ee781a8d5db8">
         <socketUses>
@@ -177,6 +162,21 @@
               <socket>
                 <socketUseReferencesSocket Id="66d8549d-1361-489e-ba5d-65063c39c309">
                   <socketMoniker Id="7ed6543f-56e0-482f-8cbb-730e911505f7" />
+                </socketUseReferencesSocket>
+              </socket>
+            </socketUse>
+          </moduleHasSocketUses>
+        </socketUses>
+      </module>
+    </gadgeteerModelHasGadgeteerHardware>
+    <gadgeteerModelHasGadgeteerHardware Id="a58463f6-7865-4277-be91-f93d09a2f24f">
+      <module Id="32b719dc-64a1-4d32-9c05-6c668900aa2c" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;Music&quot; Type=&quot;Gadgeteer.Modules.GHIElectronics.Music&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\GHI Electronics\GHI .NET Gadgeteer SDK\Modules\Music\Resources\Image.jpg&quot; BoardWidth=&quot;50&quot; BoardHeight=&quot;39&quot; MinimumGadgeteerCoreVersion=&quot;2.42.500&quot; HelpUrl=&quot;http://www.ghielectronics.com/catalog/product/317&quot; UniqueId=&quot;f026285c-59a9-405a-92b5-95d33ec0700e&quot; Manufacturer=&quot;GHI Electronics&quot; Description=&quot;A Music module&quot; InstanceName=&quot;music&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.GHIElectronics.Music&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;Gadgeteer.SPI&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;180&quot; Left=&quot;45&quot; Top=&quot;19&quot; TypesLabel=&quot;S&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;S&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins /&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="music" moduleType="Gadgeteer.Modules.GHIElectronics.Music" moduleDefinitionId="f026285c-59a9-405a-92b5-95d33ec0700e">
+        <socketUses>
+          <moduleHasSocketUses Id="25cb5263-5a12-45d9-8bbe-98ac4dba25aa">
+            <socketUse Id="96338f78-31c0-4b72-a477-d2eb3498ebbb" label="S">
+              <socket>
+                <socketUseReferencesSocket Id="091f4e46-6795-4e1d-9d69-7c264e943833">
+                  <socketMoniker Id="e33932e1-a6d8-4428-a319-1179c1c42a54" />
                 </socketUseReferencesSocket>
               </socket>
             </socketUse>
