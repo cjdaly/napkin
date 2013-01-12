@@ -33,7 +33,8 @@ namespace hydra1
             get { return "http://" + NapkinServerName + ":" + NapkinServerPort.ToString(); }
         }
 
-        private Emic2 _emic2;
+        //private Emic2 _emic2;
+        private Mp3Trigger _mp3Trigger;
 
         private Thread _wiflyThread;
 
@@ -58,7 +59,9 @@ namespace hydra1
             _joystickDriver = new JoystickDriver(joystick);
             _joystickDriver.JoystickMotion += new JoystickDriver.JoystickMotionHandler(_joystickDriver_JoystickMotion);
 
-            _emic2 = new Emic2(Serial.COM1);
+            //_emic2 = new Emic2(Serial.COM1);
+
+            _mp3Trigger = new Mp3Trigger(Serial.COM1);
 
             Font fontTitle = Resources.GetFont(Resources.FontResources.NinaB);
             Font fontBody = Resources.GetFont(Resources.FontResources.MirB64);
@@ -72,8 +75,6 @@ namespace hydra1
 
             button.ButtonPressed += new Button.ButtonEventHandler(button_ButtonPressed);
             button.ButtonReleased += new Button.ButtonEventHandler(button_ButtonReleased);
-
-            rfid.CardIDReceived += new RFID.CardIDReceivedEventHandler(rfid_CardIDReceived);
 
             music.SetVolume(250);
             music.musicFinished += new Music.MusicFinishedPlayingEventHandler(music_musicFinished);
@@ -100,9 +101,11 @@ namespace hydra1
                     Message("joystick: DOWN");
                     break;
                 case JoystickDriver.Position.LEFT:
+                    _mp3Trigger.SendCommand("R");
                     Message("joystick: LEFT");
                     break;
                 case JoystickDriver.Position.RIGHT:
+                    _mp3Trigger.SendCommand("F");
                     Message("joystick: RIGHT");
                     break;
             }
@@ -129,7 +132,7 @@ namespace hydra1
 
         void button1_ButtonReleased(Button sender, Button.ButtonState state)
         {
-            _emic2.Say("hello");
+            //_emic2.Say("hello");
         }
 
         //
@@ -146,7 +149,7 @@ namespace hydra1
 
         void button_ButtonReleased(Button sender, Button.ButtonState state)
         {
-            _emic2.Say("goodbye");
+            //_emic2.Say("goodbye");
         }
 
         //
@@ -172,11 +175,6 @@ namespace hydra1
             _playingSound = false;
             button1.TurnLEDOff();
             button.TurnLEDOff();
-        }
-
-        void rfid_CardIDReceived(RFID sender, string ID)
-        {
-            Message("RFID: " + ID);
         }
 
         //

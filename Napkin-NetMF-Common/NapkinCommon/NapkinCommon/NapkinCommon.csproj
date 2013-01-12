@@ -35,6 +35,7 @@
     <Compile Include="DeviceVitals.cs" />
     <Compile Include="Emic2.cs" />
     <Compile Include="HttpUtil.cs" />
+    <Compile Include="Mp3Trigger.cs" />
     <Compile Include="NumericSamplers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerLCD.cs" />

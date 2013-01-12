@@ -18,7 +18,6 @@ namespace hydra1
         // GTM.Module definitions
         Gadgeteer.Modules.GHIElectronics.UsbClientDP usbClientDP;
         Gadgeteer.Modules.GHIElectronics.SDCard sdCard;
-        Gadgeteer.Modules.GHIElectronics.RFID rfid;
         Gadgeteer.Modules.GHIElectronics.Button button;
         Gadgeteer.Modules.GHIElectronics.Joystick joystick;
         Gadgeteer.Modules.GHIElectronics.XBee xBee;
@@ -47,8 +46,6 @@ namespace hydra1
             oledDisplay = new GTM.Seeed.OledDisplay(4);
 		
             xBee = new GTM.GHIElectronics.XBee(6);
-		
-            rfid = new GTM.GHIElectronics.RFID(7);
 		
             sdCard = new GTM.GHIElectronics.SDCard(8);
 		
