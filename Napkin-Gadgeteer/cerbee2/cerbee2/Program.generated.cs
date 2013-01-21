@@ -16,7 +16,8 @@ namespace cerbee2
     public partial class Program : Gadgeteer.Program
     {
         // GTM.Module definitions
-        Gadgeteer.Modules.GHIElectronics.Music music;
+        Gadgeteer.Modules.GHIElectronics.RFID rfid;
+        Gadgeteer.Modules.GHIElectronics.LED7R led7r;
 
         public static void Main()
         {
@@ -32,7 +33,9 @@ namespace cerbee2
         private void InitializeModules()
         {   
             // Initialize GTM.Modules and event handlers here.		
-            music = new GTM.GHIElectronics.Music(1);
+            rfid = new GTM.GHIElectronics.RFID(2);
+		
+            led7r = new GTM.GHIElectronics.LED7R(3);
 
         }
     }

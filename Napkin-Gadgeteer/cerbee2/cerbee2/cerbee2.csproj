@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Gadgeteer, Version=2.42.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="Gadgeteer.SPI, Version=2.42.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Gadgeteer.Serial, Version=2.42.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="GHI.OSHW.Hardware, Version=4.2.3.1, Culture=neutral, processorArchitecture=MSIL" />
@@ -65,7 +65,10 @@
     <Reference Include="GHIElectronics.Gadgeteer.FEZCerbuinoBee, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="GTM.GHIElectronics.Music, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="GTM.GHIElectronics.LED7R, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="GTM.GHIElectronics.RFID, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Microsoft.SPOT.Graphics" />

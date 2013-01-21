@@ -26,16 +26,19 @@ namespace cerbee2
     public partial class Program
     {
         public readonly string DeviceId = "cerbee2";
-        public readonly string NapkinServerUri = "http://192.168.2.50:4567";
+        public readonly string NapkinServerName = "192.168.2.50";
+        public readonly ushort NapkinServerPort = 4567;
+        public string NapkinServerUri
+        {
+            get { return "http://" + NapkinServerName + ":" + NapkinServerPort.ToString(); }
+        }
 
         void ProgramStarted()
         {
-
             Thread.Sleep(1000);
 
-            // InitSerLcd();
-
-            //_emic2 = new Emic2(Serial.COM3);
+            _wiflyThread = new Thread(WiFlyDriver);
+            _wiflyThread.Start();
 
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
@@ -48,9 +51,8 @@ namespace cerbee2
 
         private int _cycleCount = 0;
 
+        private Thread _wiflyThread;
         private WiFlyGSX _wifly;
-
-        //private Emic2 _emic2;
 
         private void CycleDriver()
         {
@@ -60,10 +62,7 @@ namespace cerbee2
 
             SDCardTest();
 
-            // TestSerLcd("Marah is 5");
-
             Debug.Print("Starting cycle: " + _cycleCount + " on device: " + DeviceId);
-            // JoinNetwork();
 
             bool exit = false;
             while (!exit)
@@ -78,63 +77,61 @@ namespace cerbee2
 
             _cycleCount++;
             Debug.Print("Starting cycle: " + _cycleCount + " on device: " + DeviceId);
-
-            music.SineTest();
-            Thread.Sleep(2000);
-            music.StopPlaying();
-
-            //_emic2.Say("cycle " + _cycleCount);
-
-            // PingServer();
+            Debug.Print("mem: " + Debug.GC(false));
         }
 
-        private string GetWifiPassword()
-        {
-            // TODO: get from SD card
-            return "foo";
-        }
+        //
+        //
 
-        private void JoinNetwork()
+        private void WiFlyDriver()
         {
+            // Note: WiFly is pre-configured for SSID, passphrase, etc, using 3.3V FTDI basic (pins 1,2,3,10)
+
             try
             {
-                _wifly = new WiFlyGSX();
-                _wifly.EnableDHCP();
-                _wifly.JoinNetwork("WIFI24G", 0, WiFlyGSX.AuthMode.WPA2_PSK, GetWifiPassword());
-                //_wifly.JoinNetwork("linksys-dd", 0, WiFlyGSX.AuthMode.Open);
 
-                for (int i = 0; i < 4; i++)
+                _wifly = new WiFlyGSX("COM4");
+
+                string ver = _wifly.ModuleVersion;
+                string mac = _wifly.MacAddress;
+
+                Debug.Print("WiFly version: " + ver + ", mac: " + mac);
+
+                while (true)
                 {
                     string ip = _wifly.LocalIP;
-                    string mac = _wifly.MacAddress;
-                    Debug.Print("IP: " + ip + ", mac: " + mac);
-                    Thread.Sleep(5000);
-                }
+                    Debug.Print("IP: " + ip);
 
-                Debug.Print("joined network");
+                    if (ip != "0.0.0.0")
+                    {
+                        string conf = NapkinGet("/config/cerbee2");
+                        Debug.Print("CONF: ");
+                        Debug.Print(conf);
+                    }
+
+                    Thread.Sleep(8000);
+                }
             }
             catch (Exception ex)
             {
-                Debug.Print("Exception in JoinNetwork: " + ex.Message);
+                Debug.Print("Exception in WiFlyDriver: " + ex.Message);
             }
         }
 
-        private void PingServer()
+        private string NapkinGet(string path)
         {
             try
             {
-                WiFlySocket socket = new WiFlySocket("192.168.2.50", 4567, _wifly);
-                //WiFlySocket socket = new WiFlySocket("www.google.com", 80, _wifly);
+                WiFlySocket socket = new WiFlySocket(NapkinServerName, NapkinServerPort, _wifly);
                 HTTP_Client client = new HTTP_Client(socket);
                 client.Authenticate(DeviceId, DeviceId);
-                HTTP_Client.HTTP_Response response = client.Get("/config");
-
-                Debug.Print("got from server:");
-                Debug.Print(response.ResponseBody);
+                HTTP_Client.HTTP_Response response = client.Get(path);
+                return response.ResponseBody;
             }
             catch (Exception ex)
             {
                 Debug.Print("Exception in PingServer: " + ex.Message);
+                return null;
             }
         }
 
@@ -194,52 +191,6 @@ namespace cerbee2
             char[] chars = Encoding.UTF8.GetChars(bytes);
             string fileText = new String(chars);
             return fileText;
-        }
-
-
-        //
-        // SerLCD ?
-        //
-
-        private SerialPort _serLcdPort;
-        private readonly string _portName = Serial.COM3;
-
-        private void InitSerLcd()
-        {
-            _serLcdPort = new SerialPort(_portName, 9600, Parity.None, 8, StopBits.One);
-            _serLcdPort.Open();
-        }
-
-        public void ClearSerLcd()
-        {
-            _serLcdPort.Write(new byte[] { 0xFE, 0x01 }, 0, 2);
-        }
-
-        public bool TestSerLcd(String message)
-        {
-            ClearSerLcd();
-
-            WriteSerLcd("Hello World");
-            WriteSerLcd(message, 64);
-
-            return true;
-        }
-
-        private byte[] _serLcdBuffer = new byte[40];
-        private void WriteSerLcd(String message, int position = 0)
-        {
-            int i = 0;
-            if (position != 0)
-            {
-                _serLcdBuffer[i++] = (byte)(0xFE);
-                _serLcdBuffer[i++] = (byte)(0x80 + position);
-            }
-
-            foreach (char c in message)
-            {
-                _serLcdBuffer[i++] = (byte)c;
-            }
-            _serLcdPort.Write(_serLcdBuffer, 0, i);
         }
 
     }
