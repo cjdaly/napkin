@@ -33,7 +33,7 @@ namespace hydra1
             get { return "http://" + NapkinServerName + ":" + NapkinServerPort.ToString(); }
         }
 
-        //private Emic2 _emic2;
+        private Emic2 _emic2;
         private Mp3Trigger _mp3Trigger;
 
         private Thread _wiflyThread;
@@ -59,9 +59,9 @@ namespace hydra1
             _joystickDriver = new JoystickDriver(joystick);
             _joystickDriver.JoystickMotion += new JoystickDriver.JoystickMotionHandler(_joystickDriver_JoystickMotion);
 
-            //_emic2 = new Emic2(Serial.COM1);
-
-            _mp3Trigger = new Mp3Trigger(Serial.COM1);
+            _emic2 = new Emic2(Serial.COM1);
+            _mp3Trigger = new Mp3Trigger(Serial.COM2);
+            _mp3Trigger.SetVolume(40);
 
             Font fontTitle = Resources.GetFont(Resources.FontResources.NinaB);
             Font fontBody = Resources.GetFont(Resources.FontResources.MirB64);
@@ -101,11 +101,11 @@ namespace hydra1
                     Message("joystick: DOWN");
                     break;
                 case JoystickDriver.Position.LEFT:
-                    _mp3Trigger.SendCommand("R");
+                    _mp3Trigger.Reverse();
                     Message("joystick: LEFT");
                     break;
                 case JoystickDriver.Position.RIGHT:
-                    _mp3Trigger.SendCommand("F");
+                    _mp3Trigger.Forward();
                     Message("joystick: RIGHT");
                     break;
             }
@@ -132,7 +132,7 @@ namespace hydra1
 
         void button1_ButtonReleased(Button sender, Button.ButtonState state)
         {
-            //_emic2.Say("hello");
+            _emic2.Say("hello");
         }
 
         //
@@ -149,7 +149,7 @@ namespace hydra1
 
         void button_ButtonReleased(Button sender, Button.ButtonState state)
         {
-            //_emic2.Say("goodbye");
+            _emic2.Say("goodbye");
         }
 
         //

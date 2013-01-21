@@ -14,15 +14,29 @@ namespace NapkinCommon
             _serialPort.Open();
         }
 
-        public void SendCommand(string command)
+        private void SendCommand(byte[] commandBytes)
         {
-            byte[] _buffer = new byte[command.Length];
-            int i = 0;
-            foreach (char c in command)
-            {
-                _buffer[i++] = (byte)c;
-            }
-            _serialPort.Write(_buffer, 0, i);
+            _serialPort.Write(commandBytes, 0, commandBytes.Length);
+        }
+
+        public void StartStop()
+        {
+            SendCommand(new byte[] { (byte)'O' });
+        }
+
+        public void Forward()
+        {
+            SendCommand(new byte[] { (byte)'F' });
+        }
+
+        public void Reverse()
+        {
+            SendCommand(new byte[] { (byte)'R' });
+        }
+
+        public void SetVolume(byte volume)
+        {
+            SendCommand(new byte[] { (byte)'v', volume });
         }
     }
 }

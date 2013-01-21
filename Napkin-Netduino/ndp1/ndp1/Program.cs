@@ -23,7 +23,8 @@ namespace ndp1
 
         private BlinkMArray _blinkMs;
 
-        private Emic2 _emic2;
+        private Mp3Trigger _mp3Trigger;
+        //private Emic2 _emic2;
 
         private SerLCD _serLcd;
 
@@ -36,8 +37,11 @@ namespace ndp1
 
             _blinkMs = new BlinkMArray();
 
-            _emic2 = new Emic2();
-            _emic2.Say("hello");
+            _mp3Trigger = new Mp3Trigger();
+            _mp3Trigger.SetVolume(64);
+
+            //_emic2 = new Emic2();
+            //_emic2.Say("hello");
 
             _button_Red = new ControlButton(Pins.GPIO_PIN_D5, "Red", 0, this);
             _button_Green = new ControlButton(Pins.GPIO_PIN_D6, "Green", 80, this);
@@ -58,15 +62,16 @@ namespace ndp1
             else if (button.Color == "Blue")
             {
                 //
+                _mp3Trigger.Forward();
             }
             else if (button.Color == "Yellow")
             {
-                _emic2.IncrementVoice();
-                Thread.Sleep(200);
+                //_emic2.IncrementVoice();
+               // Thread.Sleep(200);
             }
 
             _serLcd.Write(button.Color, PadCount());
-            _emic2.Say(_count.ToString());
+            //_emic2.Say(_count.ToString());
             _blinkMs.UpdateBlinkMs(button.Hue);
         }
 
