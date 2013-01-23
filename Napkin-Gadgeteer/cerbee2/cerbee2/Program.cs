@@ -37,12 +37,25 @@ namespace cerbee2
         {
             Thread.Sleep(1000);
 
+            rfid.CardIDReceived += new RFID.CardIDReceivedEventHandler(rfid_CardIDReceived);
+
             _wiflyThread = new Thread(WiFlyDriver);
             _wiflyThread.Start();
 
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
 
+        }
+
+        private int _led7rVal = 0;
+        void rfid_CardIDReceived(RFID sender, string ID)
+        {
+            _led7rVal++;
+            if (_led7rVal >= 8) {
+                _led7rVal = 0;
+            }
+
+            led7r.TurnLightOn(_led7rVal, true);
         }
 
         private readonly int _cycleDelayMillisecondsInitial = 15 * 1000;
@@ -90,7 +103,7 @@ namespace cerbee2
             try
             {
 
-                _wifly = new WiFlyGSX("COM4");
+                _wifly = new WiFlyGSX();
 
                 string ver = _wifly.ModuleVersion;
                 string mac = _wifly.MacAddress;
