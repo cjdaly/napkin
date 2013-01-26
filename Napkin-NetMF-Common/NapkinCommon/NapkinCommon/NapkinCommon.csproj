@@ -30,6 +30,7 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="ThreadedSerialDevice.cs" />
     <Compile Include="BlinkMCommand.cs" />
     <Compile Include="ConfigUtil.cs" />
     <Compile Include="DeviceVitals.cs" />

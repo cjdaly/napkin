@@ -4,19 +4,21 @@ using Microsoft.SPOT;
 
 namespace NapkinCommon
 {
-    public class Mp3Trigger
+    public class Mp3Trigger : ThreadedSerialDevice
     {
-        private SerialPort _serialPort;
-
         public Mp3Trigger(string serialPortName = Serial.COM2)
+            : base(serialPortName)
         {
-            _serialPort = new SerialPort(serialPortName, 9600, Parity.None, 8, StopBits.One);
-            _serialPort.Open();
         }
 
         private void SendCommand(byte[] commandBytes)
         {
-            _serialPort.Write(commandBytes, 0, commandBytes.Length);
+            Write(commandBytes);
+        }
+
+        public void StatusVersion()
+        {
+            SendCommand(new byte[] { (byte)'S', (byte)'0' });
         }
 
         public void StartStop()

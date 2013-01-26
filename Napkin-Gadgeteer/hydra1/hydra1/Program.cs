@@ -56,19 +56,26 @@ namespace hydra1
 
         void ProgramStarted()
         {
-            _joystickDriver = new JoystickDriver(joystick);
-            _joystickDriver.JoystickMotion += new JoystickDriver.JoystickMotionHandler(_joystickDriver_JoystickMotion);
-
-            _emic2 = new Emic2(Serial.COM1);
-            _mp3Trigger = new Mp3Trigger(Serial.COM2);
-            _mp3Trigger.SetVolume(40);
-
             Font fontTitle = Resources.GetFont(Resources.FontResources.NinaB);
             Font fontBody = Resources.GetFont(Resources.FontResources.MirB64);
             Font fontStatus = Resources.GetFont(Resources.FontResources.small);
             _oledDriver = new OledDisplayDriver(oledDisplay, fontTitle, fontBody, fontStatus);
             _oledDriver.SetTitle("Hello");
             _oledDriver.SetBody("Foo");
+
+            _joystickDriver = new JoystickDriver(joystick);
+            _joystickDriver.JoystickMotion += new JoystickDriver.JoystickMotionHandler(_joystickDriver_JoystickMotion);
+
+            _emic2 = new Emic2(Serial.COM1);
+            _emic2.ReadMessage += new ThreadedSerialDevice.ReadHandler(_emic2_ReadMessage);
+            _emic2.Settings();
+            _emic2.Version();
+            _emic2.Help();
+
+            _mp3Trigger = new Mp3Trigger(Serial.COM2);
+            _mp3Trigger.ReadMessage += new ThreadedSerialDevice.ReadHandler(_mp3Trigger_ReadMessage);
+            _mp3Trigger.SetVolume(40);
+            _mp3Trigger.StatusVersion();
 
             button1.ButtonPressed += new Button.ButtonEventHandler(button1_ButtonPressed);
             button1.ButtonReleased += new Button.ButtonEventHandler(button1_ButtonReleased);
@@ -115,7 +122,25 @@ namespace hydra1
 
         private void Message(string message = "")
         {
-            _oledDriver.AddLine(message);
+            if (message != null)
+            {
+                Debug.Print(message);
+                _oledDriver.AddLine(message);
+            }
+        }
+        
+        //
+
+        void _mp3Trigger_ReadMessage(string message)
+        {
+            Message("mp3:" + message);
+        }
+
+        //
+
+        void _emic2_ReadMessage(string message)
+        {
+            Message("emic:" + message);
         }
 
         //
@@ -132,7 +157,7 @@ namespace hydra1
 
         void button1_ButtonReleased(Button sender, Button.ButtonState state)
         {
-            _emic2.Say("hello");
+            _emic2.Say("hello hello");
         }
 
         //
@@ -149,7 +174,7 @@ namespace hydra1
 
         void button_ButtonReleased(Button sender, Button.ButtonState state)
         {
-            _emic2.Say("goodbye");
+            _emic2.Say("goodbye dude");
         }
 
         //
