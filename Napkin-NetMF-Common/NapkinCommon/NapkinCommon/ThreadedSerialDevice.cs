@@ -19,8 +19,8 @@ namespace NapkinCommon
         private Thread _writeThread;
         private Queue _writeData;
 
-        public delegate void ReadHandler(string message);
-        public event ReadHandler ReadMessage;
+        public delegate void ReadHandler(string line);
+        public event ReadHandler ReadLine;
 
         public ThreadedSerialDevice(string serialPortName = Serial.COM1)
         {
@@ -92,7 +92,7 @@ namespace NapkinCommon
                     }
                     if (_readBuffer.Length > 0)
                     {
-                        ReadMessage(_readBuffer.ToString());
+                        ReadLine(_readBuffer.ToString());
                         _readBuffer.Clear();
                     }
                 }

@@ -67,13 +67,13 @@ namespace hydra1
             _joystickDriver.JoystickMotion += new JoystickDriver.JoystickMotionHandler(_joystickDriver_JoystickMotion);
 
             _emic2 = new Emic2(Serial.COM1);
-            _emic2.ReadMessage += new ThreadedSerialDevice.ReadHandler(_emic2_ReadMessage);
+            _emic2.ReadLine += new ThreadedSerialDevice.ReadHandler(_emic2_ReadLine);
             _emic2.Settings();
             _emic2.Version();
             _emic2.Help();
 
             _mp3Trigger = new Mp3Trigger(Serial.COM2);
-            _mp3Trigger.ReadMessage += new ThreadedSerialDevice.ReadHandler(_mp3Trigger_ReadMessage);
+            _mp3Trigger.ReadLine += new ThreadedSerialDevice.ReadHandler(_mp3Trigger_ReadLine);
             _mp3Trigger.SetVolume(40);
             _mp3Trigger.StatusVersion();
 
@@ -131,16 +131,16 @@ namespace hydra1
         
         //
 
-        void _mp3Trigger_ReadMessage(string message)
+        void _mp3Trigger_ReadLine(string line)
         {
-            Message("mp3:" + message);
+            Message("mp3:" + line);
         }
 
         //
 
-        void _emic2_ReadMessage(string message)
+        void _emic2_ReadLine(string line)
         {
-            Message("emic:" + message);
+            Message("emic:" + line);
         }
 
         //
