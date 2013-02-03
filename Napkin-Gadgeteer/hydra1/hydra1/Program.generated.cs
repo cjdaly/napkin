@@ -51,9 +51,9 @@ namespace hydra1
 		
             button1 = new GTM.GHIElectronics.Button(9);
 		
-            joystick = new GTM.GHIElectronics.Joystick(13);
+            button = new GTM.GHIElectronics.Button(13);
 		
-            button = new GTM.GHIElectronics.Button(14);
+            joystick = new GTM.GHIElectronics.Joystick(14);
 
         }
     }

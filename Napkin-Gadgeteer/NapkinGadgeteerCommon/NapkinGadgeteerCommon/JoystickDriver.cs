@@ -59,8 +59,9 @@ namespace NapkinGadgeteerCommon
             Joystick.Position pos = _joystick.GetJoystickPosition();
 
             // note: X/Y values munged to account for physical joystick orientation
-            int x = scaleJoystickValue(pos.Y);
-            int y = -scaleJoystickValue(pos.X);
+            // TODO: pull this configuration out for subclassing
+            int x = scaleJoystickValue(pos.X);
+            int y = scaleJoystickValue(pos.Y);
 
             Position position = GetPosition(x, y);
 

@@ -68,9 +68,7 @@ namespace hydra1
 
             _emic2 = new Emic2(Serial.COM1);
             _emic2.ReadLine += new ThreadedSerialDevice.ReadHandler(_emic2_ReadLine);
-            _emic2.Settings();
             _emic2.Version();
-            _emic2.Help();
 
             _mp3Trigger = new Mp3Trigger(Serial.COM2);
             _mp3Trigger.ReadLine += new ThreadedSerialDevice.ReadHandler(_mp3Trigger_ReadLine);
