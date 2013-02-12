@@ -21,12 +21,14 @@ namespace ndp1
         private ControlButton _button_Blue;
         private ControlButton _button_Yellow;
 
-        private BlinkMArray _blinkMs;
+        // private BlinkMArray _blinkMs;
 
-        private Mp3Trigger _mp3Trigger;
+        // private Mp3Trigger _mp3Trigger;
         //private Emic2 _emic2;
 
         private SerLCD _serLcd;
+
+        private static SerialBridge _serialBridge;
 
         private int _count = 0;
 
@@ -35,10 +37,13 @@ namespace ndp1
             _serLcd = new SerLCD();
             _serLcd.Write("hello", "world");
 
-            _blinkMs = new BlinkMArray();
+            _serialBridge = new SerialBridge(Serial.COM2);
+            _serialBridge.ReadLine += new ThreadedSerialDevice.ReadHandler(_serialBridge_ReadLine);
 
-            _mp3Trigger = new Mp3Trigger();
-            _mp3Trigger.SetVolume(64);
+            // _blinkMs = new BlinkMArray();
+
+            // _mp3Trigger = new Mp3Trigger();
+            // _mp3Trigger.SetVolume(64);
 
             //_emic2 = new Emic2();
             //_emic2.Say("hello");
@@ -47,6 +52,11 @@ namespace ndp1
             _button_Green = new ControlButton(Pins.GPIO_PIN_D6, "Green", 80, this);
             _button_Blue = new ControlButton(Pins.GPIO_PIN_D9, "Blue", 160, this);
             _button_Yellow = new ControlButton(Pins.GPIO_PIN_D10, "Yellow", 42, this);
+        }
+
+        void _serialBridge_ReadLine(string line)
+        {
+            _serLcd.Write(line);
         }
 
         public void HandleButtonPress(ControlButton button)
@@ -61,18 +71,20 @@ namespace ndp1
             }
             else if (button.Color == "Blue")
             {
+                _serialBridge.WriteLine("bing");
                 //
-                _mp3Trigger.Forward();
+                // _mp3Trigger.Forward();
             }
             else if (button.Color == "Yellow")
             {
+                _serialBridge.WriteLine("ping");
                 //_emic2.IncrementVoice();
                // Thread.Sleep(200);
             }
 
             _serLcd.Write(button.Color, PadCount());
             //_emic2.Say(_count.ToString());
-            _blinkMs.UpdateBlinkMs(button.Hue);
+            // _blinkMs.UpdateBlinkMs(button.Hue);
         }
 
         private string PadCount()

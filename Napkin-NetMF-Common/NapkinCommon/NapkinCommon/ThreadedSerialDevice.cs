@@ -72,31 +72,40 @@ namespace NapkinCommon
         {
             while (true)
             {
-                lock (_readBuffer)
+                try
                 {
-                    while (_serialPort.BytesToRead > 0)
+                    lock (_readBuffer)
                     {
-                        int data = _serialPort.ReadByte();
-                        char c = (char)data;
-                        if (IsNewline(c)) {
-                            break;
-                        }
-                        else if (data < 32)
+                        while (_serialPort.BytesToRead > 0)
                         {
-                            _readBuffer.Append("[" + data.ToString() + "]");
+                            int data = _serialPort.ReadByte();
+                            char c = (char)data;
+                            if (IsNewline(c))
+                            {
+                                break;
+                            }
+                            else if (data < 32)
+                            {
+                                _readBuffer.Append("[" + data.ToString() + "]");
+                            }
+                            else
+                            {
+                                _readBuffer.Append(c);
+                            }
                         }
-                        else
+                        if (_readBuffer.Length > 0)
                         {
-                            _readBuffer.Append(c);
+                            ReadLine(_readBuffer.ToString());
+                            _readBuffer.Clear();
                         }
                     }
-                    if (_readBuffer.Length > 0)
-                    {
-                        ReadLine(_readBuffer.ToString());
-                        _readBuffer.Clear();
-                    }
+                    Thread.Sleep(20);
                 }
-                Thread.Sleep(20);
+                catch (Exception ex)
+                {
+                    Debug.Print("ReadLoop: " + ex.Message);
+                    Thread.Sleep(1000);
+                }
             }
         }
 
