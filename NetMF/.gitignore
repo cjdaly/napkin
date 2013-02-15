@@ -1,0 +1,8 @@
+# Build output
+[Oo]bj
+[Bb]in
+
+# user/system specific; VS recreates these as needed
+*.suo
+*.user
+

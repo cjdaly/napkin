@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "napkin.systems.gadgeteer.cerbee2", "napkin.systems.gadgeteer.cerbee2.csproj", "{1971A18B-7148-470A-895D-1068C688F943}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "napkin.devices.serial.bridge", "..\..\..\libraries\devices\napkin.devices.serial.bridge\napkin.devices.serial.bridge.csproj", "{490E44B9-88C0-435F-9332-591F880D77FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "napkin.devices.serial.common", "..\..\..\libraries\devices\napkin.devices.serial.common\napkin.devices.serial.common.csproj", "{DD9E17B2-9F7F-4BD4-87C9-B8CE5BDBBFB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "napkin.devices.serial.bridge.client", "..\..\..\libraries\devices\napkin.devices.serial.bridge.client\napkin.devices.serial.bridge.client.csproj", "{C2B62D9B-7C27-407F-B7F4-12C5202468C1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1971A18B-7148-470A-895D-1068C688F943}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1971A18B-7148-470A-895D-1068C688F943}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1971A18B-7148-470A-895D-1068C688F943}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{1971A18B-7148-470A-895D-1068C688F943}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1971A18B-7148-470A-895D-1068C688F943}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1971A18B-7148-470A-895D-1068C688F943}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{490E44B9-88C0-435F-9332-591F880D77FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{490E44B9-88C0-435F-9332-591F880D77FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{490E44B9-88C0-435F-9332-591F880D77FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{490E44B9-88C0-435F-9332-591F880D77FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD9E17B2-9F7F-4BD4-87C9-B8CE5BDBBFB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD9E17B2-9F7F-4BD4-87C9-B8CE5BDBBFB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD9E17B2-9F7F-4BD4-87C9-B8CE5BDBBFB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD9E17B2-9F7F-4BD4-87C9-B8CE5BDBBFB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B62D9B-7C27-407F-B7F4-12C5202468C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B62D9B-7C27-407F-B7F4-12C5202468C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B62D9B-7C27-407F-B7F4-12C5202468C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B62D9B-7C27-407F-B7F4-12C5202468C1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
