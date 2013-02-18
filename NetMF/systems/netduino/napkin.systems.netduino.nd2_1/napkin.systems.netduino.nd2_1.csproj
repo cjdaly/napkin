@@ -57,5 +57,9 @@
       <Project>{401CF8B0-8F33-48A7-996C-39163859E017}</Project>
       <Name>napkin.devices.serial.MidiMusicShield</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\libraries\devices\napkin.devices.serial.uLcd144\napkin.devices.serial.uLcd144.csproj">
+      <Project>{9DFFEB17-136D-40BC-9990-506914F14F04}</Project>
+      <Name>napkin.devices.serial.uLcd144</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

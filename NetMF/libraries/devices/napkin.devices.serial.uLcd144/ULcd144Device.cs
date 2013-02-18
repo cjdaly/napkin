@@ -7,6 +7,9 @@ using napkin.devices.serial.common;
 
 namespace napkin.devices.serial.uLcd144
 {
+    // http://www.4dsystems.com.au/prod.php?id=120
+    // http://www.4dsystems.com.au/downloads/Semiconductors/GOLDELOX-SGC/Docs/GOLDELOX-SGC-COMMANDS-SIS-rev6.pdf
+    //
     public class ULcd144Device : ThreadedSerialDevice
     {
         private OutputPort _resetPinPort;
@@ -32,12 +35,46 @@ namespace napkin.devices.serial.uLcd144
             WriteCommand(new byte[] { (byte)'U' });
         }
 
-        public void WriteCommand(byte[] commandBytes)
+        public void WriteCommand(byte[] commandBytes, byte[] dataBytes = null)
         {
-            Debug.Print("ULcd144 write: " + commandBytes.Length);
             Write(commandBytes);
+            if (dataBytes != null) Write(dataBytes);
             string status = Read(true);
-            Debug.Print("ULcd144 status: " + status.Length);
+        }
+
+        public void Clear()
+        {
+            // set screen background
+            WriteCommand(new byte[] { (byte)'B', 0x00, 0x00 });
+
+            // clear screen
+            WriteCommand(new byte[] { (byte)'E' });
+        }
+
+        public void WriteMessage(string message, byte column = 0, byte row = 0, byte font = 1)
+        {
+            byte[] messageBytes = new byte[message.Length + 1];
+            int i = 0;
+            foreach (char c in message)
+            {
+                messageBytes[i++] = (byte)c;
+            }
+            messageBytes[i++] = 0;
+
+            byte[] commandBytes = new byte[] { (byte)'s', column, row, font, 0xff, 0xff };
+            WriteCommand(commandBytes, messageBytes);
+        }
+
+
+        public void ConsoleWriteLine(string line)
+        {
+            byte[] scroll = new byte[] { (byte)'c', 0, 8 * 9, 0, 8 * 8, 128, 8 * 8 };
+            WriteCommand(scroll);
+
+            byte[] fill = new byte[] { (byte)'r', 0, 119, 127, 127, 0x00, 0x00 };
+            WriteCommand(fill);
+
+            WriteMessage(line, 0, 15);
         }
 
         public void Test()

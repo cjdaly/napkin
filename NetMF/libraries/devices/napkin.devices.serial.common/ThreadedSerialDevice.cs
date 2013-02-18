@@ -20,7 +20,7 @@ namespace napkin.devices.serial.common
         private Queue _writeData;
 
         public delegate void ReadHandler(string line);
-        public event ReadHandler ReadLine;
+        public event ReadHandler ReadLine = delegate { };
 
         public ThreadedSerialDevice(string serialPortName = Serial.COM1)
         {

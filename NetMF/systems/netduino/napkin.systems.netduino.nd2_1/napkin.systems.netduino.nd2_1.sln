@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "napkin.devices.serial.commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "napkin.devices.serial.MidiMusicShield", "..\..\..\libraries\devices\napkin.devices.serial.MidiMusicShield\napkin.devices.serial.MidiMusicShield.csproj", "{401CF8B0-8F33-48A7-996C-39163859E017}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "napkin.devices.serial.uLcd144", "..\..\..\libraries\devices\napkin.devices.serial.uLcd144\napkin.devices.serial.uLcd144.csproj", "{9DFFEB17-136D-40BC-9990-506914F14F04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{401CF8B0-8F33-48A7-996C-39163859E017}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{401CF8B0-8F33-48A7-996C-39163859E017}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{401CF8B0-8F33-48A7-996C-39163859E017}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DFFEB17-136D-40BC-9990-506914F14F04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DFFEB17-136D-40BC-9990-506914F14F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DFFEB17-136D-40BC-9990-506914F14F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DFFEB17-136D-40BC-9990-506914F14F04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

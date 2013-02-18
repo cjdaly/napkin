@@ -40,6 +40,22 @@ namespace napkin.devices.serial.MidiMusicShield
             }
         }
 
+        public void Test(byte instrument)
+        {
+            Write(new byte[] { 0xb0, 0x07, 100 });
+            Write(new byte[] { 0xb0, 0, 0 });
+
+            Write(new byte[] { 0xc0, instrument });
+            for (byte note = 30; note < 40; note++)
+            {
+                Write(new byte[] { 0x90, note, 60 });
+                Thread.Sleep(50);
+
+                Write(new byte[] { 0x80, note, 60 });
+                Thread.Sleep(50);
+            }
+        }
+
         public void Reset()
         {
             _resetPinPort.Write(false);
