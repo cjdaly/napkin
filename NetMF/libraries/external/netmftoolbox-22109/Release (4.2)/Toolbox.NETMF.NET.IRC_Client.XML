@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.NET.IRC_Client</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.NET.IRC_Client">
+            <summary>
+            IRC Client
+            </summary>
+            <remarks>
+            This client contains the most basic features to stay connected to an IRC server.
+            It can also reply to the CTCP commands VERSION, TIME and PING.
+            To disable or change the CTCP replies, just create your own OnCtcpRequest method.
+            </remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Socket">
+            <summary>Contains the socket wrapper</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._LoopThread">
+            <summary>Main loop thread</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Nickname">
+            <summary>The nickname of the client</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Username">
+            <summary>The username of the client</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Fullname">
+            <summary>The full name of the client</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Password">
+            <summary>Optional password</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._ClientVersion">
+            <summary>Contains the clientversion</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._Authenticated">
+            <summary>True when the user is authenticated by the remote server</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IRC_Client._ServerName">
+            <summary>Contains the name of the IRC server</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.#ctor(Toolbox.NETMF.NET.SimpleSocket,System.String,System.String,System.String,System.String)">
+            <summary>
+            Connects to an IRC server
+            </summary>
+            <param name="Socket">The socket to use</param>
+            <param name="Nickname">Nickname</param>
+            <param name="Username">Username (optional)</param>
+            <param name="Fullname">Full name (optional)</param>
+            <param name="Password">Password to connect to the server (optional)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Dispose">
+            <summary>
+            Disposes this object
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Connect">
+            <summary>
+            Connects to the IRC server
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Disconnect">
+            <summary>
+            Closes the connection
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client._Loop">
+            <summary>
+            Main loop
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client._DataReceived(System.String)">
+            <summary>Triggered for every line of data received by the server</summary>
+            <param name="Data">The received line of data</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.CtcpResponse(System.String,System.String)">
+            <summary>Sends a CTCP Response</summary>
+            <param name="Recipient">The recipient (may be a user or a channel)</param>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.CtcpRequest(System.String,System.String)">
+            <summary>Sends a CTCP Request</summary>
+            <param name="Recipient">The recipient (may be a user or a channel)</param>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Action(System.String,System.String)">
+            <summary>Sends an action</summary>
+            <param name="Recipient">The recipient (may be a user or a channel)</param>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Notice(System.String,System.String)">
+            <summary>Sends a notice</summary>
+            <param name="Recipient">The recipient (may be a user or a channel)</param>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Message(System.String,System.String)">
+            <summary>Sends a message</summary>
+            <param name="Recipient">The recipient (may be a user or a channel)</param>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Join(System.String,System.String)">
+            <summary>
+            Joins one or more channels
+            </summary>
+            <param name="Channels">The channel to join (multiple can be comma seperated)</param>
+            <param name="Passwords">Optional, the password(s) to join the channel(s)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.Part(System.String,System.String)">
+            <summary>
+            Parts a channel
+            </summary>
+            <param name="Channel">The channel to leave</param>
+            <param name="Reason">The reason to leave the channel (optional)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.SendRaw(System.String)">
+            <summary>
+            Sends raw data to the remote server
+            </summary>
+            <param name="Data">Data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.SplitRawData(System.String)">
+            <summary>
+            Splits data according to the IRC protocol
+            </summary>
+            <param name="Data">Input data</param>
+            <returns>Output data</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IRC_Client.SplitName(System.String)">
+            <summary>
+            Returns the username splitted (many IRCds send "[nickname]![username]@[hostname]")
+            </summary>
+            <param name="Name">The full name</param>
+            <returns>An array with 3 values: nickname, username, hostname</returns>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IRC_Client.ClientVersion">
+            <summary>Returns the clientversion</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IRC_Client.Authenticated">
+            <summary>True when the user is authenticated by the remote server</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IRC_Client.ServerName">
+            <summary>Returns the name of the IRC server</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IRC_Client.Nickname">
+            <summary>
+            Gets or sets the nickname
+            </summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnRawReceived">
+            <summary>Event triggered when raw data is received from the remote server</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnNotice">
+            <summary>Event triggered when a notice is received</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnMessage">
+            <summary>Event triggered when a message is received</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnAction">
+            <summary>Event triggered when an action is received</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnCtcpRequest">
+            <summary>Event triggered when a CTCP-request is received</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnCtcpReply">
+            <summary>Event triggered when a CTCP-reply is received</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnAuthenticated">
+            <summary>Event triggered when the user is fully logged in</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnJoin">
+            <summary>Event triggered when a user joins a channel</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnPart">
+            <summary>Event triggered when a user parts a channel</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnQuit">
+            <summary>Event triggered when a user quits the server</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnKick">
+            <summary>Event triggered when a user is kicked from a channel</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.NET.IRC_Client.OnNick">
+            <summary>Event triggered when a user changes its name</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IRC_Client.Time">
+            <summary>Gets the current local time</summary>
+            <returns>The local time as string</returns>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.IRC_Client.OnStringReceived">
+            <summary>Event triggered when string data is received</summary>
+            <param name="Sender">The sender of the data</param>
+            <param name="Target">The target of the data</param>
+            <param name="Data">The data</param>
+            <remarks>A very generic method, can be used for a lot of events</remarks>
+        </member>
+    </members>
+</doc>

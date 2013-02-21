@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.SevenSegment</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.SevenSegment">
+            <summary>
+            7-segment module
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.SevenSegment._ParallelPort">
+            <summary>Local reference to the parallel port</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.SevenSegment._CommonAnode">
+            <summary>True when the segments are common anode</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.SevenSegment._Values">
+            <summary>
+            Contains an array of bytes; to light the leds specific bytes need to be true. Can be changed with <see cref="M:Toolbox.NETMF.Hardware.SevenSegment.ChangeSignal(System.Byte,System.Byte)"/> and <see cref="M:Toolbox.NETMF.Hardware.SevenSegment.ChangeSignals(System.Byte[])"/>
+            </summary>
+            <remarks><![CDATA[
+            At default, these bytes are used:
+               LowerLeft = 0
+               Bottom = 1
+               LowerRight = 2
+               UpperRight = 4
+               Top = 5
+               UpperLeft = 6
+               Middle = 7
+               (Dot = 3)
+            ]]></remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.SevenSegment._DotBit">
+            <summary>Reference to the bit which contains the dot (4th bit by default)</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.SevenSegment._Digit">
+            <summary>Contains the current displayed nummeric value</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.SevenSegment._Dot">
+            <summary>Contains the current state of the dot</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.SevenSegment.#ctor(Toolbox.NETMF.Hardware.IParallelOut,System.Boolean)">
+            <summary>
+            Initalises a 7-segment display on a parallel port
+            </summary>
+            <param name="ParallelPort">The parallel port (requires at least 8 pins)</param>
+            <param name="CommonAnode">Specifies if the 7-segment is common anode</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.SevenSegment.SetDigit(System.Byte)">
+            <summary>
+            Sets the digit to a specific number
+            </summary>
+            <param name="Digit">The number (0 to 9, 10 for blank)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.SevenSegment.GetDigit">
+            <summary>
+            Gets the current displayed digit
+            </summary>
+            <returns>The displayed number (0 to 9, 10 for blank)</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.SevenSegment.SetDot(System.Boolean)">
+            <summary>
+            Sets or unsets the dot
+            </summary>
+            <param name="State">True when the dot must be on</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.SevenSegment.GetDot">
+            <summary>
+            Gets the current state of the dot
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.SevenSegment._Write">
+            <summary>
+            Writes the byte to the 74HC595 IC
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.SevenSegment.ChangeSignal(System.Byte,System.Byte)">
+            <summary>
+            Changes the byte that needs to be sent to display a character (useful to customize characters)
+            </summary>
+            <param name="Index">The character to change (0 to 9 are actually 0 to 9 and 10 is blank, 11 to 255 are unused by default)</param>
+            <param name="Signal">The byte of data that needs to be sent to the SPI bus for this character</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.SevenSegment.ChangeSignals(System.Byte[])">
+            <summary>
+            Changes all characters (also removes custom-made characters created with <see cref="M:Toolbox.NETMF.Hardware.SevenSegment.ChangeSignal(System.Byte,System.Byte)"/>)
+            </summary>
+            <param name="Signals">A new array of index versus signal</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.SevenSegment.ChangeDotSignal(System.Byte)">
+            <summary>
+            Changes the bit used for the dot (by default: 4)
+            </summary>
+            <param name="Bit">The bit in which the dot is (1 to 8)</param>
+        </member>
+    </members>
+</doc>

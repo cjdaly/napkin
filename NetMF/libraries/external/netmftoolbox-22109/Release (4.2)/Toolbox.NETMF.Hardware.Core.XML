@@ -1,0 +1,462 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.IGPOPort">
+            <summary>Generic Purpose Output Port interface</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IGPOPort.Write(System.Boolean)">
+            <summary>Writes the pin value</summary>
+            <param name="State">True for high, false for low</param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.IGPOPort.State">
+            <summary>True when the pin is high, false when low</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.ITRIPort">
+            <summary>Tristate Port interface</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.IGPIPort">
+            <summary>Generic Purpose Input Port interface</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IGPIPort.Read">
+            <summary>Reads the pin value</summary>
+            <returns>True when high, false when low</returns>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.IGPIPort.InvertReadings">
+            <summary>When true, the read value is inverted (useful when working with pull-up resistors)</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.MultiSPI">
+            <summary>
+            SPI Helper to make it easier to use multiple SPI-devices on one SPI-bus
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MultiSPI._SPIDevice">
+            <summary>Reference to the SPI Device. All MultiSPI devices use the same SPI class from the NETMF, so this reference is static</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MultiSPI._Configuration">
+            <summary>SPI Configuration. Different for each device, so not a static reference</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MultiSPI._Use_SoftwareCS">
+            <summary>There is a software ChipSelect feature because of a bug. True when enabled</summary>
+            <remarks>see http://netduino.codeplex.com/workitem/3 for more details about the bug.</remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MultiSPI._SoftwareCS">
+            <summary>Reference to the latch-pin when using software chip-select</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MultiSPI._SoftwareCS_ActiveState">
+            <summary>Active state when using software chip-select</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiSPI.#ctor(Microsoft.SPOT.Hardware.SPI.Configuration)">
+            <summary>
+            Initializes a new SPI device
+            </summary>
+            <param name="config">The SPI-module configuration</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiSPI.Write(System.Byte[])">
+            <summary>
+            The 8-bit bytes to write to the SPI-buffer
+            </summary>
+            <param name="WriteBuffer">An array of 8-bit bytes</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiSPI.Write(System.UInt16[])">
+            <summary>
+            The 16-bit bytes to write to the SPI-buffer
+            </summary>
+            <param name="WriteBuffer">An array of 16-bit bytes</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiSPI.Read(System.Byte[])">
+            <summary>
+            Reads 8-bit bytes
+            </summary>
+            <param name="ReadBuffer">An array with 8-bit bytes to read</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiSPI.Read(System.UInt16[])">
+            <summary>
+            Reads 16-bit bytes
+            </summary>
+            <param name="ReadBuffer">An array with 16-bit bytes to read</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiSPI.WriteRead(System.Byte[],System.Byte[])">
+            <summary>
+            Writes an array of 8-bit bytes to the interface, and reads an array of 8-bit bytes from the interface.
+            </summary>
+            <param name="WriteBuffer">An array with 8-bit bytes to write</param>
+            <param name="ReadBuffer">An array with 8-bit bytes to read</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiSPI.WriteRead(System.UInt16[],System.UInt16[])">
+            <summary>
+            Writes an array of 16-bit bytes to the interface, and reads an array of 16-bit bytes from the interface.
+            </summary>
+            <param name="WriteBuffer">An array with 16-bit bytes to write</param>
+            <param name="ReadBuffer">An array with 16-bit bytes to read</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiSPI.WriteRead(System.Byte[],System.Byte[],System.Int32)">
+            <summary>
+            Writes an array of 8-bit bytes to the interface, and reads an array of 8-bit bytes from the interface into a specified location in the read buffer.
+            </summary>
+            <param name="WriteBuffer">An array with 8-bit bytes to write</param>
+            <param name="ReadBuffer">An array with 8-bit bytes to read</param>
+            <param name="StartReadOffset">The offset in time, measured in transacted elements from writeBuffer, when to start reading back data into readBuffer</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiSPI.WriteRead(System.UInt16[],System.UInt16[],System.Int32)">
+            <summary>
+            Writes an array of 16-bit bytes to the interface, and reads an array of 16-bit bytes from the interface into a specified location in the read buffer.
+            </summary>
+            <param name="WriteBuffer">An array with 16-bit bytes to write</param>
+            <param name="ReadBuffer">An array with 16-bit bytes to read</param>
+            <param name="StartReadOffset">The offset in time, measured in transacted elements from writeBuffer, when to start reading back data into readBuffer</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiSPI.WriteRead(System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Writes an array of 16-bit bytes to the interface, and reads an array of 16-bit bytes from the interface into a specified location in the read buffer. 
+            </summary>
+            <param name="WriteBuffer">An array with 8-bit bytes to write</param>
+            <param name="ReadBuffer">An array with 8-bit bytes to read</param>
+            <param name="WriteOffset">The offset in writeBuffer to start write data from</param>
+            <param name="WriteCount">The number of elements in writeBuffer to write</param>
+            <param name="ReadOffset">The offset in readBuffer to start read data from</param>
+            <param name="ReadCount">The number of elements in readBuffer to fill</param>
+            <param name="StartReadOffset">The offset in time, measured in transacted elements from writeBuffer, when to start reading back data into readBuffer</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiSPI.WriteRead(System.UInt16[],System.Int32,System.Int32,System.UInt16[],System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Writes an array of 16-bit bytes to the interface, and reads an array of 16-bit bytes from the interface into a specified location in the read buffer. 
+            </summary>
+            <param name="WriteBuffer">An array with 16-bit bytes to write</param>
+            <param name="ReadBuffer">An array with 16-bit bytes to read</param>
+            <param name="WriteOffset">The offset in writeBuffer to start write data from</param>
+            <param name="WriteCount">The number of elements in writeBuffer to write</param>
+            <param name="ReadOffset">The offset in readBuffer to start read data from</param>
+            <param name="ReadCount">The number of elements in readBuffer to fill</param>
+            <param name="StartReadOffset">The offset in time, measured in transacted elements from writeBuffer, when to start reading back data into readBuffer</param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.MultiSPI.Config">
+            <summary>Returns the SPI Configuration</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.IntegratedIRQ">
+            <summary>.NETMF InterruptPort wrapper</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.IIRQPort">
+            <summary>Interrupt ReQuest Port interface</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.IIRQPort.ID">
+            <summary>Use this to give this IRQ port a unique identifier (default: blank)</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.IIRQPort.OnStateChange">
+            <summary>Event triggered when a IRQ port state changes</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.IntegratedIRQ._Port">
+            <summary>Reference to the IRQ port</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedIRQ.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,System.Boolean,Microsoft.SPOT.Hardware.Port.ResistorMode)">
+            <summary>
+            Creates a new IRQ Port
+            </summary>
+            <param name="Pin">The pin number</param>
+            <param name="GlitchFilter">Turns on or off the glitchfilter</param>
+            <param name="ResistorMode">Selects the resistor mode</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedIRQ._Port_OnInterrupt(System.UInt32,System.UInt32,System.DateTime)">
+            <summary>
+            Triggered when the pin state changes
+            </summary>
+            <param name="PinId">The hardware pin #</param>
+            <param name="Value">The new value</param>
+            <param name="Time">Time of the event</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedIRQ.Read">
+            <summary>Reads the pin value</summary>
+            <returns>True when high, false when low</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedIRQ.Dispose">
+            <summary>
+            Disposes this object
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.IntegratedIRQ.InvertReadings">
+            <summary>When true, the read value is inverted (useful when working with pull-up resistors)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.IntegratedIRQ.ID">
+            <summary>Use this to give this IRQ port a unique identifier (default: blank)</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.IntegratedIRQ.OnStateChange">
+            <summary>Event triggered when a IRQ port state changes</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.IADCPort">
+            <summary>
+            Generic ADC Port interface
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IADCPort.AnalogRead">
+            <summary>Reads out a value between 0 and 1</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IADCPort.Dispose">
+            <summary>Disposes the ADC port</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IADCPort.RangeRead">
+            <summary>
+            Reads the value between <see cref="P:Toolbox.NETMF.Hardware.IADCPort.RangeMin"/> and  <see cref="P:Toolbox.NETMF.Hardware.IADCPort.RangeMax"/>
+            </summary>
+            <returns>The value within range</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IADCPort.RangeSet(System.Int32,System.Int32)">
+            <summary>Sets the range for <see cref="M:Toolbox.NETMF.Hardware.IADCPort.RangeRead"/></summary>
+            <param name="Min">Minimal value</param>
+            <param name="Max">Maximal value</param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.IADCPort.RangeMin">
+            <summary>Gets the range minimum</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.IADCPort.RangeMax">
+            <summary>Gets the range maximum</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.IPWMPort">
+            <summary>
+            Generic PWM Port interface
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IPWMPort.StartPulse">
+            <summary>Starts the signal</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IPWMPort.StopPulse">
+            <summary>Stops the signal</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IPWMPort.Dispose">
+            <summary>Disposes the PWM port</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IPWMPort.SetPulse(System.UInt32,System.UInt32)">
+            <summary>Sets the signal in pulses</summary>
+            <param name="period_ns">The time for each timeframe in nanoseconds</param>
+            <param name="duration_ns">The amount of nanoseconds the pulse must be high</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IPWMPort.SetDutyCycle(System.UInt32,System.UInt32)">
+            <summary>Sets the signal as dutycycle</summary>
+            <param name="dutyCycle">The amount of changes per second</param>
+            <param name="frequency">The PWM frequency</param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.IPWMPort.Active">
+            <summary>Checks if the signal is active</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.IntegratedPWM">
+            <summary>.NETMF 4.2 PWM wrapper</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.IntegratedPWM._Port">
+            <summary>Reference to the PWM port</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedPWM.#ctor(Microsoft.SPOT.Hardware.Cpu.PWMChannel)">
+            <summary>Defines the PWM pin</summary>
+            <param name="PWMChannel">The channel the pin is connected to</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedPWM.StartPulse">
+            <summary>Starts the signal</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedPWM.StopPulse">
+            <summary>Stops the signal</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedPWM.SetPulse(System.UInt32,System.UInt32)">
+            <summary>Sets the signal in pulses</summary>
+            <param name="period_ns">The time for each timeframe in nanoseconds</param>
+            <param name="duration_ns">The amount of nanoseconds the pulse must be high</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedPWM.Dispose">
+            <summary>Disposes the PWM object</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.IntegratedGPO">
+            <summary>.NETMF OutputPort wrapper</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.IntegratedGPO._Port">
+            <summary>Reference to the GPO port</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedGPO.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,System.Boolean)">
+            <summary>
+            Creates a new GPO Port
+            </summary>
+            <param name="Pin">The pin number</param>
+            <param name="InitialState">It's initial state</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedGPO.Write(System.Boolean)">
+            <summary>Writes the pin value</summary>
+            <param name="State">True for high, false for low</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedGPO.Dispose">
+            <summary>
+            Disposes this object
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.IntegratedGPO.State">
+            <summary>True when the pin is high, false when low</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.ProviderCollection">
+            <summary>The Provider Collection links hardware providers to other classes</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ProviderCollection._PWMPinMapper">
+            <summary>Reference to the PWM Pin Mapper method</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ProviderCollection.GetPWMByPin(Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>Gets a IPWMPort-compatible class from a pin</summary>
+            <param name="pin">The pin</param>
+            <returns>The IPWMPort-compatible class</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ProviderCollection.RegisterPWMPinMapper(Toolbox.NETMF.Hardware.ProviderCollection.PWMPinMapper)">
+            <summary>Registers a PWM Pin Mapper method</summary>
+            <param name="mapper">The mapper method</param>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ProviderCollection._ADCPinMapper">
+            <summary>Reference to the ADC Pin Mapper method</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ProviderCollection.GetADCByPin(Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>Gets a IADCPort-compatible class from a pin</summary>
+            <param name="pin">The pin</param>
+            <returns>The IADCPort-compatible class</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ProviderCollection.RegisterADCPinMapper(Toolbox.NETMF.Hardware.ProviderCollection.ADCPinMapper)">
+            <summary>Registers a ADC Pin Mapper method</summary>
+            <param name="mapper">The mapper method</param>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.ProviderCollection.PWMPinMapper">
+            <summary>Interface for a PWM Pin Mapper method</summary>
+            <param name="pin">The pin</param>
+            <returns>The IPWMPort-compatible class</returns>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.ProviderCollection.ADCPinMapper">
+            <summary>Interface for a ADC Pin Mapper method</summary>
+            <param name="pin">The pin</param>
+            <returns>The IADCPort-compatible class</returns>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.MultiI2C">
+            <summary>
+            I²C Helper to make it easier to use multiple I²C-devices on one I²C-bus
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MultiI2C._I2CDevice">
+            <summary>Reference to the I²C Device. All MultiI2C devices use the same I2CDevice class from the NETMF, so this reference is static</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MultiI2C._Configuration">
+            <summary>I²C Configuration. Different for each device, so not a static reference</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiI2C.#ctor(System.UInt16,System.Int32)">
+            <summary>
+            Initializes a new I²C device
+            </summary>
+            <param name="Address">The address of the I²C device</param>
+            <param name="ClockRateKhz">The speed in Khz of the I²C device</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiI2C.Write(System.Byte[])">
+            <summary>
+            The 8-bit bytes to write to the I²C-buffer
+            </summary>
+            <param name="WriteBuffer">An array of 8-bit bytes</param>
+            <returns>The amount of transferred bytes</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiI2C.Write(System.UInt16[])">
+            <summary>
+            The 16-bit bytes to write to the I²C-buffer
+            </summary>
+            <param name="WriteBuffer">An array of 16-bit bytes</param>
+            <returns>The amount of transferred bytes</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiI2C.Read(System.Byte[])">
+            <summary>
+            Reads 8-bit bytes
+            </summary>
+            <param name="ReadBuffer">An array with 8-bit bytes to read</param>
+            <returns>The amount of transferred bytes</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiI2C.Read(System.UInt16[])">
+            <summary>
+            Reads 16-bit bytes
+            </summary>
+            <param name="ReadBuffer">An array with 16-bit bytes to read</param>
+            <returns>The amount of transferred bytes</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiI2C.WriteRead(System.Byte[],System.Byte[])">
+            <summary>
+            Writes an array of 8-bit bytes to the interface, and reads an array of 8-bit bytes from the interface.
+            </summary>
+            <param name="WriteBuffer">An array with 8-bit bytes to write</param>
+            <param name="ReadBuffer">An array with 8-bit bytes to read</param>
+            <returns>The amount of transferred bytes</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MultiI2C.WriteRead(System.UInt16[],System.UInt16[])">
+            <summary>
+            Writes an array of 16-bit bytes to the interface, and reads an array of 16-bit bytes from the interface.
+            </summary>
+            <param name="WriteBuffer">An array with 16-bit bytes to write</param>
+            <param name="ReadBuffer">An array with 16-bit bytes to read</param>
+            <returns>The amount of transferred bytes</returns>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.MultiI2C.Timeout">
+            <summary>Transaction timeout</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.MultiI2C.DeviceAddress">
+            <summary>The address of the I²C device</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.MultiI2C.ClockRateKhz">
+            <summary>The speed of the I²C device</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.IParallelOut">
+            <summary>Generic Purpose Output Array interface</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IParallelOut.Write(System.UInt32)">
+            <summary>Writes a block of data to the array</summary>
+            <param name="Value">The block of data to write</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IParallelOut.Read">
+            <summary>Returns the last written block of data</summary>
+            <returns>The last written block of data</returns>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.IParallelOut.Size">
+            <summary>Amount of bits in the array</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.IntegratedGPI">
+            <summary>.NETMF InputPort wrapper</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.IntegratedGPI._Port">
+            <summary>Reference to the GPI port</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedGPI.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,System.Boolean,Microsoft.SPOT.Hardware.Port.ResistorMode)">
+            <summary>
+            Creates a new GPI Port
+            </summary>
+            <param name="Pin">The pin number</param>
+            <param name="GlitchFilter">Turns on or off the glitchfilter</param>
+            <param name="ResistorMode">Selects the resistor mode</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedGPI.Read">
+            <summary>Reads the pin value</summary>
+            <returns>True when high, false when low</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedGPI.Dispose">
+            <summary>
+            Disposes this object
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.IntegratedGPI.InvertReadings">
+            <summary>When true, the read value is inverted (useful when working with pull-up resistors)</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.IntegratedADC">
+            <summary>.NETMF 4.2 AnalogInput wrapper</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.IntegratedADC._port">
+            <summary>Reference to the ADC port</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedADC.#ctor(Microsoft.SPOT.Hardware.Cpu.AnalogChannel)">
+            <summary>Defines a ADC pin</summary>
+            <param name="AnalogChannel">The analog channel channel the pin is connected to</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedADC.AnalogRead">
+            <summary>Reads out a value between 0 and 1</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.IntegratedADC.Dispose">
+            <summary>Disposes the ADC object</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.StateChange">
+            <summary>Triggered when a IRQ port state changes</summary>
+            <param name="Object">The IRQ port (use IIRQPort.ID to make it unique)</param>
+            <param name="State">The new state</param>
+            <param name="Time">Timestamp of the event</param>
+        </member>
+    </members>
+</doc>

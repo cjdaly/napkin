@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.NET.TelnetServer</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.NET.TelnetServer">
+            <summary>
+            A telnet server with minimal TELNET and ANSI support
+            </summary>
+            <remarks>
+            I found these links very useful:
+            ANSI escapes: http://isthe.com/chongo/tech/comp/ansi_escapes.html
+            Telnet commands: http://www.networksorcery.com/enp/protocol/telnet.htm
+            </remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer._Sock">
+            <summary>Reference to the socket</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer._Buffer">
+            <summary>Local data buffer</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer._WriteBuffer">
+            <summary>Some commands, like color, will be buffered to avoid small data packets. This actually speeds up the server.</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.#ctor(Toolbox.NETMF.NET.SimpleSocket)">
+            <summary>
+            Creates a new telnet server
+            </summary>
+            <param name="Socket">The socket</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Close">
+            <summary>
+            Closes the connection
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Listen">
+            <summary>
+            Listens and waits until we have a connection
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer._Write(System.String,System.Boolean)">
+            <summary>
+            Writes data to the client
+            </summary>
+            <param name="Data">Data to write</param>
+            <param name="Buffered">When true, data will be sent in front of the next packet</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer._Write(System.Char[],System.Boolean)">
+            <summary>
+            Writes data to the client
+            </summary>
+            <param name="Data">Data to write</param>
+            <param name="Buffered">When true, data will be sent in front of the next packet</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Beep">
+            <summary>
+            Sends a beep to the client
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer._Read">
+            <summary>
+            Reads data from the client
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Input(System.Int32,System.Boolean)">
+            <summary>
+            Reads out input from the terminal
+            </summary>
+            <param name="Length">The amount of bytes to read, if 0, it reads until a carriage return</param>
+            <param name="Blocking">When set to false, it won't wait for data, it will just return empty if there's no data</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Print(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Prints a text to the screen
+            </summary>
+            <param name="Text">Text to print</param>
+            <param name="NoNewLine">Normally a Print call will print the text and go to the next line. Set this to true to avoid that behaviour.</param>
+            <param name="Buffered">When true, data won't be sent immediately but stored in a buffer.</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.ClearScreen">
+            <summary>Clears the terminal's screen</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Color(Toolbox.NETMF.NET.TelnetServer.Colors)">
+            <summary>
+            Sets the terminal colors
+            </summary>
+            <param name="Foreground">Forground color</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Color(Toolbox.NETMF.NET.TelnetServer.Colors,Toolbox.NETMF.NET.TelnetServer.Colors)">
+            <summary>
+            Sets the terminal colors
+            </summary>
+            <param name="Foreground">Forground color</param>
+            <param name="Background">Background color</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.TelnetServer.Locate(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Moves the cursor position
+            </summary>
+            <param name="Line">Line (starts at 1 instead of 0!)</param>
+            <param name="Column">Column (starts at 1 instead of 0!)</param>
+            <param name="Buffered">When true, data won't be sent immediately but stored in a buffer.</param>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.TelnetServer.EchoEnabled">
+            <summary>When true, user inputted data gets echoed</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.TelnetServer.InputBuffer">
+            <summary>
+            Returns the amount of bytes waiting for this.Input()
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.TelnetServer.RemoteAddress">
+            <summary>The client address</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.TelnetServer.IsConnected">
+            <summary>
+            True when there's a connection
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.TelnetServer.Colors">
+            <summary>Available colors</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Black">
+            <summary>Black</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Blue">
+            <summary>Blue</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Green">
+            <summary>Green</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Cyan">
+            <summary>Cyan</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Red">
+            <summary>Red</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Magenta">
+            <summary>Magenta</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Brown">
+            <summary>Brown/orange</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.White">
+            <summary>White</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Gray">
+            <summary>Gray</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.LightBlue">
+            <summary>Light blue</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.LightGreen">
+            <summary>Light green</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.LightCyan">
+            <summary>Light cyan</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.LightRed">
+            <summary>Light red</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.LightMagenta">
+            <summary>Light magenta</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.Yellow">
+            <summary>Yellow</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.HighIntensityWhite">
+            <summary>High-intensity white</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.TelnetServer.Colors.TerminalDefault">
+            <summary>The default of the terminal</summary>
+        </member>
+    </members>
+</doc>

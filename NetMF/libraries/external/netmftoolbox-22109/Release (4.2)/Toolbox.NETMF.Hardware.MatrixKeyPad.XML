@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.MatrixKeyPad</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.MatrixKeyPad">
+            <summary>Generic KeyPad driver</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MatrixKeyPad._ColPins">
+            <summary>A collection of all column pins</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MatrixKeyPad._RowPins">
+            <summary>A collection of all row pins</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MatrixKeyPad._ColPinIds">
+            <summary>A collection of all column pin IDs</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MatrixKeyPad._CheckState">
+            <summary>Contains the current state</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MatrixKeyPad._LastKeyPress">
+            <summary>Stores the last key press</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MatrixKeyPad.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin[],Microsoft.SPOT.Hardware.Cpu.Pin[])">
+            <summary>Generic KeyPad driver</summary>
+            <param name="RowPins">The pins bound to rows on the keypad matrix</param>
+            <param name="ColPins">The pins bound to columns on the keypad matrix</param>
+            <remarks>See also: http://netmftoolbox.codeplex.com/wikipage?title=Toolbox.NETMF.Hardware.MatrixKeyPad </remarks>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MatrixKeyPad.MatrixKeyPad_OnInterrupt(System.UInt32,System.UInt32,System.DateTime)">
+            <summary>
+            Event triggered when a button is pressed or released
+            </summary>
+            <param name="ColPinId">The Column Pin in which a key is pressed</param>
+            <param name="State">The state of the button (0 = pressed, 1 = released)</param>
+            <param name="time">Time of the event</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MatrixKeyPad.ActivateRowPorts(System.Boolean)">
+            <summary>Switches all Row ports activity</summary>
+            <param name="Active">True when they must be active, false otherwise</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MatrixKeyPad.ActivateColInterrupts(System.Boolean)">
+            <summary>Disables or enables all interrupt events</summary>
+            <param name="Active">When true, all events will be enabled, oftherwise disabled</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MatrixKeyPad.Read">
+            <summary>Reads the KeyPad and returns the currently pressed scan code</summary>
+            <returns>The key code or -1 when nothing is pressed</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MatrixKeyPad.Dispose">
+            <summary>
+            Disposes this object and frees the pins
+            </summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.MatrixKeyPad.OnKeyDown">
+            <summary>When a button is pushed, this event will be triggered</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.MatrixKeyPad.OnKeyUp">
+            <summary>When a button is released, this event will be triggered</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.MatrixKeyPad.CheckStates">
+            <summary>We have a few states in which we do different checks</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MatrixKeyPad.CheckStates.WaitingForSignal">
+            <summary>Waiting for a key press</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MatrixKeyPad.CheckStates.RowCheck">
+            <summary>Searching the row</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MatrixKeyPad.CheckStates.WaitingForRelease">
+            <summary>Waiting for a key release</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MatrixKeyPad.CheckStates.WaitingForMultipleRelease">
+            <summary>Multiple buttons are pressed, waiting for a release</summary>
+        </member>
+    </members>
+</doc>

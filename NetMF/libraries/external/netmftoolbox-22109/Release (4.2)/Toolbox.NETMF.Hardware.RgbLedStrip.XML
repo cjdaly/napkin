@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.RgbLedStrip</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.RgbLedStrip">
+            <summary>
+            A chain of RGB LEDs
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip._Chipset">
+            <summary>
+            The used chipset
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip._Conn">
+            <summary>
+            Reference to the SPI connection
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip._LedState">
+            <summary>
+            State stored for each LED
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip._Brightness">
+            <summary>
+            Brightness stored for each LED
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip._Buffer">
+            <summary>
+            The SPI write buffer
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.#ctor(Toolbox.NETMF.Hardware.RgbLedStrip.Chipsets,System.Int32,Microsoft.SPOT.Hardware.SPI.SPI_module)">
+            <summary>
+            Defines a chain of RGB LEDs
+            </summary>
+            <param name="Chipset">The chipset used to daisychain the LEDs</param>
+            <param name="LedCount">The amount of LEDs in the chain</param>
+            <param name="SPI_Device">The SPI bus the chain is connected to</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.#ctor(Toolbox.NETMF.Hardware.RgbLedStrip.Chipsets,System.Int32,Microsoft.SPOT.Hardware.SPI.SPI_module,Microsoft.SPOT.Hardware.Cpu.Pin,System.Boolean)">
+            <summary>
+            Defines a chain of RGB LEDs
+            </summary>
+            <param name="Chipset">The chipset used to daisychain the LEDs</param>
+            <param name="LedCount">The amount of LEDs in the chain</param>
+            <param name="SPI_Device">The SPI bus the chain is connected to</param>
+            <param name="ChipSelect_Port">If there's a CS circuitry, specify it's pin</param>
+            <param name="ChipSelect_ActiveState">If there's a CS circuitry, specify it's active state</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.InsertColorAtBack(System.Byte,System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            Shifts all LEDs to the right and adds a new one at the left
+            </summary>
+            <param name="Red">Red brightness (0 to 255)</param>
+            <param name="Green">Green brightness (0 to 255)</param>
+            <param name="Blue">Blue brightness (0 to 255)</param>
+            <param name="Delayed">Do we have to write all LEDs immediately?</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.InsertColorAtBack(System.Int32,System.Boolean)">
+            <summary>
+            Shifts all LEDs to the right and adds a new one at the left
+            </summary>
+            <param name="Color">The color (0x000000 to 0xffffff)</param>
+            <param name="Delayed">Do we have to write all LEDs immediately?</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.InsertColorAtFront(System.Byte,System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            Shifts all LEDs to the left and adds a new one at the right
+            </summary>
+            <param name="Red">Red brightness (0 to 255)</param>
+            <param name="Green">Green brightness (0 to 255)</param>
+            <param name="Blue">Blue brightness (0 to 255)</param>
+            <param name="Delayed">Do we have to write all LEDs immediately?</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.InsertColorAtFront(System.Int32,System.Boolean)">
+            <summary>
+            Shifts all LEDs to the left and adds a new one at the right
+            </summary>
+            <param name="Color">The color (0x000000 to 0xffffff)</param>
+            <param name="Delayed">Do we have to write all LEDs immediately?</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.SetColorAll(System.Byte,System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            Configures all LEDs to a specific color
+            </summary>
+            <param name="Red">Red brightness (0 to 255)</param>
+            <param name="Green">Green brightness (0 to 255)</param>
+            <param name="Blue">Blue brightness (0 to 255)</param>
+            <param name="Delayed">Do we have to write all LEDs immediately?</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.SetColorAll(System.Int32,System.Boolean)">
+            <summary>
+            Configures all LEDs to a specific color
+            </summary>
+            <param name="Color">The color (0x000000 to 0xffffff)</param>
+            <param name="Delayed">Do we have to write all LEDs immediately?</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.SetBrightnessAll(System.Byte,System.Boolean)">
+            <summary>
+            Sets the brightness for all LEDs
+            </summary>
+            <param name="Brightness">Brightness from 0 to 255</param>
+            <param name="Delayed">Do we have to write all LEDs immediately?</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.GetBrightness(System.Int32)">
+            <summary>
+            Gets the brightness from a single LED
+            </summary>
+            <param name="LedNo">The LED to read (starts counting at 0)</param>
+            <returns>Brightness from 0 to 255</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.GetColor(System.Int32)">
+            <summary>
+            Gets the color from a single LED
+            </summary>
+            <param name="LedNo">The LED to read (starts counting at 0)</param>
+            <returns>Color from 0x000000 to 0xffffff</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.SetBrightness(System.Int32,System.Byte,System.Boolean)">
+            <summary>
+            Sets the brightness for a single LED
+            </summary>
+            <param name="LedNo">The LED to configure (starts counting at 0)</param>
+            <param name="Brightness">Brightness from 0 to 255</param>
+            <param name="Delayed">Do we have to write all LEDs immediately?</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.SetColor(System.Int32,System.Byte,System.Byte,System.Byte,System.Boolean)">
+            <summary>
+            Configures a specific LED
+            </summary>
+            <param name="LedNo">The LED to configure (starts counting at 0)</param>
+            <param name="Red">Red brightness (0 to 255)</param>
+            <param name="Green">Green brightness (0 to 255)</param>
+            <param name="Blue">Blue brightness (0 to 255)</param>
+            <param name="Delayed">Do we have to write all LEDs immediately?</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip._StateToBuffer(System.Int32)">
+            <summary>
+            Translates the LED states towards the SPI buffer
+            </summary>
+            <param name="LedNo">The LED to configure (starts counting at 0)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.SetColor(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Configures a specific LED
+            </summary>
+            <param name="LedNo">The LED to configure (starts counting at 0)</param>
+            <param name="Color">The color (0x000000 to 0xffffff)</param>
+            <param name="Delayed">Do we have to write all LEDs immediately?</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RgbLedStrip.Write">
+            <summary>
+            Writes the status of all LEDs
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.RgbLedStrip.LedCount">
+            <summary>
+            Amount of LEDs
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.RgbLedStrip.ShiftBrightness">
+            <summary>
+            When false, brightness won't be taken into account with the <see cref="M:Toolbox.NETMF.Hardware.RgbLedStrip.InsertColorAtBack(System.Int32,System.Boolean)"/> and <see cref="M:Toolbox.NETMF.Hardware.RgbLedStrip.InsertColorAtFront(System.Int32,System.Boolean)"/> methods
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.RgbLedStrip.Sequence">
+            <summary>
+            There are some strips that use a different sequence for the red, green and blue bytes. Change that here.
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.RgbLedStrip.Chipsets">
+            <summary>
+            Supported types of chips
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip.Chipsets.LPD8806">
+            <summary>LPD8806</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip.Chipsets.WS2801">
+            <summary>WS2801</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.RgbLedStrip.Sequences">
+            <summary>
+            These are the possible values for <see cref="P:Toolbox.NETMF.Hardware.RgbLedStrip.Sequence"/>
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip.Sequences.RGB">
+            <summary>Red/Green/Blue</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip.Sequences.RBG">
+            <summary>Red/Blue/Green</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip.Sequences.GRB">
+            <summary>Green/Red/Blue</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip.Sequences.GBR">
+            <summary>Green/Blue/Red</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip.Sequences.BRG">
+            <summary>Blue/Red/Green</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RgbLedStrip.Sequences.BGR">
+            <summary>Blue/Green/Red</summary>
+        </member>
+    </members>
+</doc>

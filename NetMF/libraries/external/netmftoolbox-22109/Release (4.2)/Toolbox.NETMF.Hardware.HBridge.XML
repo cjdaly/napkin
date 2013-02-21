@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.HBridge</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.HBridge">
+             <summary>
+             H-Bridge Motor Driver
+             </summary>
+             <remarks><![CDATA[
+             SN754410/L293D DIP16 pin layout:
+             
+               16 15 14 13 12 11 10 9
+               │  │  │  │  │  │  │  │
+             █████████████████████████
+             ▀████████████████████████
+               ███████████████████████
+             ▄████████████████████████
+             █████████████████████████
+               │  │  │  │  │  │  │  │
+               1  2  3  4  5  6  7  8
+             
+             NOTE: The pins below aren't mentioned in pin sequence but grouped by connection
+            
+              3 1Y -> Motor 1 negative wire
+              6 2Y -> Motor 1 positive wire
+             11 1Y -> Motor 2 positive wire
+             14 2Y -> Motor 3 negative wire
+            
+              2 1A (Motor 1 direction pin) -> Any GPIO on the Netduino, ex. pin 7
+              7 2A (Motor 1 speed pin) -> Any PWM pin on the Netduino, ex. pin 6
+             10 3A (Motor 2 direction pin) -> Any GPIO on the Netduino, ex. pin 4
+             15 4A (Motor 2 speed pin) -> Any PWM pin on the Netduino, ex. pin 5
+            
+              8 Vcc2 -> Power source for the motors, ex. Vin on the Netduino
+            
+              4 Heatsink and ground -> Ground
+              5 Heatsink and ground -> Ground
+             12 Heatsink and ground -> Ground
+             13 Heatsink and ground -> Ground
+            
+              1 1,2EN -> +5V
+              9 3,4EN -> +5V
+             16 Vcc1 -> +5V
+             ]]></remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.HBridge._Motor2Speed">
+            <summary>Reference to the speed-pin of motor 2</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.HBridge._Motor1Speed">
+            <summary>Reference to the speed-pin of motor 1</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.HBridge._Motor2Direction">
+            <summary>Reference to the direction-pin of motor 2</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.HBridge._Motor1Direction">
+            <summary>Reference to the direction-pin of motor 1</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.HBridge.#ctor(Microsoft.SPOT.Hardware.Cpu.PWMChannel,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.PWMChannel,Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>
+            H-Bridge-compatible Motor Driver (as used on the DFRobot Motorshield)
+            </summary>
+            <param name="Speed1">Motor 1 PWM control</param>
+            <param name="Direction1">Motor 1 Direction control</param>
+            <param name="Speed2">Motor 2 PWM control</param>
+            <param name="Direction2">Motor 2 Direction control</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.HBridge.#ctor(Toolbox.NETMF.Hardware.IPWMPort,Microsoft.SPOT.Hardware.Cpu.Pin,Toolbox.NETMF.Hardware.IPWMPort,Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>
+            H-Bridge-compatible Motor Driver (as used on the DFRobot Motorshield)
+            </summary>
+            <param name="Speed1">Motor 1 PWM control</param>
+            <param name="Direction1">Motor 1 Direction control</param>
+            <param name="Speed2">Motor 2 PWM control</param>
+            <param name="Direction2">Motor 2 Direction control</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.HBridge.SetState(Toolbox.NETMF.Hardware.HBridge.Motors,System.SByte)">
+            <summary>
+            Sets the state of a motor
+            </summary>
+            <param name="Motor">The motor to change</param>
+            <param name="Speed">The speed to move with; -100 (full speed backward) to 100 (full speed forward)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.HBridge.Dispose">
+            <summary>
+            Stops both motors and disposes this class
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.HBridge.Motors">
+            <summary>
+            Contains all motors
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.HBridge.Motors.Motor1">
+            <summary>First motor</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.HBridge.Motors.Motor2">
+            <summary>Second motor</summary>
+        </member>
+    </members>
+</doc>

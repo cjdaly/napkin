@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.WiiNunchuk</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.WiiNunchuk">
+            <summary>
+            Wii Nunchuk
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.WiiNunchuk._Device">
+            <summary>
+            Reference to the I²C bus
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiiNunchuk.#ctor(System.UInt16,System.Int32)">
+            <summary>
+            Initialises a new Wii Nunchuk
+            </summary>
+            <param name="Address">The I²C address</param>
+            <param name="ClockRateKhz">The speed in Khz</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.WiiNunchuk.Read">
+            <summary>
+            Reads all data from the nunchuk
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiiNunchuk.AnalogStickX">
+            <summary>Analog stick X axis value</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiiNunchuk.AnalogStickY">
+            <summary>Analog stick Y axis value</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiiNunchuk.AcceleroMeterX">
+            <summary>Accelerometer X axis value</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiiNunchuk.AcceleroMeterY">
+            <summary>Accelerometer Y axis value</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiiNunchuk.AcceleroMeterZ">
+            <summary>Accelerometer Z axis value</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiiNunchuk.ButtonC">
+            <summary>C-Button value</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.WiiNunchuk.ButtonZ">
+            <summary>Z-Button value</summary>
+        </member>
+    </members>
+</doc>

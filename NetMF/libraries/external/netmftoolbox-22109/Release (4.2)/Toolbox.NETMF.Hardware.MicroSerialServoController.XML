@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.MicroSerialServoController</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.MicroSerialServoController">
+            <summary>
+            Pololu Micro Serial Servo Controller
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MicroSerialServoController._Controller">
+            <summary>
+            Reference to the serial port
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MicroSerialServoController._Mode">
+            <summary>
+            Contains the current used mode
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MicroSerialServoController.#ctor(System.String,Toolbox.NETMF.Hardware.MicroSerialServoController.Modes)">
+            <summary>
+            Pololu Micro Serial Servo Controller
+            </summary>
+            <param name="Port">Serial port the controller is connected to</param>
+            <param name="Mode">The mode the controller is in (when the Mode-jumper is placed on the board, it's MiniSSC2)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MicroSerialServoController.SetParameters(System.Byte,System.Boolean,System.Boolean,System.Byte)">
+            <summary>
+            Sets specific parameters for a servo (Pololu-mode only)
+            </summary>
+            <param name="MotorId">The number of the motor</param>
+            <param name="On">Specifies whether the motor is on or not</param>
+            <param name="Reversed">When true, it will move in reverse</param>
+            <param name="Range">The range through which the servo moves (0 to 31)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MicroSerialServoController.SetSpeed(System.Byte,System.Byte)">
+            <summary>
+            Sets the speed at which the servo moves (Pololu-mode only)
+            </summary>
+            <param name="MotorId">The number of the motor</param>
+            <param name="Speed">The speed of movement (1 to 127 or 0 to disable any delay)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MicroSerialServoController.SetPosition(System.Byte,System.Byte)">
+            <summary>
+            Changes the position of a motor (works in both modes)
+            </summary>
+            <param name="MotorId">The number of the motor</param>
+            <param name="Position">The position the motor must go to (0 to 254)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MicroSerialServoController.SendCommand(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Sends a customized command (Pololu-mode only, see manual for commands)
+            </summary>
+            <param name="Command">Command ID</param>
+            <param name="MotorId">Motor ID</param>
+            <param name="Data1">Data byte 1</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MicroSerialServoController.SendCommand(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Sends a customized command (Pololu-mode only, see manual for commands)
+            </summary>
+            <param name="Command">Command ID</param>
+            <param name="MotorId">Motor ID</param>
+            <param name="Data1">Data byte 1</param>
+            <param name="Data2">Data byte 2</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MicroSerialServoController.SendCommand(System.Byte[])">
+            <summary>
+            Sends a customized command (Pololu-mode only, see manual for commands)
+            </summary>
+            <param name="WriteBuffer">A byte array with the command and it's parameters</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.MicroSerialServoController.Dispose">
+            <summary>
+            Disposes this object
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.MicroSerialServoController.Modes">
+            <summary>
+            Different communication modes of the board
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MicroSerialServoController.Modes.MiniSSC2">
+            <summary>MiniSSC2 communication mode (use this when a jumper is on the board)</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.MicroSerialServoController.Modes.Pololu">
+            <summary>Pololu communication mode (Recommended; use this when no jumper is on the board)</summary>
+        </member>
+    </members>
+</doc>

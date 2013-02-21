@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.NET.SMTP_Client</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.NET.SMTP_Client">
+            <summary>
+            .NETMF SMTP Client
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client._SMTP_Auth">
+            <summary>Reference to the SMTP authentication type</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client._SMTP_User">
+            <summary>Reference to the SMTP authentication username</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client._SMTP_Pass">
+            <summary>Reference to the SMTP authentication password</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client._LocalHostname">
+            <summary>Local host name, used for identifying the mail client</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client._Socket">
+            <summary>Reference to the socket</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.#ctor(Toolbox.NETMF.NET.SimpleSocket,Toolbox.NETMF.NET.SMTP_Client.AuthenticationTypes,System.String,System.String)">
+            <summary>
+            Initializes a mail sender
+            </summary>
+            <param name="Socket">The socket to use (default TCP port for SMTP is 25)</param>
+            <param name="AuthenticationType">The form of SMTP Authentication (default: no authentication)</param>
+            <param name="Username">Username for the SMTP server (when using authentication)</param>
+            <param name="Password">Password for the SMTP server (when using authentication)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.Send(Toolbox.NETMF.NET.SMTP_Client.MailMessage,Toolbox.NETMF.NET.SMTP_Client.MailContact,Toolbox.NETMF.NET.SMTP_Client.MailContact[],Toolbox.NETMF.NET.SMTP_Client.MailContact[],Toolbox.NETMF.NET.SMTP_Client.MailContact[])">
+            <summary>
+            Sends a message
+            </summary>
+            <param name="Message">The message to send</param>
+            <param name="From">The sender (From: header)</param>
+            <param name="To">A list of recipients (To: header)</param>
+            <param name="CC">A list of recipients (CC: header)</param>
+            <param name="BCC">A list of recipients (in no header at all)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.Send(Toolbox.NETMF.NET.SMTP_Client.MailMessage,Toolbox.NETMF.NET.SMTP_Client.MailContact,Toolbox.NETMF.NET.SMTP_Client.MailContact)">
+            <summary>
+            Sends a message
+            </summary>
+            <param name="Message">The message to send</param>
+            <param name="From">The sender (From: header)</param>
+            <param name="To">The recipient (To: header)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client._Send(System.String,System.String[],System.String)">
+            <summary>
+            Actually sends a message
+            </summary>
+            <param name="From">The mail address of the sender</param>
+            <param name="Recipients">The mail addresses of all recipients (To, CC and BCC)</param>
+            <param name="Data">The data, including headers</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client._RFC2822_Date">
+            <summary>
+            Returns the date formatted for mail headers
+            </summary>
+            <returns>The date formatted for mail headers</returns>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SMTP_Client.MailContact">
+            <summary>
+            Small container for mail contacts
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.MailContact.ToString">
+            <summary>Returns the name and mail address as a string</summary>
+            <returns>Returns the name and mail address as a string</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.MailContact.#ctor(System.String,System.String)">
+            <summary>Creates a new mail contact</summary>
+            <param name="MailAddress">The mail address of the person</param>
+            <param name="Name">The full name of the person</param>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailContact.Name">
+            <summary>The full name of the person</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailContact.MailAddress">
+            <summary>The mail address of the person</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SMTP_Client.MailMessage">
+            <summary>
+            Container for mail messages
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client.MailMessage._Priority">
+            <summary>Contains the priority</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.MailMessage.ToString">
+            <summary>Returns the mailbody</summary>
+            <returns>Returns the mailbody</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SMTP_Client.MailMessage.#ctor(System.String,System.String)">
+            <summary>Creates a new mail message</summary>
+            <param name="Subject">The subject of the mail</param>
+            <param name="Body">The body of the mail</param>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailMessage.Subject">
+            <summary>The subject of the mail</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailMessage.Body">
+            <summary>The body of the mail</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailMessage.ContentType">
+            <summary>Content type of the mail (default: text/plain)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailMessage.CharacterSet">
+            <summary>Character set of the mail (default: us-ascii)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SMTP_Client.MailMessage.Priority">
+            <summary>Defines the priority of the mail (1 to 5, default: 3)</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SMTP_Client.AuthenticationTypes">
+            <summary>
+            Supported authentication types
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client.AuthenticationTypes.None">
+            <summary>No authentication is used</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SMTP_Client.AuthenticationTypes.Login">
+            <summary>Login authentication is used</summary>
+        </member>
+    </members>
+</doc>

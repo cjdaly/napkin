@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.NET.HTTP_Client</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.NET.HTTP_Client">
+            <summary>
+            Simple HTTP Client
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.HTTP_Client._Socket">
+            <summary>Reference to the socket</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.HTTP_Client._Cookies">
+            <summary>Contains all cookies</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.HTTP_Client._Username">
+            <summary>When using HTTP Authentication, the username is stored here</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.HTTP_Client._Password">
+            <summary>When using HTTP Authentication, the password is stored here</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.#ctor(Toolbox.NETMF.NET.SimpleSocket)">
+            <summary>
+            Initializes a web session
+            </summary>
+            <param name="Socket">The socket to use (default TCP port for HTTP is 80)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.Authenticate(System.String,System.String)">
+            <summary>
+            When a Username is specified, HTTP Authentication will be used
+            </summary>
+            <param name="Username">The username</param>
+            <param name="Password">The password</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.SetCookie(System.String,System.String)">
+            <summary>
+            Saves cookie data to the memory
+            </summary>
+            <param name="Key">The cookie name</param>
+            <param name="Value">The cookie value (Needs to be URL Encoded!)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.Get(System.String,System.String)">
+            <summary>
+            Executes a GET request and returns the HTTP response
+            </summary>
+            <param name="Url">Path to request</param>
+            <param name="Arguments">Request arguments</param>
+            <returns>HTTP response</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.Post(System.String,System.String)">
+            <summary>
+            Executes a POST request and returns the HTTP response
+            </summary>
+            <param name="Url">Path to request</param>
+            <param name="Arguments">Request arguments</param>
+            <returns>HTTP response</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client._DoRequest(System.String)">
+            <summary>
+            Actually executes a request
+            </summary>
+            <param name="RequestData">The Request Data</param>
+            <returns>The HTTP Response</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client._ParseHeaders(System.String[])">
+            <summary>
+            Parses the headers from a response and processes all cookies
+            </summary>
+            <param name="HTTP_Headers">The response headers</param>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.Hostname">
+            <summary>Returns the hostname of the webserver</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.Port">
+            <summary>Returns the port the webserver should listen to</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.Referrer">
+            <summary>The referrer for the next HTTP request (will automaticly be filled when a page is requested)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.UserAgent">
+            <summary>The user agent header we send with the HTTP request</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.Accept">
+            <summary>The Accept-header we send with the HTTP request</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.AcceptLanguage">
+            <summary>The Accept Language-header we send with the HTTP request</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response">
+            <summary>
+            HTTP Response container
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.GetAllHeaders">
+            <summary>Returns all response headers</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.ToString">
+            <summary>Returns the webserver's response body</summary>
+            <returns>The webserver's response body</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.ResponseHeader(System.String)">
+            <summary>
+            Reads out a specific header
+            </summary>
+            <param name="Header">The name of the header</param>
+            <returns>The value of the header</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.#ctor(System.String)">
+            <summary>
+            Creates a new HTTP Response object based on some response data from the webserver
+            </summary>
+            <param name="ResponseData">The response data from the webserver</param>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.ResponseBody">
+            <summary>Returns the response body</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.HTTP_Client.HTTP_Response.ResponseCode">
+            <summary>Returns the response </summary>
+        </member>
+    </members>
+</doc>

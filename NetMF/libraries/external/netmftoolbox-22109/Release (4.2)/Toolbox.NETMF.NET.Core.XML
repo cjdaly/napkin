@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.NET.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.NET.SimpleSocket">
+            <summary>
+            Simplifies usage of sockets in .NETMF
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.Listen">
+            <summary>
+            Listens on the port instead of connecting remotely
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.NtpLookup">
+            <summary>
+            Returns a timestamp from an NTP server
+            </summary>
+            <returns>The amount of seconds since 1 jan. 1900</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.Connect(Toolbox.NETMF.NET.SimpleSocket.SocketProtocol)">
+            <summary>
+            Connects to the remote host
+            </summary>
+            <param name="Protocol">The protocol to be used</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.Close">
+            <summary>
+            Closes the connection
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.Send(System.String)">
+            <summary>
+            Sends string data to the socket
+            </summary>
+            <param name="Data">The string to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.SendBinary(System.Byte[])">
+            <summary>
+            Sends binary data to the socket
+            </summary>
+            <param name="Data">The binary data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.Receive(System.Boolean)">
+            <summary>
+            Receives data from the socket
+            </summary>
+            <param name="Block">When true, this function will wait until there is data to return</param>
+            <returns>The received data (may be empty)</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.ReceiveBinary(System.Int32)">
+            <summary>
+            Receives binary data from the socket (line endings aren't used with this method)
+            </summary>
+            <param name="Length">The amount of bytes to receive</param>
+            <returns>The binary data</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SimpleSocket.FeatureImplemented(Toolbox.NETMF.NET.SimpleSocket.SocketFeatures)">
+            <summary>
+            Checks if a feature is implemented
+            </summary>
+            <param name="Feature">The feature to check for</param>
+            <returns>True if the feature is implemented</returns>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SimpleSocket.LineEnding">
+            <summary>When LineEnding contains data, <see cref="M:Toolbox.NETMF.NET.SimpleSocket.Receive(System.Boolean)"/> will only return data when <see cref="P:Toolbox.NETMF.NET.SimpleSocket.LineEnding"/> is reached</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SimpleSocket.IsConnected">
+            <summary>
+            Returns true when connected, otherwise false
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SimpleSocket.Hostname">
+            <summary>Returns the hostname this socket is configured for/connected to</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SimpleSocket.Port">
+            <summary>Returns the port number this socket is configured for</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SimpleSocket.BytesAvailable">
+            <summary>
+            Requests the amount of bytes available in the buffer
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SimpleSocket.SocketProtocol">
+            <summary>
+            Supported protocols
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketProtocol.TcpStream">
+            <summary>The socket will work as a TCP Stream</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketProtocol.UdpDatagram">
+            <summary>The socket will work as a UDP Datagram</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.NET.SimpleSocket.SocketFeatures">
+            <summary>
+            Possible features
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketFeatures.TcpStream">
+            <summary>When the socket has support for a TCP Stream</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketFeatures.UdpDatagram">
+            <summary>When the socket has support for a UDP Datagram</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketFeatures.NtpClient">
+            <summary>When the socket has support for built-in NTP</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SimpleSocket.SocketFeatures.TcpListener">
+            <summary>When the socket can also listen to a local port</summary>
+        </member>
+    </members>
+</doc>

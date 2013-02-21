@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.NET.Integrated</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.NET.IntegratedSocket">
+            <summary>
+            Simplifies usage of sockets in .NETMF
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IntegratedSocket._Sock">
+            <summary>Contains a reference to the socket</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IntegratedSocket._Hostname">
+            <summary>Stores the hostname connected to</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IntegratedSocket._Port">
+            <summary>Stores the TCP port connected to</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IntegratedSocket._Buffer">
+            <summary>Contains the buffer of the read data</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.IntegratedSocket._Closed">
+            <summary>Set to true when Close() is called</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IntegratedSocket.#ctor(System.String,System.UInt16)">
+            <summary>
+            Creates a new socket based on the integrated .NETMF socket TCP stack
+            </summary>
+            <param name="Hostname">The hostname to connect to</param>
+            <param name="Port">The port to connect to</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IntegratedSocket.Listen">
+            <summary>
+            Listens on the port instead of connecting remotely
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IntegratedSocket.Connect(Toolbox.NETMF.NET.SimpleSocket.SocketProtocol)">
+            <summary>
+            Connects to the remote host
+            </summary>
+            <param name="Protocol">The protocol to be used</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IntegratedSocket.Close">
+            <summary>
+            Closes the connection
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IntegratedSocket.SendBinary(System.Byte[])">
+            <summary>
+            Sends binary data to the socket
+            </summary>
+            <param name="Data">The binary data to send</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IntegratedSocket.Receive(System.Boolean)">
+            <summary>
+            Receives data from the socket
+            </summary>
+            <param name="Block">When true, this function will wait until there is data to return</param>
+            <returns>The received data (may be empty)</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IntegratedSocket.ReceiveBinary(System.Int32)">
+            <summary>
+            Receives binary data from the socket (line endings aren't used with this method)
+            </summary>
+            <param name="Length">The amount of bytes to receive</param>
+            <returns>The binary data</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.IntegratedSocket.FeatureImplemented(Toolbox.NETMF.NET.SimpleSocket.SocketFeatures)">
+            <summary>
+            Checks if a feature is implemented
+            </summary>
+            <param name="Feature">The feature to check for</param>
+            <returns>True if the feature is implemented</returns>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IntegratedSocket.BytesAvailable">
+            <summary>
+            Requests the amount of bytes available in the buffer
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IntegratedSocket.IsConnected">
+            <summary>
+            Returns true when connected, otherwise false
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IntegratedSocket.Hostname">
+            <summary>Returns the hostname this socket is configured for</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.IntegratedSocket.Port">
+            <summary>Returns the port number this socket is configured for</summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.NET.SNTP_Client</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.NET.SNTP_Client">
+            <summary>
+            Simple Network Time Protocol client
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.NET.SNTP_Client._Socket">
+            <summary>Reference to the socket</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SNTP_Client.#ctor(Toolbox.NETMF.NET.SimpleSocket)">
+            <summary>
+            Creates a connection to a NTP server
+            </summary>
+            <param name="Socket">The socket to use (default UDP port for NTP is 123)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.NET.SNTP_Client.Synchronize">
+            <summary>
+            Synchronizes the MCU with the NTP-server
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SNTP_Client.Hostname">
+            <summary>Returns the hostname of the NTP server</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SNTP_Client.Port">
+            <summary>Returns the UDP port number of the NTP server</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SNTP_Client.Timestamp">
+            <summary>
+            The amount of seconds since 1 jan. 1900
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SNTP_Client.UTCDate">
+            <summary>
+            The UTC time as DateTime object
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.NET.SNTP_Client.LocalDate">
+            <summary>
+            The local time as DateTime object
+            </summary>
+        </member>
+    </members>
+</doc>

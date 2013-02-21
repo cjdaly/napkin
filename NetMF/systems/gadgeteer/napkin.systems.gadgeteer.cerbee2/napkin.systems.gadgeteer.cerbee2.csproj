@@ -84,6 +84,18 @@
     <Reference Include="System" />
     <Reference Include="System.Http" />
     <Reference Include="System.IO" />
+    <Reference Include="Toolbox.NETMF.Core">
+      <HintPath>..\..\..\libraries\external\netmftoolbox-22109\Release (4.2)\Toolbox.NETMF.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Toolbox.NETMF.Hardware.WiFlyGSX">
+      <HintPath>..\..\..\libraries\external\netmftoolbox-22109\Release (4.2)\Toolbox.NETMF.Hardware.WiFlyGSX.dll</HintPath>
+    </Reference>
+    <Reference Include="Toolbox.NETMF.NET.Core">
+      <HintPath>..\..\..\libraries\external\netmftoolbox-22109\Release (4.2)\Toolbox.NETMF.NET.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Toolbox.NETMF.NET.HTTP_Client">
+      <HintPath>..\..\..\libraries\external\netmftoolbox-22109\Release (4.2)\Toolbox.NETMF.NET.HTTP_Client.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">

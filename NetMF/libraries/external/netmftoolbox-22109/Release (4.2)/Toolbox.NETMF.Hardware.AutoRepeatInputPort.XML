@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.AutoRepeatInputPort</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.AutoRepeatInputPort">
+            <summary>
+            Represent an extension over an input port, with embedded auto-repeat capabilities.
+            This kind of class is well suited for pushbuttons input managements
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AutoRepeatInputPort.QuantumDuration">
+            <summary>
+            Indicates the duration of the quantum for the input port sampling,
+            and all the related calculations
+            </summary>
+            <remarks>It is recommended to leave this value as is</remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AutoRepeatInputPort.DefaultInitialDelay">
+            <summary>
+            The initial delay used as default.
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AutoRepeatInputPort.DefaultAutoRepeatPeriod">
+            <summary>
+            The auto-repeat period used as default
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.AutoRepeatInputPort.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Port.ResistorMode,System.Boolean)">
+            <summary>
+            Create and open an instance of an input port,
+            with embedded auto-repeat capabilities
+            </summary>
+            <param name="port">The I/O pin selected for the input</param>
+            <param name="resistor">The resistor wired-logic easing</param>
+            <param name="activeLevel">The level on which the input has to be considered active</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.AutoRepeatInputPort.Worker">
+            <summary>
+            the working thread handler, as the manager of the auto-repeat
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.AutoRepeatInputPort.Dispose(System.Boolean)">
+            <summary>
+            Disposes the object
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.AutoRepeatInputPort.OnStateChanged(Toolbox.NETMF.Hardware.AutoRepeatInputPort.AutoRepeatState)">
+            <summary>
+            
+            </summary>
+            <param name="state"></param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.AutoRepeatInputPort.ActiveLevel">
+            <summary>
+            Gets the active level defined for this instance
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.AutoRepeatInputPort.InitialDelay">
+            <summary>
+            Get/set the initial delay before the auto-repeat starts. 
+            The value is expressed in milliseconds, and is rounded accordingly to the quantum
+            </summary>
+            <remarks>
+            The minimum allowed value is zero, that is an immediate starting of the auto-repeat
+            </remarks>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.AutoRepeatInputPort.AutoRepeatPeriod">
+            <summary>
+            Get/set the interval period of the auto-repeat.
+            The value is expressed in milliseconds, and is rounded accordingly to the quantum
+            </summary>
+            <remarks>
+            The minimum value is equal to the quantum (i.e. 100ms)
+            </remarks>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.AutoRepeatInputPort.StateChanged">
+            <summary>
+            Notify any change occurring in the auto-repeat life-cycle
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.AutoRepeatInputPort.AutoRepeatState">
+            <summary>
+            Enumeration of the possible states issued by the <see cref="E:Toolbox.NETMF.Hardware.AutoRepeatInputPort.StateChanged"/> event
+            </summary>
+            <remarks>
+            Each state is better depicted considering a pushbutton acting on the input port
+            </remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AutoRepeatInputPort.AutoRepeatState.Press">
+            <summary>
+            The button has just been pressed. This state is always issued, but once only
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AutoRepeatInputPort.AutoRepeatState.Tick">
+            <summary>
+            The button has been hold down enough to begin the auto-repeat cycle.
+            This state can be issued periodically
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.AutoRepeatInputPort.AutoRepeatState.Release">
+            <summary>
+            The button has just been depressed. This state is always issued, but once only
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.AutoRepeatEventHandler">
+            <summary>
+            The delegate behind the <see cref="E:Toolbox.NETMF.Hardware.AutoRepeatInputPort.StateChanged"/> event
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.AutoRepeatEventArgs">
+            <summary>
+            Extension wrapper to the standard <see cref="T:Microsoft.SPOT.EventArgs"/> object, thus the state of the auto-repeat may be carried out to the host
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.AutoRepeatEventArgs.#ctor(Toolbox.NETMF.Hardware.AutoRepeatInputPort.AutoRepeatState)">
+            <summary>
+            Extension wrapper to the standard <see cref="T:Microsoft.SPOT.EventArgs"/> object, thus the state of the auto-repeat may be carried out to the host
+            </summary>
+            <param name="state"></param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.AutoRepeatEventArgs.State">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

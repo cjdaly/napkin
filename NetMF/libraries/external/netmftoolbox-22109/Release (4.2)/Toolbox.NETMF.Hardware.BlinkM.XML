@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.BlinkM</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.BlinkM">
+            <summary>
+            BlinkM RGB LED
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.BlinkM._Device">
+            <summary>
+            Reference to the I²C bus
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BlinkM.#ctor(System.UInt16,System.Int32)">
+            <summary>
+            Initialises a new BlinkM RGB LED
+            </summary>
+            <param name="Address">The I²C address</param>
+            <param name="ClockRateKhz">The module speed in Khz</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BlinkM.SetColor(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Go to RGB Color Now
+            </summary>
+            <param name="r">Red</param>
+            <param name="g">Green</param>
+            <param name="b">Blue</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BlinkM.SetColor(System.Int32)">
+            <summary>
+            Go to RGB Color Now
+            </summary>
+            <param name="Color">The color (0xff0000 is Red)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BlinkM.FadeColor(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Fade to RGB Color
+            </summary>
+            <param name="r">Red</param>
+            <param name="g">Green</param>
+            <param name="b">Blue</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BlinkM.FadeColor(System.Int32)">
+            <summary>
+            Fade to RGB Color
+            </summary>
+            <param name="Color">The color (0xff0000 is Red)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BlinkM._SplitColor(System.Int32)">
+            <summary>
+            Splits a color as integer to three bytes
+            </summary>
+            <param name="Color">The color (0xff0000 is Red)</param>
+            <returns>A byte with array 3 values; red, green and blue</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BlinkM.SendCommand(System.Char,System.Byte[])">
+            <summary>
+            Sends a raw command
+            </summary>
+            <param name="Command">The command to send</param>
+            <param name="Arguments">Arguments belonging to the command</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BlinkM.SendCommand(System.Char)">
+            <summary>
+            Sends a raw command
+            </summary>
+            <param name="Command">The command to send</param>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.DS1307</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.DS1307">
+            <summary>
+            DS1307 RTC Module
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.DS1307._Device">
+            <summary>
+            Reference to the I²C bus
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.DS1307.#ctor(System.Byte,System.Int32)">
+            <summary>
+            Initialises a new DS1307 RTC Module
+            </summary>
+            <param name="Address">The I²C address</param>
+            <param name="ClockRateKhz">The module speed in Khz</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.DS1307.SetTime(System.DateTime)">
+            <summary>
+            Sets the time in the RTC module
+            </summary>
+            <param name="Time">The current time</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.DS1307.SetTime(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Sets the time in the RTC module
+            </summary>
+            <param name="Year">Current year</param>
+            <param name="Month">Current month</param>
+            <param name="Day">Current day</param>
+            <param name="Hour">Current hour</param>
+            <param name="Minute">Current minute</param>
+            <param name="Second">Current second</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.DS1307.GetTime">
+            <summary>
+            Gets the time from the RTC module
+            </summary>
+            <returns>The current time</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.DS1307.Synchronize">
+            <summary>
+            Synchronizes the MCU with the RTC module
+            </summary>
+        </member>
+    </members>
+</doc>

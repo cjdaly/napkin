@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.Speaker</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.Speaker">
+            <summary>
+            Simple Speaker interface
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Speaker._Speaker">
+            <summary>
+            Stores a reference to the PWM device of the speaker
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Speaker._Tonebar">
+            <summary>
+            Contains 120 periods from A to G# from octave 0 to 9
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Speaker._PlayLength">
+            <summary>
+            The length of each note (1 - 64). L1 is whole note, L2 is half note, etc.
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Speaker._PlayTempo">
+            <summary>
+            The tempo in quarter notes per minute (32 - 255).
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Speaker._PlayOctave">
+            <summary>
+            The octave the Play-method currently is in.
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Speaker._PlayMode">
+            <summary>
+            Holds the play mode the Play-method currently is in.
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Speaker.Play(System.String)">
+            <summary>
+            Plays musical notes. See also: http://netmftoolbox.codeplex.com/wikipage?title=Toolbox.NETMF.Hardware.Speaker
+            </summary>
+            <example><![CDATA[
+            Octave and tone commands:
+              Ooctave    Sets the current octave (0 - 9).
+              < or >     Moves up or down one octave.
+              A - G      Plays the specified note in the current octave.
+              Nnote      Plays a specified note (0 - 84) in the seven octave
+                         range (0 is a rest).
+            
+            Duration and tempo commands:
+              Llength    Sets the length of each note (1 - 64). L1 is whole note,
+                         L2 is half note, etc.
+              ML         Sets music legato.
+              MN         Sets music normal.
+              MS         Sets music staccato.
+              Ppause     Specifies a pause (1 - 64). P1 is a whole-note pause,
+                         P2 is a half-note pause, etc.
+              Ttempo     Sets the tempo in quarter notes per minute (32 - 255).
+              
+            Mode commands:
+              MF         Plays music in foreground.
+              MB         Plays music in background.
+            
+            Suffix commands:
+              # or +     Turns preceding note into a sharp.
+              -          Turns preceding note into a flat.
+              .          Plays the preceding note 3/2 as long as specified.
+            
+            See also: http://netmftoolbox.codeplex.com/wikipage?title=Toolbox.NETMF.Hardware.Speaker
+            ]]></example>
+            <param name="CommandString">A string expression that contains one or more of the PLAY commands.</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Speaker._PlayBackground(System.String)">
+            <summary>
+            Plays a song in the background
+            </summary>
+            <param name="CommandString">The song to play</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Speaker._PlayNote(System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Plays a note
+            </summary>
+            <param name="Note">The note (0 to 84)</param>
+            <param name="Tempo">The tempo in quarter notes per minute (32 - 255).</param>
+            <param name="Length">The length of each note (1 - 64). L1 is whole note, L2 is half note, etc.</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Speaker.#ctor(Toolbox.NETMF.Hardware.IPWMPort)">
+            <summary>
+            Defines a speaker
+            </summary>
+            <param name="PwmPort">The PWM port the speaker is connected to</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Speaker.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>
+            Defines a speaker
+            </summary>
+            <param name="PwmPort">The PWM port the speaker is connected to</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Speaker.#ctor(Microsoft.SPOT.Hardware.Cpu.PWMChannel)">
+            <summary>
+            Defines a speaker
+            </summary>
+            <param name="PwmPort">The PWM port the speaker is connected to</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Speaker.Sound(System.Single,System.Single)">
+            <summary>
+            Generates a sound through your speaker.
+            </summary>
+            <param name="Frequency">The frequency of the sound in hertz; a value in the range 37 through 32,767</param>
+            <param name="Duration">The number of ticks the sound should last; a value in the range 0 through 65,535. There are 18.2 ticks per second.</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Speaker.Beep">
+            <summary>
+            Generates a beep sound from your speaker.
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Speaker.Dispose">
+            <summary>Disposes this object</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.Speaker.OnPlay">
+            <summary>
+            Triggered after each played note. data2 contains the remaining bytes to play
+            </summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.Speaker._PlayModes">
+            <summary>
+            All existing play modes
+            </summary>
+        </member>
+    </members>
+</doc>

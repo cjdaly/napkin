@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.RotaryEncoder</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.RotaryEncoder">
+            <summary>
+            Rotary Encoder
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RotaryEncoder._PinA">
+            <summary>Reference to the interruptport on the A-pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RotaryEncoder._PinB">
+            <summary>Reference to the interruptport on the B-pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RotaryEncoder._OddA">
+            <summary>Stores the odd value of pin A</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RotaryEncoder._OddB">
+            <summary>Stores the odd value of pin B</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.RotaryEncoder._Even">
+            <summary>Swaps at each measurement, we act when we got two measurements</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RotaryEncoder.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>
+            Initiates a rotary encoder
+            </summary>
+            <param name="PinA">Pin A</param>
+            <param name="PinB">Pin B</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RotaryEncoder._Pin_OnInterrupt(System.UInt32,System.UInt32,System.DateTime)">
+            <summary>
+            One of the pins has triggered an interrupt
+            </summary>
+            <param name="PinId">The Id of the pin</param>
+            <param name="Value">It's new value</param>
+            <param name="Time">Timestamp of the event</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.RotaryEncoder.Dispose">
+            <summary>
+            Frees all pins and disposes this object
+            </summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.RotaryEncoder.Rotated">
+            <summary>
+            This event will be triggered on rotation
+            </summary>
+        </member>
+    </members>
+</doc>

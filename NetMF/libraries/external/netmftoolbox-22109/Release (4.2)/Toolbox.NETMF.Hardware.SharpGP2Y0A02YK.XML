@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.SharpGP2Y0A02YK</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.SharpGP2Y0A02YK">
+            <summary>
+            Sharp Long Distance Measuring Sensor
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.SharpGP2Y0A02YK._Input">
+            <summary>
+            Contains a reference to the analog input port
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.SharpGP2Y0A02YK.#ctor(Microsoft.SPOT.Hardware.Cpu.AnalogChannel)">
+            <summary>
+            Sharp Long Distance Measuring Sensor
+            </summary>
+            <param name="InputPort">Port the sensor is connected to</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.SharpGP2Y0A02YK.#ctor(Toolbox.NETMF.Hardware.IADCPort)">
+            <summary>
+            Sharp Long Distance Measuring Sensor
+            </summary>
+            <param name="InputPort">Port the sensor is connected to</param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.SharpGP2Y0A02YK.Distance">
+            <summary>
+            Sends back the distance in centimeters (IR sensors aren't as accurate as sonic though!)
+            </summary>
+        </member>
+    </members>
+</doc>

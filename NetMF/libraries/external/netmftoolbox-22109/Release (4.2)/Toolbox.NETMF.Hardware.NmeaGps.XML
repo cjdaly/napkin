@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.NmeaGps</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.NmeaGps">
+            <summary>
+            NMEA compatible GPS
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._Uart">
+            <summary>
+            Reference to the serial port
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._Buffer">
+            <summary>
+            Contains the serial buffer
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NmeaGps.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new GPS module
+            </summary>
+            <param name="SerialPort">The serial port the module is connected to</param>
+            <param name="BaudRate">The speed of the module</param>
+            <remarks>Specs are taken from http://www.gpsinformation.org/dale/nmea.htm </remarks>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NmeaGps.Start">
+            <summary>
+            Starts listening to the GPS module
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NmeaGps.Stop">
+            <summary>
+            Stops listening to the GPS module
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._Fix">
+            <summary>True when we have a fix</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._Hour">
+            <summary>Latest fix timestamp: Hour</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._Minute">
+            <summary>Latest fix timestamp: Minute</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._Second">
+            <summary>Latest fix timestamp: Second</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._MilliSecond">
+            <summary>Latest fix timestamp: MilliSecond</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._Day">
+            <summary>Latest fix timestamp: Day</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._Month">
+            <summary>Latest fix timestamp: Month</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._Year">
+            <summary>Latest fix timestamp: Year</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._RMC_Supported">
+            <summary>True when we got an RMC reply</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._GGA_Supported">
+            <summary>True when we got an GGA reply</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NmeaGps._LastPosition">
+            <summary>Last position as string</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NmeaGps._IsPositionChanged">
+            <summary>Checks if the position is changed. If so, the PositionChanged event it called</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NmeaGps._GSA_DataReceived(System.String[])">
+            <summary>
+            Triggered when overall satellite data is received
+            </summary>
+            <param name="Params">The data</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NmeaGps._RMC_DataReceived(System.String[])">
+            <summary>
+            Triggered when recommended minimum data for gps is received
+            </summary>
+            <param name="Params">The data</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NmeaGps._GGA_DataReceived(System.String[])">
+            <summary>
+            Triggered when fix information is received
+            </summary>
+            <param name="Params">The data</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NmeaGps._Uart_DataReceived(System.Object,System.IO.Ports.SerialDataReceivedEventArgs)">
+            <summary>
+            There's data received from the serial port
+            </summary>
+            <param name="sender">The sender of the data</param>
+            <param name="e">Some event data</param>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.Active">
+            <summary>
+            Checks if we're listening to the GPS module
+            </summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.NmeaGps.GotFix">
+            <summary>Event triggered when we gain a fix</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.NmeaGps.LostFix">
+            <summary>Event triggered when we loose a fix</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.NmeaGps.PositionChanged">
+            <summary>Event triggered when our position is changed</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.Fix">
+            <summary>True when we have a fix</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.Fix3D">
+            <summary>True when we have a 3D fix</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.Satellites">
+            <summary>The amount of fixed satellites</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.GPSTime">
+            <summary>Time according to the satellites</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.Knots">
+            <summary>Speed over the ground in knots</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.Kmh">
+            <summary>Speed over the ground in kilometers per hour</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.TrackAngle">
+            <summary>Track angle in degrees</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.SLatitude">
+            <summary>Latidude (in the format 4068.092,N)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.SLongitude">
+            <summary>Longitude (in the format 04704.045,W)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.SAltitude">
+            <summary>Altitude, Meters, above mean sea level (in the format 545.4,M)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.Longitude">
+            <summary>Longitude as floating point value</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.Latitude">
+            <summary>Latitude as floating point value</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NmeaGps.Altitude">
+            <summary>Altitude in meters as floating point value</summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.Rdm630</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.Rdm630">
+             <summary>
+             Rdm630 RFID Reader
+             </summary>
+             <remarks><![CDATA[
+             RDM630 pin layout:
+             
+               10 9  8           7  6
+               │  │  │           │  │
+             █████████████████████████
+             █████████████████████████
+             █████████████████████████
+             █████████████████████████
+               │  │  │  │  │         
+               1  2  3  4  5         
+            
+              1 TX (Data out) -> Netduino pin 0 or 2 (COM1 or COM2)
+              2 RX (Data in) -> Netduino pin 1 or 3 (COM1 or COM2), but since it's read-only, may be left empty
+              3 Unused
+              4 GND -> Netduino Gnd
+              5 +5V(DC) -> Netduino +5V
+              6 ANT1 -> Antenna (polarity doesn't matter)
+              7 ANT2 -> Antenna (polarity doesn't matter)
+              8 GND -> Netduino Gnd (but if pin 4 is already connected, this may be left empty)
+              9 +5V(DC) -> Netduino +5V (but if pin 5 is already connected, this may be left empty)
+             10 LED -> A led if you want to have a led signalling when there's a transfer
+             ]]></remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Rdm630._Serial">
+            <summary>
+            Contains a reference to the serial port the Rdm630 is connected to
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Rdm630._ReadBuffer">
+            <summary>
+            A read buffer of 14 bytes. Since every block of data has 14 bytes, this should be enough.
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Rdm630._ReadPosition">
+            <summary>
+            The current position on the _ReadBuffer
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Rdm630._SerialConversionTable">
+            <summary>
+            Table to convert integers from the serial bus to a hex digit quickly
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Rdm630._LastSuccessfullRead">
+            <summary>
+            Contains the last successfull RFID tag
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Rdm630.#ctor(System.String)">
+            <summary>
+            Rdm630 RFID Reader
+            </summary>
+            <param name="Port">The serial port the Rdm630 is connected to</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Rdm630._Serial_DataReceived(System.Object,System.IO.Ports.SerialDataReceivedEventArgs)">
+            <summary>
+            Triggers when there is new data on the serial port
+            </summary>
+            <param name="Sender">The sender of the event, which is the SerialPort object</param>
+            <param name="EventData">A SerialDataReceivedEventArgs object that contains the event data</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Rdm630._Rdm630_DataReceived">
+            <summary>
+            Triggers when a full RFID tag is scanned
+            </summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.Rdm630.DataReceived">
+            <summary>
+            Triggered when data has been received
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.Rdm630.Tag">
+            <summary>
+            The most recent scanned tag
+            </summary>
+        </member>
+    </members>
+</doc>

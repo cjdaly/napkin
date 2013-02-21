@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.NESControllerAdapter</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.NESControllerAdapter">
+            <summary>
+            Parallax NES Controller Adapter driver
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter._Clk">
+            <summary>Reference to the clock pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter._Latch">
+            <summary>Reference to the latch pin</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter._Data1">
+            <summary>Reference to the data pin for socket 1</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter._Data2">
+            <summary>Reference to the data pin for socket 2</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter._LastSocket1">
+            <summary>Last state for socket 1</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter._LastSocket2">
+            <summary>Last state for socket 2</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter._LastScanValue">
+            <summary>Last scan value</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter._InterruptStarter">
+            <summary>Contains a reference to the interrupt thread</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter._EventsEnabled">
+            <summary>When true, events are enabled</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NESControllerAdapter.SocketConnected(Toolbox.NETMF.Hardware.NESControllerAdapter.Socket)">
+            <summary>Checks if a socket is active</summary>
+            <param name="Socket"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NESControllerAdapter.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin,Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>
+            Initialises the Parallax NES Controller Adapter
+            </summary>
+            <param name="Clk">Clock pin</param>
+            <param name="Latch">Latch pin</param>
+            <param name="Data1">Data pin for socket 1</param>
+            <param name="Data2">Data pin for socket 2 (optional)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NESControllerAdapter.Dispose">
+            <summary>Frees all pins</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NESControllerAdapter._ScanThread">
+            <summary>Scans both sockets while events are enabled</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NESControllerAdapter._PinTick(Microsoft.SPOT.Hardware.OutputPort)">
+            <summary>Puts a pin high for a short amount of time</summary>
+            <param name="Pin">The pin to put high</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NESControllerAdapter.Read(System.Boolean[]@)">
+            <summary>Reads the boolean values of all buttons</summary>
+            <param name="Socket1">8 boolean values for socket 1: [A,B,Select,Start,Up,Down,Left,Right]</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NESControllerAdapter.Read(System.Boolean[]@,System.Boolean[]@)">
+            <summary>Reads the boolean values of all buttons</summary>
+            <param name="Socket1">8 boolean values for socket 1: [A,B,Select,Start,Up,Down,Left,Right]</param>
+            <param name="Socket2">8 boolean values for socket 2: [A,B,Select,Start,Up,Down,Left,Right]</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NESControllerAdapter.ButtonState(Toolbox.NETMF.Hardware.NESControllerAdapter.Socket,Toolbox.NETMF.Hardware.NESControllerAdapter.Button)">
+            <summary>Reads the state of a single button</summary>
+            <param name="Socket">The socket</param>
+            <param name="Button">The button</param>
+            <returns>True when pressed</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.NESControllerAdapter._Read(System.Boolean[]@,System.Boolean[]@)">
+            <summary>Reads the boolean values of all buttons</summary>
+            <param name="Socket1">8 boolean values for socket 1: [A,B,Select,Start,Up,Down,Left,Right]</param>
+            <param name="Socket2">8 boolean values for socket 2: [A,B,Select,Start,Up,Down,Left,Right]</param>
+            <returns>0 when there are no changes since the last Read() call, otherwise the bit of the button is set</returns>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.NESControllerAdapter.OnButtonChanged">
+            <summary>Triggered when a button state changes</summary>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.NESControllerAdapter.OnSocketChanged">
+            <summary>Triggered when a socket state changes</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.NESControllerAdapter.EventsEnabled">
+            <summary>When true, events are enabled</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.NESControllerAdapter.Socket">
+            <summary>List of the game sockets</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter.Socket.Socket1">
+            <summary>Socket 1</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter.Socket.Socket2">
+            <summary>Socket 2</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.NESControllerAdapter.Button">
+            <summary>List of the buttons on a keypad</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter.Button.Button_A">
+            <summary>Button A</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter.Button.Button_B">
+            <summary>Button B</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter.Button.Button_Select">
+            <summary>Select Button</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter.Button.Button_Start">
+            <summary>Start Button</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter.Button.Button_Up">
+            <summary>Up Button</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter.Button.Button_Down">
+            <summary>Down Button</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter.Button.Button_Left">
+            <summary>Left Button</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.NESControllerAdapter.Button.Button_Right">
+            <summary>Right Button</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.NESControllerAdapter.ButtonChanged">
+            <summary>Button changed event</summary>
+            <param name="This">The current object</param>
+            <param name="Socket">The changed socket</param>
+            <param name="Button">The changed button</param>
+            <param name="Value">The new value</param>
+            <param name="Time">Time of the event</param>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.NESControllerAdapter.SocketChanged">
+            <summary>Socket changed event</summary>
+            <param name="This">The current object</param>
+            <param name="Socket">The changed socket</param>
+            <param name="ButtonStates">8 boolean values for the socket: [A,B,Select,Start,Up,Down,Left,Right]</param>
+            <param name="Time">Time of the event</param>
+        </member>
+    </members>
+</doc>

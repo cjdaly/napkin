@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.BitBangBuzzer</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.BitBangBuzzer">
+            <summary>
+            Bitbang Buzzer class for if a buzzer isn't conneced to a PWM-pin
+            </summary>
+            <remarks>
+            Sometimes you want to add a buzzer, but all PWM-pins are already taken. This class comes to rescue!
+            </remarks>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.BitBangBuzzer._State">
+            <summary>
+            Contains the current state of the buzzer
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.BitBangBuzzer._OutputPin">
+            <summary>
+            Contains the pin
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.BitBangBuzzer._PinSwitcherThread">
+            <summary>
+            Reference to the seperate buzzer thread
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BitBangBuzzer.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin,System.Boolean)">
+            <summary>
+            Bit Bang Buzzer
+            </summary>
+            <remarks>
+            Sometimes you want to add a buzzer, but all PWM-pins are already taken. This class comes to rescue!
+            </remarks>
+            <param name="PortId">The pin the buzzer is connected to (on Netduino: Pins.GPIO_PIN_D3)</param>
+            <param name="InitialState">The buzzers initial state</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BitBangBuzzer._PinSwitcherLoop">
+            <summary>
+            Switches the pin values if needed
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BitBangBuzzer.Write(System.Boolean)">
+            <summary>
+            Writes the state of the buzzer
+            </summary>
+            <param name="Value"></param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BitBangBuzzer.Read">
+            <summary>
+            Reads the state of the buzzer
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.BitBangBuzzer.Dispose">
+            <summary>
+            Disposes the buzzer object
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.BitBangBuzzer.Interval">
+            <summary>
+            Interval of the speaker in ms
+            </summary>
+        </member>
+    </members>
+</doc>

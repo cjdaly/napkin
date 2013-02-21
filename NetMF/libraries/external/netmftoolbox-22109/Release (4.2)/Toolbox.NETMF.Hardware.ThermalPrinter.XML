@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.ThermalPrinter</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.ThermalPrinter">
+            <summary>
+            Thermal Printer driver
+            </summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter._Uart">
+            <summary>
+            Reference to the serial port
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter._WriteControlParameters">
+            <summary>
+            Writes the control parameters
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter._WriteModes">
+            <summary>
+            Updates the font status
+            </summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a Thermal Printer
+            </summary>
+            <param name="SerialPort">The serial port the printer is connected to</param>
+            <param name="BaudRate">The speed of the printer</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter._Uart_DataReceived(System.Object,System.IO.Ports.SerialDataReceivedEventArgs)">
+            <summary>
+            The serial port sent data back
+            </summary>
+            <param name="sender">SerialPort object</param>
+            <param name="e">Event details</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.Print(System.String)">
+            <summary>Sends data to the printer</summary>
+            <param name="Data">Data to process</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.Print(System.Byte[])">
+            <summary>Sends data to the printer</summary>
+            <param name="Data">Data to process</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.PrintLine(System.String)">
+            <summary>
+            Prints a line of text
+            </summary>
+            <param name="Text">Line of text to print</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.LineFeed">
+            <summary>Executes a line feed</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.LineFeed(System.Int32)">
+            <summary>Executes a specific amount of line feeds</summary>
+            <param name="Amount">The amount of linefeeds</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.SetAlignment(Toolbox.NETMF.Hardware.ThermalPrinter.Alignment)">
+            <summary>Changes the text alignment</summary>
+            <param name="Value">Alignment</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.SetLeftSpacing(System.Byte)">
+            <summary>Set the amount of spaces to be added in front of each line of text</summary>
+            <param name="Value">Amount of spaces</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.SetLineSpacing(System.Byte)">
+            <summary>Changes the line spacing</summary>
+            <param name="Value">New line spacing (default value is 30)</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.PrintBitmap(System.Int32,System.Int32,System.Byte[],Toolbox.NETMF.Hardware.ThermalPrinter.PrintMode)">
+            <summary>
+            Prints a bitmap
+            </summary>
+            <param name="Width">Bitmap width (should be a power of 8)</param>
+            <param name="Height">Bitmap height (should be a power of 8)</param>
+            <param name="Bitmap">Bitmap data</param>
+            <param name="Mode">Print mode</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.PrintBarcode(System.String,Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem,System.Byte,System.Byte,System.Boolean,System.Boolean)">
+            <summary>
+            Prints a bar code
+            </summary>
+            <param name="Value">The bar code</param>
+            <param name="Format">The format to print the code in</param>
+            <param name="BarWidth">The width of each single bar (so not of the full bar code)</param>
+            <param name="BarHeight">The height of each single bar (also the height of the full bar code)</param>
+            <param name="PrintValueAbove">When true, the value will also be printed in text, above the bar code</param>
+            <param name="PrintValueBelow">When true, the value will also be printed in text, below the bar code</param>
+            <remarks>
+            The printer also validates the barcode. If it's not valid it won't print.
+            If you send the checkbyte yourself (in most barcodes the last digit) and it does not compute, discard it.
+            Also, if the barcode won't fit the paper, it won't print either. Try reducing the BarWidth in that case.
+            </remarks>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter.Dispose">
+            <summary>Disposes this object</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.ThermalPrinter._HasOnlyCharacters(System.String,System.String)">
+            <summary>
+            Checks if a value contains only legal characters
+            </summary>
+            <param name="Value">The value</param>
+            <param name="LegalChars">All legal characters</param>
+            <returns>True when it's a valid value</returns>
+        </member>
+        <member name="E:Toolbox.NETMF.Hardware.ThermalPrinter.OnStatusChange">
+            <summary>
+            Triggered when the status changes
+            </summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThermalPrinter.SmallText">
+            <summary>When true, text will be printed smaller</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThermalPrinter.Inverted">
+            <summary>When true, text will be printed white on black</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThermalPrinter.UpsideDown">
+            <summary>When true, text will be printed upside down</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThermalPrinter.DoubleHeight">
+            <summary>When true, text will be printed with it's doubled height</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThermalPrinter.DoubleWidth">
+            <summary>When true, text will be printed with it's doubled width</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThermalPrinter.StrikeThrough">
+            <summary>When true, text will be striked through</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThermalPrinter.Underlined">
+            <summary>When true, text will be underlined</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThermalPrinter.MaxPrintingDots">
+            <summary>Max printing dots，Unit(8dots)，Default:7(64 dots)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThermalPrinter.HeatingTime">
+            <summary>Heating time，Unit(10µs),Default:80(800µs)</summary>
+        </member>
+        <member name="P:Toolbox.NETMF.Hardware.ThermalPrinter.HeatingInterval">
+            <summary>Heating interval,Unit(10µs)，Default:2(20µs)</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.ThermalPrinter.PrintMode">
+            <summary>The print mode for bitmaps</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.PrintMode.SingleDensity8Dots">
+            <summary>8dots single density，102dpi</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.PrintMode.DoubleDensity8Dots">
+            <summary>8dots double density，203dpi</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.PrintMode.SingleDensity24Dots">
+            <summary>24 dots single density,102dpi</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.PrintMode.DoubleDensity24Dots">
+            <summary>24 dots double density,203dpi</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.ThermalPrinter.Alignment">
+            <summary>Text alignment values</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.Alignment.AlignLeft">
+            <summary>Align to the left</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.Alignment.AlignCenter">
+            <summary>Align to the middle</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.Alignment.AlignRight">
+            <summary>Align to the right</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem">
+            <summary>Bar code systems</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem.UPC_A">
+            <summary>Universal Product Code type A</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem.UPC_E">
+            <summary>Universal Product Code type E</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem.EAN13">
+            <summary>European Article Number (12 bytes)</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem.EAN8">
+            <summary>European Article Number (8 bytes)</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem.CODE39">
+            <summary>Code 39</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem.I25">
+            <summary>Interleaved 2 of 5</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem.CODEBAR">
+            <summary>Codabar</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem.CODE93">
+            <summary>Code 93</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem.CODE128">
+            <summary>Code 128</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem.CODE11">
+            <summary>Code 11</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.ThermalPrinter.BarCodeSystem.MSI">
+            <summary>Modified Plessey</summary>
+        </member>
+    </members>
+</doc>

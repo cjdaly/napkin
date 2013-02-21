@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toolbox.NETMF.Hardware.Netduino</name>
+    </assembly>
+    <members>
+        <member name="T:Toolbox.NETMF.Hardware.Netduino">
+            <summary>Collection of Netduino wrappers</summary>
+            <remarks>I made this as a class so people actually have to type Netduino.PWM. This, to avoid conflicts with any other PWM class.</remarks>
+            <summary>Collection of Netduino wrappers</summary>
+            <remarks>I made this as a class so people actually have to type Netduino.PWM. This, to avoid conflicts with any other PWM class.</remarks>
+            <summary>Collection of Netduino wrappers</summary>
+            <remarks>I made this as a class so people actually have to type Netduino.PWM. This, to avoid conflicts with any other PWM class.</remarks>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.Netduino.PWM">
+            <summary>Netduino PWM Wrapper</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Netduino.PWM._port">
+            <summary>Reference to the PWM port</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Netduino.PWM._period_ns">
+            <summary>The time for each timeframe in nanoseconds</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Netduino.PWM._duration_ns">
+            <summary>The amount of nanoseconds the pulse must be high</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Netduino.PWM.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>Defines a Netduino PWM pin</summary>
+            <param name="Pin">The Netduino pin</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Netduino.PWM.Dispose">
+            <summary>Disposes the PWM object</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Netduino.PWM.StartPulse">
+            <summary>Starts the signal</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Netduino.PWM.StopPulse">
+            <summary>Stops the signal</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Netduino.PWM.SetPulse(System.UInt32,System.UInt32)">
+            <summary>Sets the signal in pulses</summary>
+            <param name="period_ns">The time for each timeframe in nanoseconds</param>
+            <param name="duration_ns">The amount of nanoseconds the pulse must be high</param>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.Netduino.ADC">
+            <summary>Netduino PWM Wrapper</summary>
+        </member>
+        <member name="F:Toolbox.NETMF.Hardware.Netduino.ADC._port">
+            <summary>Reference to the ADC port</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Netduino.ADC.#ctor(Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>Defines a Netduino ADC pin</summary>
+            <param name="Pin">The Netduino pin</param>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Netduino.ADC.AnalogRead">
+            <summary>Reads out a value between 0 and 1</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Netduino.ADC.Dispose">
+            <summary>Disposes the ADC object</summary>
+        </member>
+        <member name="T:Toolbox.NETMF.Hardware.Netduino.Provider">
+            <summary>Class that installs the Hardware provider</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Netduino.Provider.#cctor">
+            <summary>Main method</summary>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Netduino.Provider._PWMMapper(Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>PWM Pin Mapper</summary>
+            <param name="pin">Pin</param>
+            <returns>IPWMPort-compatible class</returns>
+        </member>
+        <member name="M:Toolbox.NETMF.Hardware.Netduino.Provider._ADCMapper(Microsoft.SPOT.Hardware.Cpu.Pin)">
+            <summary>ADC Pin Mapper</summary>
+            <param name="pin">Pin</param>
+            <returns>IADCPort-compatible class</returns>
+        </member>
+    </members>
+</doc>
