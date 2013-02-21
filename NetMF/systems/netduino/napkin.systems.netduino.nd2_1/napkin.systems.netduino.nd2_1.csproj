@@ -61,5 +61,9 @@
       <Project>{9DFFEB17-136D-40BC-9990-506914F14F04}</Project>
       <Name>napkin.devices.serial.uLcd144</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\libraries\devices\napkin.devices.spi.DeadOnRTC\napkin.devices.spi.DeadOnRTC.csproj">
+      <Project>{C19B8F5C-9663-484E-9179-8219B082FEC1}</Project>
+      <Name>napkin.devices.spi.DeadOnRTC</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

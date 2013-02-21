@@ -11,6 +11,7 @@ using SecretLabs.NETMF.Hardware.Netduino;
 using napkin.devices.serial.common;
 using napkin.devices.serial.MidiMusicShield;
 using napkin.devices.serial.uLcd144;
+using napkin.devices.spi.DeadOnRTC;
 
 namespace napkin.systems.netduino.nd2_1
 {
@@ -19,6 +20,7 @@ namespace napkin.systems.netduino.nd2_1
         private static ThreadedSerialDevice _cerbee2;
         private static MidiDriver _midiDriver;
         private static ULcd144Device _uLcd144;
+        // private static DeadOnRTCDriver _deadOnRtc;
 
         public static void Main()
         {
@@ -35,6 +37,9 @@ namespace napkin.systems.netduino.nd2_1
             _uLcd144.Clear();
             _uLcd144.WriteMessage("Hello", 0, 0);
             _uLcd144.WriteMessage("World!", 0, 1);
+
+            // _deadOnRtc = new DeadOnRTCDriver(Pins.GPIO_PIN_D10);
+            // _deadOnRtc.DumpRTCData();
 
             Debug.Print("Goodbye!   mem: " + Debug.GC(false));
         }
