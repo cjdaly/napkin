@@ -20,7 +20,7 @@ namespace napkin.systems.netduino.nd2_1
         private static ThreadedSerialDevice _cerbee2;
         private static MidiDriver _midiDriver;
         private static ULcd144Device _uLcd144;
-        // private static DeadOnRTCDriver _deadOnRtc;
+        private static DeadOnRTCDriver _deadOnRtc;
 
         public static void Main()
         {
@@ -38,8 +38,16 @@ namespace napkin.systems.netduino.nd2_1
             _uLcd144.WriteMessage("Hello", 0, 0);
             _uLcd144.WriteMessage("World!", 0, 1);
 
-            // _deadOnRtc = new DeadOnRTCDriver(Pins.GPIO_PIN_D10);
-            // _deadOnRtc.DumpRTCData();
+            _deadOnRtc = new DeadOnRTCDriver(Pins.GPIO_PIN_D10, SPI_Devices.SPI1);
+
+            for (int i = 0; i < 4; i++)
+            {
+                DeadOnRTCData rtcData = _deadOnRtc.ReadData();
+                DateTime dt = rtcData.GetDateTime();
+                Debug.Print("DateTime: " + dt.ToString());
+                _uLcd144.ConsoleWriteLine(dt.ToString());
+                Thread.Sleep(5000);
+            }
 
             Debug.Print("Goodbye!   mem: " + Debug.GC(false));
         }
