@@ -57,6 +57,7 @@ module Napkin
           puts "!!! KeysetsTask.cycle called !!!"
         end
 
+      # TODO: bad slash
         KEYSET_GROUP = Napkin::NodeUtil::PropertyGroup.new('napkin/keysets').
         add_property('keyset_name').group.
         add_property('keyset_description').group.

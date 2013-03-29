@@ -49,7 +49,9 @@ module Napkin
         body_text = @request.body.read
 
         nn = @nn.dup
+        # TODO: bad hash slash
         old_value = nn["config/data##{param_key}"]
+        # TODO: bad hash slash
         nn["config/data##{param_key}"] = body_text
 
         old_value="" if old_value.nil?
@@ -70,6 +72,7 @@ module Napkin
         end
 
         nn = @nn.dup
+        # TODO: bad hash slash
         value = nn["config/data##{param_key}"]
 
         value="" if value.nil?

@@ -70,6 +70,7 @@ end
 # Tasks
 #
 
+# TODO: bad hash slash ...
 tasks_test = {
   'napkin#id' => "test",
   'napkin/tasks#task_name' =>"test task",
@@ -153,6 +154,11 @@ keysets_test = {
 # put_config('cerbee2', 'device_location', "man cave")
 # put_config('cerbee2', 'post_cycle', "60")
 # put_config('cerbee2', 'cycle_delay_milliseconds', "5000")
+
+# post_config('', 'hydra1')
+# put_config('hydra1', 'device_location', "man cave")
+# put_config('hydra1', 'post_cycle', "60")
+# put_config('hydra1', 'cycle_delay_milliseconds', "5000")
 
 # post_config('', 'bone1')
 # put_config('bone1', 'device_location', "tv room")

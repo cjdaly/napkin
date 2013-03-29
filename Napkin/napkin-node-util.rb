@@ -158,6 +158,7 @@ module Napkin
       def go_sub_path!(path, set_property_key_prefix = false)
         if (set_property_key_prefix) then
           @property_key_prefix = path
+          # TODO: bad hash
           @property_key_prefix_separator = "#"
         end
 
@@ -248,6 +249,7 @@ module Napkin
     end
 
     class PropertyGroup
+      # TODO: bad hash
       def initialize(id, separator='#')
         @id = id
         @separator = separator

@@ -108,6 +108,7 @@ module Napkin
     end
 
     def get_handler_class(nn, method)
+      # TODO: bad hash
       handler_class_name = nn["#{NAPKIN_HTTP_HANDLERS}##{method}"]
       if (handler_class_name.nil?) then
         return Napkin::Handlers::HttpMethodHandler

@@ -177,6 +177,7 @@ module Napkin
 
       def get_task_class(node)
         nn = Napkin::NodeUtil::NodeNav.new(node)
+        # TODO: bad slash
         nn.set_key_prefix("napkin/tasks")
 
         task_class_name = nn["task_class"]

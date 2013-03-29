@@ -2,11 +2,13 @@ require 'rubygems'
 require 'neo4j'
 
 module Napkin
-
+  
+  # TODO: bad hash ...
   NAPKIN_ID = 'napkin#id'
   NAPKIN_SUB = 'napkin#sub'
   NAPKIN_REF = 'napkin#ref'
   #
+  # TODO: bad hash slash ...
   NAPKIN_HTTP_HANDLERS = 'napkin/http/handlers'
   NAPKIN_HTTP_GET = NAPKIN_HTTP_HANDLERS + '#get'
   NAPKIN_HTTP_POST = NAPKIN_HTTP_HANDLERS + '#post'

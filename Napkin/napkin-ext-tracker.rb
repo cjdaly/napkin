@@ -149,13 +149,18 @@ module Napkin
 
             nn_items = Napkin::NodeUtil::NodeNav.new(feed_node)
             nn_items.go_sub!('items');
+            
+            # TODO: bad slash
             nn_items.set_key_prefix('tracker/feeds/feed/items')
 
             rss.items.each do |item|
               rss_item_hash = RSS_ITEM_GROUP.construct_hash('rss_item', item)
 
+              # TODO: bad hash slash
               guid = rss_item_hash['tracker/feeds/rss_item#guid']
               item_node = nil
+              
+              # TODO: bad hash slash
               nodes = RSSItemIndex.find('tracker/feeds/rss_item#guid' => guid)
               nodes.each do |n|
                 if (Napkin::NodeUtil::NodeNav.get_sup(n) == nn_items.node)
@@ -234,11 +239,13 @@ module Napkin
           extend Neo4j::Core::Index::ClassMethods
           include Neo4j::Core::Index
 
+          # TODO: bad hash slash
           self.node_indexer do
             index_names :exact => 'tracker_feeds_rss_item'
             trigger_on 'tracker/feeds/rss_item#_index' => true
           end
 
+          # TODO: bad hash slash
           index 'tracker/feeds/rss_item#guid'
         end
 
