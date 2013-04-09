@@ -10,6 +10,8 @@ require 'napkin-helpers'
 
 helpers Napkin::Helpers
 
+Napkin::Helpers::init_neo4j()
+
 user = nil
 use Rack::Auth::Basic, "authenticate" do |username, password|
   user = username

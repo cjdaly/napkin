@@ -74,11 +74,31 @@ json_batch_create_sub = [
 # neo4j_post(SRB, json_batch_create_sub)
 
 json_cypher = {
-  "query" => "start n=node(1) return n.`napkin.test.foo`",
+  "query" => "START n=node({node_id}) RETURN n.`napkin.test.foo`?",
   "params" => {
-  "x" => "y"
+  "node_id" => 0
   }
 }.to_json
-puts json_cypher
+# puts json_cypher
 neo4j_post(SRC, json_cypher)
+
+json_cypher_create_unique = {
+  "query" => 'START sup=node({sup_node_id}) CREATE UNIQUE sup-[:SUB]->(sub {`napkin.test.segment`: {sub_node_segment}}) RETURN sub',
+  "params" => {
+  "sup_node_id" => 0,
+  "sub_node_segment" => "hello"
+  }
+}.to_json
+puts json_cypher_create_unique
+neo4j_post(SRC, json_cypher_create_unique)
+
+json_cypher_get_sub = {
+  "query" => "START sup=node({sup_node_id}) MATCH sup-[:SUB]->sub WHERE sub.`napkin.test.segment`={sub_node_segment} RETURN sub",
+  "params" => {
+  "sup_node_id" => 0,
+  "sub_node_segment" => "yello"
+  }
+}.to_json
+# puts json_cypher_get_sub
+neo4j_post(SRC, json_cypher_get_sub)
 
