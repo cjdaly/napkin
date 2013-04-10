@@ -6,6 +6,9 @@ require 'sinatra'
 # fixed (?) by:
 set :bind, '0.0.0.0'
 
+#
+# plugins
+require 'plugin-config'
 require 'napkin-helpers'
 
 helpers Napkin::Helpers

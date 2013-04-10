@@ -11,7 +11,7 @@ module Napkin
       napkin_id = Neo.get_sub_id!('napkin')
       starts_id = Neo.get_sub_id!('starts', napkin_id)
       cycles_id = Neo.get_sub_id!('cycles', napkin_id)
-      interests_id = Neo.get_sub_id!('interests', napkin_id)
+      plugins_id = Neo.get_sub_id!('plugins', napkin_id)
 
       start_count = Neo.increment_counter('napkin.starts.count', starts_id)
       puts "STARTS: #{start_count}"
@@ -32,7 +32,7 @@ module Napkin
 
           handler_class = Handlers.get_handler_class(request.request_method, current_node_id)
           if (!handler_class.nil?) then
-            handler = handler_class.new(node_id, request, segments, i, user)
+            handler = handler_class.new(current_node_id, request, segments, i, user)
             result = handler.handle
             return result if !result.nil?
           end

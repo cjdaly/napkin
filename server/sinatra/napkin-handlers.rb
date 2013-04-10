@@ -1,3 +1,4 @@
+require 'cgi'
 require 'neo4j-util'
 
 module Napkin
@@ -8,12 +9,12 @@ module Napkin
     def Handlers.get_handler_class(method, node_id)
       handler_class_name = Neo.get_property("napkin.handlers.#{method}", node_id)
       if (handler_class_name.nil?) then
-        return nil
+        return (method == "GET") ? DefaultGetHandler : nil
       end
 
       handler_class = Napkin::Handlers.const_get(handler_class_name)
       if (handler_class.nil?) then
-        return nil?
+        return (method == "GET") ? DefaultGetHandler : nil
       end
 
       return handler_class
@@ -26,6 +27,11 @@ module Napkin
         @segments = segments
         @segment_index = segment_index
         @user = user
+        @query_hash = CGI.parse(@request.query_string)
+      end
+
+      def handle_at_destination_only
+        return true
       end
 
       def at_destination?
@@ -69,6 +75,14 @@ module Napkin
         return nil
       end
 
+    end
+
+    class DefaultGetHandler < HandlerBase
+      def handle
+        return nil unless at_destination?
+
+        return "DefaultGetHandler: #{@node_id} , #{get_segment}"
+      end
     end
 
   end
