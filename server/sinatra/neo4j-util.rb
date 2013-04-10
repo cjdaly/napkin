@@ -1,6 +1,6 @@
-require 'json'
 require 'rubygems'
 require 'rest_client'
+require 'json'
 
 module Napkin
   module Neo4jUtil
@@ -67,19 +67,18 @@ module Napkin
 
     def Neo4jUtil.increment_counter(key, node_id)
       value = Neo4jUtil.get_property(key, node_id)
-      puts "VAL: #{value}, #{value.class}, #{value.to_json}"
 
       if (value.nil?) then
         value = 0
       end
 
-      puts "VAL: #{value}, #{value.class}, #{value.to_json}"
       if (value.is_a? Numeric) then
         value += 1
         Neo4jUtil.set_property(key, value, node_id)
       else
         value = nil
       end
+
       return value
     end
 
