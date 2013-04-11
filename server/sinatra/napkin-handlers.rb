@@ -29,9 +29,9 @@ module Napkin
         @user = user
         @query_hash = CGI.parse(@request.query_string)
       end
-
-      def handle_at_destination_only
-        return true
+      
+      def handle?
+        return at_destination?
       end
 
       def at_destination?
@@ -79,8 +79,6 @@ module Napkin
 
     class DefaultGetHandler < HandlerBase
       def handle
-        return nil unless at_destination?
-
         return "DefaultGetHandler: #{@node_id} , #{get_segment}"
       end
     end

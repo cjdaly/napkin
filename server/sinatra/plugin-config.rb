@@ -5,60 +5,43 @@ module Napkin
   module Handlers
     class ConfigPostHandler < HandlerBase
       def handle
-        return nil unless at_destination?
-
         param_sub = @query_hash['sub'].first
+        # TODO: validate param_sub as good segment
         return nil if param_sub.to_s.empty?
 
-        #        nn = @nn.dup
-        #        if (nn.go_sub!(param_sub)) then
-        #          nn[NAPKIN_HTTP_POST] = "ConfigPostHandler"
-        #          nn[NAPKIN_HTTP_PUT] = "ConfigPutHandler"
-        #          nn[NAPKIN_HTTP_GET] = "ConfigGetHandler"
-        #        end
+        sub_node_id = Neo.get_sub_id!(param_sub, @node_id)
+        Neo.set_property('napkin.handlers.POST', 'ConfigPostHandler', sub_node_id)
+        Neo.set_property('napkin.handlers.PUT', 'ConfigPutHandler', sub_node_id)
+        Neo.set_property('napkin.handlers.GET', 'ConfigGetHandler', sub_node_id)
 
-        return "ConfigPostHandler"
+        return "ConfigPostHandler, param_sub: #{param_sub}"
       end
     end
 
     class ConfigPutHandler < HandlerBase
       def handle
-        return nil unless at_destination?
-
         param_key = @query_hash['key'].first
+        # TODO: validate param_sub as good segment
         return nil if param_key.to_s.empty?
 
         @request.body.rewind
-        body_text = @request.body.read
+        value = @request.body.read
+        
+        Neo.set_property(param_key, value, @node_id)
 
-        #        nn = @nn.dup
-        #        # TODO: bad hash slash
-        #        old_value = nn["config/data##{param_key}"]
-        #        # TODO: bad hash slash
-        #        nn["config/data##{param_key}"] = body_text
-        #
-        #        old_value="" if old_value.nil?
-        #        return old_value.to_s
-
-        return "ConfigPutHandler"
+        return "ConfigPutHandler, param_key: #{param_key}\n#{value}"
       end
     end
 
     class ConfigGetHandler < HandlerBase
       def handle
-        return nil unless at_destination?
-
         param_key = @query_hash['key'].first
+        # TODO: validate param_sub as good segment
         return nil if param_key.to_s.empty?
 
-        #        nn = @nn.dup
-        #        # TODO: bad hash slash
-        #        value = nn["config/data##{param_key}"]
-        #
-        #        value="" if value.nil?
-        #        return value.to_s
+        value = Neo.get_property(param_key, @node_id)
 
-        return "ConfigGetHandler"
+        return "ConfigGetHandler, param_key: #{param_key}\n#{value}"
       end
     end
   end

@@ -12,6 +12,10 @@ module Napkin
       starts_id = Neo.get_sub_id!('starts', napkin_id)
       cycles_id = Neo.get_sub_id!('cycles', napkin_id)
       plugins_id = Neo.get_sub_id!('plugins', napkin_id)
+      
+      #TODO: plugin-specific init
+      config_id = Neo.get_sub_id!('config')
+      Neo.set_property('napkin.handlers.POST', 'ConfigPostHandler', config_id)
 
       start_count = Neo.increment_counter('napkin.starts.count', starts_id)
       puts "STARTS: #{start_count}"
@@ -33,8 +37,10 @@ module Napkin
           handler_class = Handlers.get_handler_class(request.request_method, current_node_id)
           if (!handler_class.nil?) then
             handler = handler_class.new(current_node_id, request, segments, i, user)
-            result = handler.handle
-            return result if !result.nil?
+            if (handler.handle?) then
+              result = handler.handle
+              return result if !result.nil?
+            end
           end
 
           puts "SUB: #{segment} : #{current_node_id} in #{path}"
