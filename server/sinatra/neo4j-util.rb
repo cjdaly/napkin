@@ -45,7 +45,8 @@ module Napkin
     end
 
     def Neo4jUtil.get_property(key, node_id)
-      # TODO: validate key as segment
+      return nil unless Neo4jUtil.valid_segment?(key)
+
       cypher_get_property = {
         "query" => "START n=node({node_id}) RETURN n.`#{key}`?",
         "params" => {
@@ -57,7 +58,8 @@ module Napkin
     end
 
     def Neo4jUtil.set_property(key, value, node_id)
-      # TODO: validate key as segment
+      return nil unless Neo4jUtil.valid_segment?(key)
+
       cypher_set_property = {
         "query" => "START n=node({node_id}) SET n.`#{key}`={value} RETURN null",
         "params" => {
@@ -89,11 +91,23 @@ module Napkin
     def Neo4jUtil.next_sub_id!(sup_node_id)
       sub_count = Neo4jUtil.increment_counter('napkin.sub_count', sup_node_id)
       return nil if sub_count.nil?
-      return Neo4jUtil.get_sub_id!(sub_count.to_s, sup_node_id)
+      sub_node_id =  Neo4jUtil.get_sub_id!(sub_count.to_s, sup_node_id)
+      Neo4jUtil.set_property('napkin.position', sub_count, sub_node_id)
+      return sub_node_id
+    end
+
+    SEGMENT_MATCH = /^[-_.a-zA-Z0-9]+$/
+
+    def Neo4jUtil.valid_segment?(node_segment)
+      return false if node_segment.nil?
+      return false unless node_segment.is_a? String
+      match = SEGMENT_MATCH.match(node_segment)
+      return !match.nil?
     end
 
     def Neo4jUtil.get_sub_id!(sub_node_segment, sup_node_id)
-      # TODO: validate sub_node_segment
+      return nil unless Neo4jUtil.valid_segment?(sub_node_segment)
+
       cypher_create_unique = {
         "query" => 'START sup=node({sup_node_id}) CREATE UNIQUE sup-[:SUB]->(sub {`napkin.segment` : {sub_node_segment}}) RETURN ID(sub)',
         "params" => {
@@ -106,7 +120,8 @@ module Napkin
     end
 
     def Neo4jUtil.get_sub_id(sub_node_segment, sup_node_id)
-      # TODO: validate sub_node_segment
+      return nil unless Neo4jUtil.valid_segment?(sub_node_segment)
+
       cypher_get_sub = {
         "query" => 'START sup=node({sup_node_id}) MATCH sup-[:SUB]->sub WHERE sub.`napkin.segment`! = {sub_node_segment} RETURN ID(sub)',
         "params" => {

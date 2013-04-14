@@ -41,34 +41,20 @@ module Napkin
       root_node_id = Neo.get_root_node_id()
       current_node_id = root_node_id
       current_segment_index = 0
+
       segments.each_with_index do |segment, i|
-        next if segment.to_s.empty?
+        current_node_id = Neo.get_sub_id(segment, current_node_id)
+        break if current_node_id.nil?
 
-        sub_node_id = nil
-
-        # napkin.segment value may be integer
-        segment_i = segment.to_i
-        if (segment_i > 0) then
-          sub_node_id = Neo.get_sub_id(segment_i, current_node_id)
-        end
-
-        # napkin.segment value may be string
-        if (sub_node_id.nil?) then
-          sub_node_id = Neo.get_sub_id(segment, current_node_id)
-        end
-
-        if (!sub_node_id.nil?) then
-          current_node_id = sub_node_id
-
-          handler_class = Handlers.get_handler_class(request.request_method, current_node_id)
-          if (!handler_class.nil?) then
-            handler = handler_class.new(current_node_id, request, segments, i, user)
-            if (handler.handle?) then
-              result = handler.handle
-              return result if !result.nil?
-            end
+        handler_class = Handlers.get_handler_class(request.request_method, current_node_id)
+        if (!handler_class.nil?) then
+          handler = handler_class.new(current_node_id, request, segments, i, user)
+          if (handler.handle?) then
+            result = handler.handle
+            return result if !result.nil?
           end
         end
+
       end
 
       return Neo.get_properties_text(root_node_id)
