@@ -14,6 +14,7 @@ require 'napkin-helpers'
 helpers Napkin::Helpers
 
 Napkin::Helpers::init_neo4j()
+# Napkin::Helpers::start_pulse()
 
 user = nil
 use Rack::Auth::Basic, "authenticate" do |username, password|

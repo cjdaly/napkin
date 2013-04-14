@@ -79,7 +79,7 @@ module Napkin
 
     class DefaultGetHandler < HandlerBase
       def handle
-        return "DefaultGetHandler: #{@node_id} , #{get_segment}"
+        return Neo.get_properties_text(@node_id)
       end
     end
 

@@ -18,26 +18,30 @@ module Napkin
     end
 
     def Neo4jUtil.get(url)
-      puts "NEO4J GET: #{url}"
-
       response = RestClient.get(url, :accept=>:json)
-
-      puts response.to_s
-
       response_json_object = JSON.parse(response.to_s)
       return response_json_object
     end
 
     def Neo4jUtil.post(url, json_object)
-      puts "NEO4J POST: #{url}"
-
       json = json_object.to_json
       response = RestClient.post(url, json, :content_type=>:json, :accept=>:json)
-
-      puts response.to_s
-
       response_json_object = JSON.parse(response.to_s)
       return response_json_object
+    end
+
+    def Neo4jUtil.get_properties(node_id)
+      return Neo4jUtil.get("#{SRN}/#{node_id}/properties")
+    end
+
+    def Neo4jUtil.get_properties_text(node_id)
+      node_properties = Neo4jUtil.get_properties(node_id)
+
+      properties_text = "ID=#{node_id}\n"
+      node_properties.each do |key, value|
+        properties_text << "#{key}=#{value}\n"
+      end
+      return properties_text
     end
 
     def Neo4jUtil.get_property(key, node_id)
@@ -49,7 +53,7 @@ module Napkin
         }
       }
       raw = Neo4jUtil.post(SRC, cypher_get_property)
-      return Neo4jUtil::extract_cypher_result(raw['data'])
+      return Neo4jUtil.extract_cypher_result(raw['data'])
     end
 
     def Neo4jUtil.set_property(key, value, node_id)
@@ -82,7 +86,13 @@ module Napkin
       return value
     end
 
-    def Neo4jUtil.get_sub_id!(sub_node_segment, sup_node_id = 0)
+    def Neo4jUtil.next_sub_id!(sup_node_id)
+      sub_count = Neo4jUtil.increment_counter('napkin.sub_count', sup_node_id)
+      return nil if sub_count.nil?
+      return Neo4jUtil.get_sub_id!(sub_count.to_s, sup_node_id)
+    end
+
+    def Neo4jUtil.get_sub_id!(sub_node_segment, sup_node_id)
       # TODO: validate sub_node_segment
       cypher_create_unique = {
         "query" => 'START sup=node({sup_node_id}) CREATE UNIQUE sup-[:SUB]->(sub {`napkin.segment` : {sub_node_segment}}) RETURN ID(sub)',
@@ -92,10 +102,10 @@ module Napkin
         }
       }
       raw = Neo4jUtil.post(SRC, cypher_create_unique)
-      return Neo4jUtil::extract_cypher_result(raw['data'])
+      return Neo4jUtil.extract_cypher_result(raw['data'])
     end
 
-    def Neo4jUtil.get_sub_id(sub_node_segment, sup_node_id = 0)
+    def Neo4jUtil.get_sub_id(sub_node_segment, sup_node_id)
       # TODO: validate sub_node_segment
       cypher_get_sub = {
         "query" => 'START sup=node({sup_node_id}) MATCH sup-[:SUB]->sub WHERE sub.`napkin.segment`! = {sub_node_segment} RETURN ID(sub)',
@@ -106,6 +116,10 @@ module Napkin
       }
       raw =  Neo4jUtil.post(SRC, cypher_get_sub)
       return extract_cypher_result(raw['data'])
+    end
+
+    def Neo4jUtil.get_root_node_id()
+      return Neo4jUtil.get_sub_id!('ROOT', 0)
     end
 
     #internal helpers
