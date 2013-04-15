@@ -1,3 +1,13 @@
+####
+# Copyright (c) 2013 Chris J Daly (github user cjdaly)
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#   cjdaly - initial API and implementation
+####
 require 'yaml'
 require 'rss/2.0'
 
@@ -149,7 +159,7 @@ module Napkin
 
             nn_items = Napkin::NodeUtil::NodeNav.new(feed_node)
             nn_items.go_sub!('items');
-            
+
             # TODO: bad slash
             nn_items.set_key_prefix('tracker/feeds/feed/items')
 
@@ -159,7 +169,7 @@ module Napkin
               # TODO: bad hash slash
               guid = rss_item_hash['tracker/feeds/rss_item#guid']
               item_node = nil
-              
+
               # TODO: bad hash slash
               nodes = RSSItemIndex.find('tracker/feeds/rss_item#guid' => guid)
               nodes.each do |n|

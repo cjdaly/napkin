@@ -1,3 +1,13 @@
+####
+# Copyright (c) 2013 Chris J Daly (github user cjdaly)
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#   cjdaly - initial API and implementation
+####
 require 'yaml'
 require 'rubygems'
 require 'neo4j'
@@ -124,7 +134,7 @@ module Napkin
 
       def find_sub(id)
         sub = nil
-        
+
         Neo4j::Transaction.run do
           # TODO: got exception here after several days of continuous run:
           ## org.apache.lucene.store.AlreadyClosedException: this IndexReader is closed
@@ -136,7 +146,7 @@ module Napkin
             end
           end
         end
-   
+
         return sub
       end
 
