@@ -6,8 +6,8 @@ module Napkin
     #
     Neo = Napkin::Neo4jUtil
     #
-    def Handlers.get_handler_class(method, node_id)
-      handler_class_name = Neo.get_property("napkin.handlers.#{method}", node_id)
+    def Handlers.get_handler_class(method, segment_node_id)
+      handler_class_name = Neo.get_property("napkin.handlers.#{method}", segment_node_id)
       if (handler_class_name.nil?) then
         return (method == "GET") ? DefaultGetHandler : nil
       end
@@ -21,15 +21,16 @@ module Napkin
     end
 
     class HandlerBase
-      def initialize(node_id, request, segments, segment_index, user)
-        @node_id = node_id
+      def initialize(segment_node_id, handle_node_id, request, segments, segment_index, user)
+        @segment_node_id = segment_node_id
+        @handle_node_id = handle_node_id
         @request = request
         @segments = segments
         @segment_index = segment_index
         @user = user
         @query_hash = CGI.parse(@request.query_string)
       end
-      
+
       def handle?
         return at_destination?
       end
@@ -79,7 +80,7 @@ module Napkin
 
     class DefaultGetHandler < HandlerBase
       def handle
-        return Neo.get_properties_text(@node_id)
+        return Neo.get_properties_text(@segment_node_id)
       end
     end
 

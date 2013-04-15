@@ -9,7 +9,7 @@ module Napkin
         # TODO: validate param_sub as good segment
         return nil if param_sub.to_s.empty?
 
-        sub_node_id = Neo.get_sub_id!(param_sub, @node_id)
+        sub_node_id = Neo.get_sub_id!(param_sub, @segment_node_id)
         Neo.set_property('napkin.handlers.POST', 'ConfigPostHandler', sub_node_id)
         Neo.set_property('napkin.handlers.PUT', 'ConfigPutHandler', sub_node_id)
         Neo.set_property('napkin.handlers.GET', 'ConfigGetHandler', sub_node_id)
@@ -26,8 +26,8 @@ module Napkin
 
         @request.body.rewind
         value = @request.body.read
-        
-        Neo.set_property(param_key, value, @node_id)
+
+        Neo.set_property(param_key, value, @segment_node_id)
 
         return "ConfigPutHandler, param_key: #{param_key}\n#{value}"
       end
@@ -39,7 +39,7 @@ module Napkin
         # TODO: validate param_sub as good segment
         return nil if param_key.to_s.empty?
 
-        value = Neo.get_property(param_key, @node_id)
+        value = Neo.get_property(param_key, @segment_node_id)
 
         return "ConfigGetHandler, param_key: #{param_key}\n#{value}"
       end

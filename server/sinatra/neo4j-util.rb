@@ -72,20 +72,16 @@ module Napkin
     end
 
     def Neo4jUtil.increment_counter(key, node_id)
-      value = Neo4jUtil.get_property(key, node_id)
+      return nil unless Neo4jUtil.valid_segment?(key)
 
-      if (value.nil?) then
-        value = 0
-      end
-
-      if (value.is_a? Numeric) then
-        value += 1
-        Neo4jUtil.set_property(key, value, node_id)
-      else
-        value = nil
-      end
-
-      return value
+      cypher_increment_counter = {
+        "query" => "START n=node({node_id}) SET n.`#{key}` = COALESCE(n.`#{key}`?, 0) + 1 RETURN n.`#{key}`",
+        "params" => {
+        "node_id" => node_id,
+        }
+      }
+      raw = Neo4jUtil.post(SRC, cypher_increment_counter)
+      return Neo4jUtil.extract_cypher_result(raw['data'])
     end
 
     def Neo4jUtil.next_sub_id!(sup_node_id)
