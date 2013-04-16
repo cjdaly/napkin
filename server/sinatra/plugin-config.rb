@@ -47,11 +47,12 @@ module Napkin
       def handle
         param_key = @query_hash['key'].first
         # TODO: validate param_sub as good segment
-        return nil if param_key.to_s.empty?
+        if param_key.to_s.empty? then
+          return Neo.get_properties_text(@segment_node_id)
+        end
 
         value = Neo.get_property(param_key, @segment_node_id)
-
-        return "ConfigGetHandler, param_key: #{param_key}\n#{value}"
+        return value
       end
     end
   end

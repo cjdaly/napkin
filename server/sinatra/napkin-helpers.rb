@@ -19,7 +19,6 @@ module Napkin
     #
     NodeId = {}
 
-    #
     def Helpers.init_neo4j()
       start_time = Time.now
 
@@ -35,9 +34,11 @@ module Napkin
       puts "STARTS: #{start_count}"
 
       NodeId[:handles] = Neo.get_sub_id!('handles', NodeId[:napkin])
+      NodeId[:pulses] = Neo.get_sub_id!('pulses', NodeId[:napkin])
+      NodeId[:tasks] = Neo.get_sub_id!('tasks', NodeId[:napkin])
+      Neo.set_property('napkin.handlers.POST', 'TaskPostHandler', NodeId[:tasks])
 
-      cycles_id = Neo.get_sub_id!('cycles', NodeId[:napkin])
-      plugins_id = Neo.get_sub_id!('plugins', NodeId[:napkin])
+      NodeId[:plugins] = Neo.get_sub_id!('plugins', NodeId[:napkin])
 
       #TODO: plugin-specific init
       config_id = Neo.get_sub_id!('config', NodeId[:root] )
@@ -45,7 +46,7 @@ module Napkin
     end
 
     def Helpers.start_pulse()
-      pulse = Napkin::Tasks::Pulse.new
+      pulse = Napkin::Tasks::Pulse.new(NodeId[:pulses], NodeId[:tasks])
       pulse.start()
     end
 
@@ -58,15 +59,14 @@ module Napkin
         handle_node_id = Neo.next_sub_id!(NodeId[:handles])
         Neo.set_property('napkin.handles.handle_time', handle_time.to_i, handle_node_id)
 
-        current_node_id = NodeId[:root]
-        current_segment_index = 0
+        segment_node_id = NodeId[:root]
         segments.each_with_index do |segment, i|
-          current_node_id = Neo.get_sub_id(segment, current_node_id)
-          break if current_node_id.nil?
+          segment_node_id = Neo.get_sub_id(segment, segment_node_id)
+          break if segment_node_id.nil?
 
-          handler_class = Handlers.get_handler_class(request.request_method, current_node_id)
+          handler_class = Handlers.get_handler_class(request.request_method, segment_node_id)
           if (!handler_class.nil?) then
-            handler = handler_class.new(current_node_id, handle_node_id, request, segments, i, user)
+            handler = handler_class.new(segment_node_id, handle_node_id, request, segments, i, user)
             if (handler.handle?) then
               result = handler.handle
               return result if !result.nil?

@@ -9,39 +9,38 @@
 #   cjdaly - initial API and implementation
 ####
 require 'neo4j-util'
+require 'napkin-handlers'
 
 module Napkin
   module Tasks
     #
     Neo = Napkin::Neo4jUtil
     #
+    TaskData = {}
+
     class Pulse
-      def start
+      def initialize(pulses_node_id, tasks_node_id)
+        @pulses_node_id = pulses_node_id
+        @tasks_node_id = tasks_node_id
+      end
+
+      def start()
         @enabled = true
         @thread = Thread.new do
           begin
             puts "Pulse thread started..."
 
-            init_tasks
+            pulse_node_id = Neo.next_sub_id!(@pulses_node_id)
+            Neo.set_property('napkin.pulse.start_time_i', Time.now.to_i, pulse_node_id)
 
             puts "Pulse thread initialized..."
-            while (next_cycle)
-              nn = Napkin::NodeUtil::NodeNav.new
-              nn.go_sub_path!('napkin/cycles', true)
-              cycle_count = nn['cycle_count']
-              puts "Pulse thread - cycle: #{cycle_count}"
-
-              pre_cycle_delay_seconds = nn.get_or_init('pre_cycle_delay_seconds', 5)
-              sleep pre_cycle_delay_seconds
-              if (@enabled)
-                process_tasks
-                puts "Pulse thread refreshed..."
-              else
-                puts "Pulse thread disabled..."
+            while (@enabled)
+              puts "Pulse thread looping..."
+              task_node_ids = Neo4jUtil.get_sub_ids(@tasks_node_id)
+              task_node_ids.each do |task_node_id|
+                puts "Task: #{task_node_id}"
               end
-
-              post_cycle_delay_seconds = nn.get_or_init('post_cycle_delay_seconds', 1)
-              sleep post_cycle_delay_seconds
+              sleep 3
             end
             puts "Pulse thread stopped..."
           rescue StandardError => err
@@ -50,12 +49,19 @@ module Napkin
         end
       end
 
-      def next_cycle
-        cycle_start_time = Time.now
-      end
+    end
+  end
 
-      def init_tasks
+  module Handlers
+    class TaskPostHandler < HandlerBase
+      def handle
+        param_sub = @query_hash['sub'].first
+        # TODO: validate param_sub as good segment
+        return nil if param_sub.to_s.empty?
 
+        sub_node_id = Neo.get_sub_id!(param_sub, @segment_node_id)
+
+        return "TaskPostHandler, param_sub: #{param_sub}"
       end
     end
   end

@@ -115,7 +115,7 @@ module Napkin
       return nil unless Neo4jUtil.valid_segment?(sub_node_segment)
 
       cypher_create_unique = {
-        "query" => 'START sup=node({sup_node_id}) CREATE UNIQUE sup-[:SUB]->(sub {`napkin.segment` : {sub_node_segment}}) RETURN ID(sub)',
+        "query" => 'START sup=node({sup_node_id}) CREATE UNIQUE sup-[:NAPKIN_SUB]->(sub {`napkin.segment` : {sub_node_segment}}) RETURN ID(sub)',
         "params" => {
         "sup_node_id" => sup_node_id,
         "sub_node_segment" => sub_node_segment
@@ -129,7 +129,7 @@ module Napkin
       return nil unless Neo4jUtil.valid_segment?(sub_node_segment)
 
       cypher_get_sub = {
-        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:SUB]->sub WHERE sub.`napkin.segment`! = {sub_node_segment} RETURN ID(sub)',
+        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:NAPKIN_SUB]->sub WHERE sub.`napkin.segment`! = {sub_node_segment} RETURN ID(sub)',
         "params" => {
         "sup_node_id" => sup_node_id,
         "sub_node_segment" => sub_node_segment
@@ -137,6 +137,21 @@ module Napkin
       }
       raw =  Neo4jUtil.post(SRC, cypher_get_sub)
       return extract_cypher_result(raw['data'])
+    end
+
+    def Neo4jUtil.get_sub_ids(sup_node_id)
+      cypher_get_subs = {
+        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:NAPKIN_SUB]->sub RETURN ID(sub)',
+        "params" => {
+        "sup_node_id" => sup_node_id,
+        }
+      }
+      raw =  Neo4jUtil.post(SRC, cypher_get_subs)
+      sub_ids = []
+      raw['data'].each do |data|
+        sub_ids << data[0]
+      end
+      return sub_ids
     end
 
     def Neo4jUtil.get_root_node_id()
