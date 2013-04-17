@@ -20,9 +20,9 @@ module Napkin
         return nil if param_sub.to_s.empty?
 
         sub_node_id = Neo.get_sub_id!(param_sub, @segment_node_id)
-        Neo.set_property('napkin.handlers.POST', 'ConfigPostHandler', sub_node_id)
-        Neo.set_property('napkin.handlers.PUT', 'ConfigPutHandler', sub_node_id)
-        Neo.set_property('napkin.handlers.GET', 'ConfigGetHandler', sub_node_id)
+        Neo.set_property('napkin.handlers.POST.class_name', 'ConfigPostHandler', sub_node_id)
+        Neo.set_property('napkin.handlers.PUT.class_name', 'ConfigPutHandler', sub_node_id)
+        Neo.set_property('napkin.handlers.GET.class_name', 'ConfigGetHandler', sub_node_id)
 
         return "ConfigPostHandler, param_sub: #{param_sub}"
       end

@@ -36,13 +36,13 @@ module Napkin
       NodeId[:handles] = Neo.get_sub_id!('handles', NodeId[:napkin])
       NodeId[:pulses] = Neo.get_sub_id!('pulses', NodeId[:napkin])
       NodeId[:tasks] = Neo.get_sub_id!('tasks', NodeId[:napkin])
-      Neo.set_property('napkin.handlers.POST', 'TaskPostHandler', NodeId[:tasks])
+      Neo.set_property('napkin.handlers.POST.class_name', 'TaskPostHandler', NodeId[:tasks])
 
       NodeId[:plugins] = Neo.get_sub_id!('plugins', NodeId[:napkin])
 
       #TODO: plugin-specific init
       config_id = Neo.get_sub_id!('config', NodeId[:root] )
-      Neo.set_property('napkin.handlers.POST', 'ConfigPostHandler', config_id)
+      Neo.set_property('napkin.handlers.POST.class_name', 'ConfigPostHandler', config_id)
     end
 
     def Helpers.start_pulse()
@@ -64,7 +64,7 @@ module Napkin
           segment_node_id = Neo.get_sub_id(segment, segment_node_id)
           break if segment_node_id.nil?
 
-          handler_class = Handlers.get_handler_class(request.request_method, segment_node_id)
+          handler_class = get_handler_class(request.request_method, segment_node_id)
           if (!handler_class.nil?) then
             handler = handler_class.new(segment_node_id, handle_node_id, request, segments, i, user)
             if (handler.handle?) then
@@ -80,6 +80,25 @@ module Napkin
 
       # TODO: some kind of 404
       return Neo.get_properties_text(NodeId[:root])
+    end
+
+    def get_handler_class(method, segment_node_id)
+      handler_class_name = Neo.get_property("napkin.handlers.#{method}.class_name", segment_node_id)
+      if (handler_class_name.nil?) then
+        return (method == "GET") ? Handlers::DefaultGetHandler : nil
+      end
+
+      begin
+        handler_class = Napkin::Handlers.const_get(handler_class_name)
+      rescue StandardError => err
+        handler_class = nil
+      end
+
+      if (handler_class.nil?) then
+        return (method == "GET") ? Handlers::DefaultGetHandler : nil
+      end
+
+      return handler_class
     end
 
     class Authenticator

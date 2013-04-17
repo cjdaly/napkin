@@ -29,4 +29,8 @@ config_url = "http://test:test@localhost:4567/config"
 # response = RestClient.put(foo_url, "Hello World!")
 
 tasks_url = "http://test:test@localhost:4567/napkin/tasks"
-# test_task = RestClient.post(tasks_url, "", {:params => {'sub' => 'test'}})
+#test_task = RestClient.post(
+#tasks_url,
+#"",
+#{:params => {'sub' => 'test', 'task_class_name' => 'TestTask'}}
+#)
