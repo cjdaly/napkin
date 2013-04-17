@@ -10,6 +10,7 @@
 ####
 require 'neo4j-util'
 require 'napkin-tasks'
+require 'napkin-pulse'
 require 'napkin-handlers'
 
 module Napkin
@@ -46,7 +47,7 @@ module Napkin
     end
 
     def Helpers.start_pulse()
-      pulse = Napkin::Tasks::Pulse.new(NodeId[:pulses], NodeId[:tasks])
+      pulse = Napkin::Pulse::Driver.new(NodeId[:pulses], NodeId[:tasks])
       pulse.start()
     end
 
