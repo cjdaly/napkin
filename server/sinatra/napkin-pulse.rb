@@ -43,7 +43,8 @@ module Napkin
               task_node_ids = Neo.get_sub_ids(@tasks_node_id)
               task_node_ids.each do |task_node_id|
                 task = get_task_instance(task_node_id, pulse_node_id)
-                end_of_pulse ||= pulse_task(task) unless task.nil?
+                work_pulse = pulse_task(task) unless task.nil?
+                end_of_pulse ||= work_pulse
               end
               sleep 1
               if (end_of_pulse) then
