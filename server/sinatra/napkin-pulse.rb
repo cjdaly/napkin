@@ -67,8 +67,12 @@ module Napkin
 
       def pulse_task(task)
         begin
-          if (task.todo?) then
-            task.doit!
+          if (task.init?) then
+            task.init
+            task.init!
+            return true
+          elsif (task.todo?)
+            task.doit
             return true
           end
         rescue StandardError => err

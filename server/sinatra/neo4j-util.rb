@@ -19,6 +19,17 @@ module Napkin
     SRB = SR + "/batch"
     SRC = SR + "/cypher"
     #
+    Pinned = {}
+
+    #
+    def Neo4jUtil.pin!(node_key, node_id)
+      Pinned[node_key] = node_id
+    end
+
+    def Neo4jUtil.pin(node_key)
+      return Pinned[node_key]
+    end
+
     def Neo4jUtil.node_url(node_id)
       return "#{SRN}/#{node_id}"
     end

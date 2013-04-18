@@ -18,36 +18,30 @@ module Napkin
     #
     Neo = Napkin::Neo4jUtil
     #
-    NodeId = {}
-
     def Helpers.init_neo4j()
       start_time = Time.now
 
-      NodeId[:root] = Neo.get_root_node_id()
-      NodeId[:napkin] = Neo.get_sub_id!('napkin', NodeId[:root])
-      NodeId[:starts] = Neo.get_sub_id!('starts', NodeId[:napkin])
-      NodeId[:start] = Neo.next_sub_id!(NodeId[:starts])
+      Neo.pin!(:root, Neo.get_root_node_id())
+      Neo.pin!(:napkin, Neo.get_sub_id!('napkin', Neo.pin(:root)))
+      Neo.pin!(:starts, Neo.get_sub_id!('starts', Neo.pin(:napkin)))
+      Neo.pin!(:start, Neo.next_sub_id!(Neo.pin(:starts)))
 
-      Neo.set_property('napkin.starts.start_time', "#{start_time}", NodeId[:start])
-      Neo.set_property('napkin.starts.start_time_i', start_time.to_i, NodeId[:start])
+      Neo.set_property('napkin.starts.start_time', "#{start_time}", Neo.pin(:start))
+      Neo.set_property('napkin.starts.start_time_i', start_time.to_i, Neo.pin(:start))
 
-      start_count = Neo.get_property('napkin.sub_count', NodeId[:starts])
+      start_count = Neo.get_property('napkin.sub_count', Neo.pin(:starts))
       puts "STARTS: #{start_count}"
 
-      NodeId[:handles] = Neo.get_sub_id!('handles', NodeId[:napkin])
-      NodeId[:pulses] = Neo.get_sub_id!('pulses', NodeId[:napkin])
-      NodeId[:tasks] = Neo.get_sub_id!('tasks', NodeId[:napkin])
-      Neo.set_property('napkin.handlers.POST.class_name', 'TaskPostHandler', NodeId[:tasks])
+      Neo.pin!(:handles, Neo.get_sub_id!('handles', Neo.pin(:napkin)))
 
-      NodeId[:plugins] = Neo.get_sub_id!('plugins', NodeId[:napkin])
+      Neo.pin!(:pulses, Neo.get_sub_id!('pulses', Neo.pin(:napkin)))
 
-      #TODO: plugin-specific init
-      config_id = Neo.get_sub_id!('config', NodeId[:root] )
-      Neo.set_property('napkin.handlers.POST.class_name', 'ConfigPostHandler', config_id)
+      Neo.pin!(:tasks, Neo.get_sub_id!('tasks', Neo.pin(:napkin)))
+      Neo.set_property('napkin.handlers.POST.class_name', 'Napkin_TaskPostHandler', Neo.pin(:tasks))
     end
 
     def Helpers.start_pulse()
-      pulse = Napkin::Pulse::Driver.new(NodeId[:pulses], NodeId[:tasks])
+      pulse = Napkin::Pulse::Driver.new(Neo.pin(:pulses), Neo.pin(:tasks))
       pulse.start()
     end
 
@@ -57,10 +51,10 @@ module Napkin
         content_type 'text/plain'
         segments = path.split('/')
 
-        handle_node_id = Neo.next_sub_id!(NodeId[:handles])
+        handle_node_id = Neo.next_sub_id!(Neo.pin(:handles))
         Neo.set_property('napkin.handles.handle_time', handle_time.to_i, handle_node_id)
 
-        segment_node_id = NodeId[:root]
+        segment_node_id = Neo.pin(:root)
         segments.each_with_index do |segment, i|
           segment_node_id = Neo.get_sub_id(segment, segment_node_id)
           break if segment_node_id.nil?
@@ -80,7 +74,7 @@ module Napkin
       end
 
       # TODO: some kind of 404
-      return Neo.get_properties_text(NodeId[:root])
+      return Neo.get_properties_text(Neo.pin(:root))
     end
 
     def get_handler_class(method, segment_node_id)

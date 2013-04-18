@@ -17,20 +17,25 @@ SRN = SR + "/node"
 SRB = SR + "/batch"
 SRC = SR + "/cypher"
 
-def napkin_post(url, body_text)
-  response = RestClient.post(url, body_text, {:params => {'sub' => sub_id}})
+def napkin_post(url, body_text, params)
+  response = RestClient.post(url, body_text, {:params => params})
   puts "RESPONSE: #{response}"
-  return response.to_s
 end
 
-config_url = "http://test:test@localhost:4567/config"
-# response = RestClient.post(config_url, "", {:params => {'sub' => 'foo'}})
-# foo_url = config_url + "/test?key=foo"
-# response = RestClient.put(foo_url, "Hello World!")
+def napkin_put(url, body_text, params)
+  response = RestClient.put(url, body_text, {:params => params})
+  puts "RESPONSE: #{response}"
+end
 
 tasks_url = "http://test:test@localhost:4567/napkin/tasks"
-#test_task = RestClient.post(
-#tasks_url,
-#"",
-#{:params => {'sub' => 'test', 'task_class_name' => 'TestTask'}}
-#)
+config_task = napkin_post(tasks_url, "", {'sub' => 'config', 'task_class_name' => 'Napkin_ConfigTask'})
+
+# wait for task init
+sleep 5
+
+config_url = "http://test:test@localhost:4567/config"
+response = napkin_post(config_url, "", {'sub' => 'test'})
+
+foo_url = config_url + "/test"
+response = napkin_put(foo_url, "Hello World!", {'key' => 'foo'})
+

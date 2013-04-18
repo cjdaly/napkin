@@ -9,26 +9,44 @@
 #   cjdaly - initial API and implementation
 ####
 require 'neo4j-util'
+require 'napkin-tasks'
 require 'napkin-handlers'
 
 module Napkin
+  module Tasks
+    class Napkin_ConfigTask < TaskBase
+      def init
+        root_node_id = Neo.pin(:root)
+        config_id = Neo.get_sub_id!('config', root_node_id)
+        Neo.set_property('napkin.handlers.POST.class_name', 'Napkin_ConfigPostHandler', config_id)
+      end
+
+      def todo?
+        return false
+      end
+
+      def doit
+      end
+    end
+  end
+
   module Handlers
-    class ConfigPostHandler < HandlerBase
+    class Napkin_ConfigPostHandler < HandlerBase
       def handle
         param_sub = @query_hash['sub'].first
         # TODO: validate param_sub as good segment
         return nil if param_sub.to_s.empty?
 
         sub_node_id = Neo.get_sub_id!(param_sub, @segment_node_id)
-        Neo.set_property('napkin.handlers.POST.class_name', 'ConfigPostHandler', sub_node_id)
-        Neo.set_property('napkin.handlers.PUT.class_name', 'ConfigPutHandler', sub_node_id)
-        Neo.set_property('napkin.handlers.GET.class_name', 'ConfigGetHandler', sub_node_id)
+        Neo.set_property('napkin.handlers.POST.class_name', 'Napkin_ConfigPostHandler', sub_node_id)
+        Neo.set_property('napkin.handlers.PUT.class_name', 'Napkin_ConfigPutHandler', sub_node_id)
+        Neo.set_property('napkin.handlers.GET.class_name', 'Napkin_ConfigGetHandler', sub_node_id)
 
         return "ConfigPostHandler, param_sub: #{param_sub}"
       end
     end
 
-    class ConfigPutHandler < HandlerBase
+    class Napkin_ConfigPutHandler < HandlerBase
       def handle
         param_key = @query_hash['key'].first
         # TODO: validate param_sub as good segment
@@ -43,10 +61,11 @@ module Napkin
       end
     end
 
-    class ConfigGetHandler < HandlerBase
+    class Napkin_ConfigGetHandler < HandlerBase
       def handle
         param_key = @query_hash['key'].first
         # TODO: validate param_sub as good segment
+
         if param_key.to_s.empty? then
           return Neo.get_properties_text(@segment_node_id)
         end

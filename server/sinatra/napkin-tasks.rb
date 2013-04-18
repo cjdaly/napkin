@@ -24,39 +24,33 @@ module Napkin
         @task_segment = task_segment
       end
 
+      def init?
+        return @task_data['napkin.tasks.task_init'].nil?
+      end
+
+      def init!
+        @task_data['napkin.tasks.task_init'] = true
+      end
+
+      #
+      # override below in subclass
+      #
+
+      def init
+      end
+
       def todo?
         return false
       end
 
-      def doit!
-      end
-    end
-
-    class TestTask < TaskBase
-      def todo?
-        if (@task_data['foo'].nil?) then
-          @task_data['foo'] = 0
-        end
-        @task_data['foo'] += 1
-
-        puts "HELLO??? #{@task_data['foo']}"
-
-        if (@task_data['foo'] > 5) then
-          return true
-        else
-          return super
-        end
+      def doit
       end
 
-      def doit!
-        @task_data['foo'] = 0
-        puts "HELLO!!!"
-      end
     end
   end
 
   module Handlers
-    class TaskPostHandler < HandlerBase
+    class Napkin_TaskPostHandler < HandlerBase
       def handle
         param_sub = @query_hash['sub'].first
         # TODO: validate param_sub as good segment

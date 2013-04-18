@@ -17,13 +17,17 @@ require 'sinatra'
 set :bind, '0.0.0.0'
 
 #
-# plugins
-require 'plugin-config'
+# helpers
 require 'napkin-helpers'
 
 helpers Napkin::Helpers
-
 Napkin::Helpers::init_neo4j()
+
+#
+# plugins
+require 'plugin-config'
+require 'plugin-vitals'
+
 Napkin::Helpers::start_pulse()
 
 user = nil
