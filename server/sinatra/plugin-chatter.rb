@@ -9,10 +9,45 @@
 #   cjdaly - initial API and implementation
 ####
 require 'neo4j-util'
+require 'napkin-plugins'
+require 'napkin-tasks'
 require 'napkin-handlers'
 
 module Napkin
-  module Handlers
+  module Plugins
+    class Plugin_Chatter < PluginBase
+      def get_segment
+        return 'chatter'
+      end
 
+      def get_task_class_name
+        return 'Task_Chatter'
+      end
+    end
+  end
+
+  module Tasks
+    class Task_Chatter < TaskBase
+      def init
+        napkin_node_id = Neo.pin(:napkin)
+        chatter_id = Neo.get_sub_id!('chatter', napkin_node_id)
+        Neo.set_property('napkin.handlers.POST.class_name', 'Handler_Chatter_Post', chatter_id)
+      end
+
+      def todo?
+        puts "Task_Chatter"
+        return false
+      end
+
+      def doit
+      end
+    end
+  end
+
+  module Handlers
+    class Handler_Chatter_Post < HandlerBase
+      def handle
+      end
+    end
   end
 end

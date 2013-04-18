@@ -9,19 +9,33 @@
 #   cjdaly - initial API and implementation
 ####
 require 'neo4j-util'
+require 'napkin-plugins'
 require 'napkin-tasks'
 require 'napkin-handlers'
 
 module Napkin
+  module Plugins
+    class Plugin_Vitals < PluginBase
+      def get_segment
+        return 'vitals'
+      end
+
+      def get_task_class_name
+        return 'Task_Vitals'
+      end
+    end
+  end
+
   module Tasks
-    class Napkin_VitalsTask < TaskBase
+    class Task_Vitals < TaskBase
       def init
         napkin_node_id = Neo.pin(:napkin)
         vitals_id = Neo.get_sub_id!('vitals', napkin_node_id)
-        Neo.set_property('napkin.handlers.POST.class_name', 'Napkin_VitalsGetHandler', vitals_id)
+        Neo.set_property('napkin.handlers.GET.class_name', 'Handler_Vitals_Get', vitals_id)
       end
 
       def todo?
+        puts "Task_Vitals"
         return false
       end
 
@@ -31,9 +45,9 @@ module Napkin
   end
 
   module Handlers
-    class Napkin_VitalsGetHandler < HandlerBase
+    class Handler_Vitals_Get < HandlerBase
       def handle
-        puts "Napkin_VitalsGetHandler!!!"
+        puts "Handler_Vitals_Get!!!"
       end
     end
   end

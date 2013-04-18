@@ -27,7 +27,12 @@ Napkin::Helpers::init_neo4j()
 # plugins
 require 'plugin-config'
 require 'plugin-vitals'
+require 'plugin-chatter'
 
+Napkin::Helpers::init_plugins()
+
+#
+# pulse
 Napkin::Helpers::start_pulse()
 
 user = nil

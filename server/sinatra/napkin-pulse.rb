@@ -45,8 +45,7 @@ module Napkin
                 task = get_task_instance(task_node_id, pulse_node_id)
                 end_of_pulse ||= pulse_task(task) unless task.nil?
               end
-              pulse_skip_count += 1
-              sleep 2
+              sleep 1
               if (end_of_pulse) then
                 puts "Pulse thread - new pulse..."
                 Neo.set_property('napkin.pulse.pulse_skip_count', pulse_skip_count, pulse_node_id)
@@ -56,6 +55,7 @@ module Napkin
                 end_of_pulse = false
                 pulse_skip_count = 0
               end
+              pulse_skip_count += 1
               sleep 1
             end
             puts "Pulse thread stopped..."

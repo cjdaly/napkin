@@ -9,16 +9,29 @@
 #   cjdaly - initial API and implementation
 ####
 require 'neo4j-util'
+require 'napkin-plugins'
 require 'napkin-tasks'
 require 'napkin-handlers'
 
 module Napkin
+  module Plugins
+    class Plugin_Config < PluginBase
+      def get_segment
+        return 'config'
+      end
+
+      def get_task_class_name
+        return 'Task_Config'
+      end
+    end
+  end
+
   module Tasks
-    class Napkin_ConfigTask < TaskBase
+    class Task_Config < TaskBase
       def init
         root_node_id = Neo.pin(:root)
         config_id = Neo.get_sub_id!('config', root_node_id)
-        Neo.set_property('napkin.handlers.POST.class_name', 'Napkin_ConfigPostHandler', config_id)
+        Neo.set_property('napkin.handlers.POST.class_name', 'Handler_Config_Post', config_id)
       end
 
       def todo?
@@ -31,22 +44,22 @@ module Napkin
   end
 
   module Handlers
-    class Napkin_ConfigPostHandler < HandlerBase
+    class Handler_Config_Post < HandlerBase
       def handle
         param_sub = @query_hash['sub'].first
         # TODO: validate param_sub as good segment
         return nil if param_sub.to_s.empty?
 
         sub_node_id = Neo.get_sub_id!(param_sub, @segment_node_id)
-        Neo.set_property('napkin.handlers.POST.class_name', 'Napkin_ConfigPostHandler', sub_node_id)
-        Neo.set_property('napkin.handlers.PUT.class_name', 'Napkin_ConfigPutHandler', sub_node_id)
-        Neo.set_property('napkin.handlers.GET.class_name', 'Napkin_ConfigGetHandler', sub_node_id)
+        Neo.set_property('napkin.handlers.POST.class_name', 'Handler_Config_Post', sub_node_id)
+        Neo.set_property('napkin.handlers.PUT.class_name', 'Handler_Config_Put', sub_node_id)
+        Neo.set_property('napkin.handlers.GET.class_name', 'Handler_Config_Get', sub_node_id)
 
         return "ConfigPostHandler, param_sub: #{param_sub}"
       end
     end
 
-    class Napkin_ConfigPutHandler < HandlerBase
+    class Handler_Config_Put < HandlerBase
       def handle
         param_key = @query_hash['key'].first
         # TODO: validate param_sub as good segment
@@ -61,7 +74,7 @@ module Napkin
       end
     end
 
-    class Napkin_ConfigGetHandler < HandlerBase
+    class Handler_Config_Get < HandlerBase
       def handle
         param_key = @query_hash['key'].first
         # TODO: validate param_sub as good segment

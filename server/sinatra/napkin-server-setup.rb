@@ -27,12 +27,6 @@ def napkin_put(url, body_text, params)
   puts "RESPONSE: #{response}"
 end
 
-tasks_url = "http://test:test@localhost:4567/napkin/tasks"
-config_task = napkin_post(tasks_url, "", {'sub' => 'config', 'task_class_name' => 'Napkin_ConfigTask'})
-
-# wait for task init
-sleep 5
-
 config_url = "http://test:test@localhost:4567/config"
 response = napkin_post(config_url, "", {'sub' => 'test'})
 

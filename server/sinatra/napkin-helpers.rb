@@ -9,6 +9,7 @@
 #   cjdaly - initial API and implementation
 ####
 require 'neo4j-util'
+require 'napkin-plugins'
 require 'napkin-tasks'
 require 'napkin-pulse'
 require 'napkin-handlers'
@@ -32,17 +33,18 @@ module Napkin
       start_count = Neo.get_property('napkin.sub_count', Neo.pin(:starts))
       puts "STARTS: #{start_count}"
 
-      Neo.pin!(:handles, Neo.get_sub_id!('handles', Neo.pin(:napkin)))
-
-      Neo.pin!(:pulses, Neo.get_sub_id!('pulses', Neo.pin(:napkin)))
-
       Neo.pin!(:tasks, Neo.get_sub_id!('tasks', Neo.pin(:napkin)))
-      Neo.set_property('napkin.handlers.POST.class_name', 'Napkin_TaskPostHandler', Neo.pin(:tasks))
+      Neo.pin!(:pulses, Neo.get_sub_id!('pulses', Neo.pin(:napkin)))
+      Neo.pin!(:handles, Neo.get_sub_id!('handles', Neo.pin(:napkin)))
     end
 
     def Helpers.start_pulse()
       pulse = Napkin::Pulse::Driver.new(Neo.pin(:pulses), Neo.pin(:tasks))
       pulse.start()
+    end
+
+    def Helpers.init_plugins()
+      Napkin::Plugins.init()
     end
 
     def handle_request(path, request, user)
