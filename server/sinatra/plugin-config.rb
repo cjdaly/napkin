@@ -46,40 +46,35 @@ module Napkin
   module Handlers
     class Handler_Config_Post < HandlerBase
       def handle
-        param_sub = @query_hash['sub'].first
-        # TODO: validate param_sub as good segment
-        return nil if param_sub.to_s.empty?
+        param_sub = get_param('sub')
+        return nil if param_sub.nil?
 
         sub_node_id = Neo.get_sub_id!(param_sub, @segment_node_id)
         Neo.set_property('napkin.handlers.POST.class_name', 'Handler_Config_Post', sub_node_id)
         Neo.set_property('napkin.handlers.PUT.class_name', 'Handler_Config_Put', sub_node_id)
         Neo.set_property('napkin.handlers.GET.class_name', 'Handler_Config_Get', sub_node_id)
 
-        return "ConfigPostHandler, param_sub: #{param_sub}"
+        return "OK"
       end
     end
 
     class Handler_Config_Put < HandlerBase
       def handle
-        param_key = @query_hash['key'].first
-        # TODO: validate param_sub as good segment
-        return nil if param_key.to_s.empty?
+        param_key = get_param('key')
+        return nil if param_key.nil?
 
-        @request.body.rewind
-        value = @request.body.read
-
+        value = get_body_text
         Neo.set_property(param_key, value, @segment_node_id)
 
-        return "ConfigPutHandler, param_key: #{param_key}\n#{value}"
+        return "OK"
       end
     end
 
     class Handler_Config_Get < HandlerBase
       def handle
-        param_key = @query_hash['key'].first
-        # TODO: validate param_sub as good segment
+        param_key = get_param('key')
 
-        if param_key.to_s.empty? then
+        if param_key.nil? then
           return Neo.get_properties_text(@segment_node_id)
         end
 

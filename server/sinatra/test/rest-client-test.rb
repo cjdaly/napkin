@@ -41,15 +41,6 @@ def napkin_post(url, body_text)
   return response.to_s
 end
 
-## config example:
-# config_url = "http://test:test@localhost:4567/config"
-# response = RestClient.post(config_url, "", {:params => {'sub' => 'test'}})
-# foo_url = config_url + "/test?key=foo"
-# response = RestClient.put(foo_url, "Hello World!")
-
-tasks_url = "http://test:test@localhost:4567/napkin/tasks"
-response = RestClient.post(tasks_url, "", {:params => {'sub' => 'test'}})
-
 #json_create_ref = {
 #  "to" => "#{SRN}/1",
 #  "type" => "SUB",

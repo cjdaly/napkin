@@ -27,24 +27,12 @@ module Napkin
         @query_hash = CGI.parse(@request.query_string)
       end
 
-      def handle?
-        return at_destination?
-      end
-
       def at_destination?
         return @segments.length() == @segment_index + 1
       end
 
-      def next_stop_destination?
-        return @segments.length() == @segment_index + 2
-      end
-
       def get_segment(index = @segment_index)
         return @segments[index]
-      end
-
-      def get_next_segment
-        return get_segment(@segment_index + 1)
       end
 
       def get_path(start_index=0, end_index=-1)
@@ -66,6 +54,30 @@ module Napkin
 
       def get_current_path
         return get_path(0, @segment_index)
+      end
+
+      SEGMENT_MATCH = /^[-_.a-zA-Z0-9]+$/
+
+      def get_param(key, validate_as_segment = true)
+        param = @query_hash[key].first
+        return nil if param.to_s.empty?
+        if (validate_as_segment) then
+          return nil if SEGMENT_MATCH.match(param).nil?
+        end
+        return param
+      end
+
+      def get_body_text
+        @request.body.rewind
+        return @request.body.read
+      end
+
+      #
+      # override below in subclass
+      #
+
+      def handle?
+        return at_destination?
       end
 
       def handle
