@@ -16,6 +16,8 @@ module Napkin
     #
     Neo = Napkin::Neo4jUtil
     #
+    KEY_MATCH = /^[-_.a-zA-Z0-9~]+$/
+    #
     class HandlerBase
       def initialize(segment_node_id, handle_node_id, request, segments, segment_index, user)
         @segment_node_id = segment_node_id
@@ -56,13 +58,11 @@ module Napkin
         return get_path(0, @segment_index)
       end
 
-      SEGMENT_MATCH = /^[-_.a-zA-Z0-9]+$/
-
       def get_param(key, validate_as_segment = true)
         param = @query_hash[key].first
         return nil if param.to_s.empty?
         if (validate_as_segment) then
-          return nil if SEGMENT_MATCH.match(param).nil?
+          return nil if KEY_MATCH.match(param).nil?
         end
         return param
       end
@@ -70,6 +70,14 @@ module Napkin
       def get_body_text
         @request.body.rewind
         return @request.body.read
+      end
+
+      def parse_int(text)
+        begin
+          return Integer(text)
+        rescue ArgumentError => err
+          return nil
+        end
       end
 
       #

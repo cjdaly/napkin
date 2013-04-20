@@ -35,7 +35,6 @@ module Napkin
       end
 
       def todo?
-        puts "Task_Chatter"
         return false
       end
 
@@ -46,21 +45,27 @@ module Napkin
 
   module Handlers
     class Handler_Chatter_Post < HandlerBase
+      KEY_TYPE_I_MATCH = /.*~i$/
       def handle
-        post_time = Time.now
+        handle_time = Time.now
 
         param_format = get_param('format')
-        return nil unless (param_format.nil? || param_format == 'keyset')
+        return nil unless (param_format.nil? || param_format == 'napkin_kv')
 
         user_node_id = Neo.get_sub_id!(@user, @segment_node_id)
         chatter_node_id = Neo.next_sub_id!(user_node_id)
 
-        Neo.set_property('chatter.time_i', post_time.to_i, chatter_node_id)
+        Neo.set_property('chatter.handle_time~i', handle_time.to_i, chatter_node_id)
 
         body_text = get_body_text
         body_text.each do |line|
           key, value = line.split('=', 2)
-          Neo.set_property(key.strip, value.strip, chatter_node_id)
+          key.strip! ; value.strip!
+          next if KEY_MATCH.match(key).nil?
+          if (KEY_TYPE_I_MATCH.match(key) != nil) then
+            value = parse_int(value)
+          end
+          Neo.set_property(key, value, chatter_node_id) unless value.nil?
         end
 
         return "OK"

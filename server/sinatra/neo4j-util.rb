@@ -113,7 +113,7 @@ module Napkin
       return sub_node_id
     end
 
-    SEGMENT_MATCH = /^[-_.a-zA-Z0-9]+$/
+    SEGMENT_MATCH = /^[-_.a-zA-Z0-9~]+$/
 
     def Neo4jUtil.valid_segment?(node_segment)
       return false if node_segment.nil?
