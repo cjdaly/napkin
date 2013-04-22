@@ -32,6 +32,22 @@ module Napkin
         @task_data['napkin.tasks.task_init'] = true
       end
 
+      def parse_int(text)
+        begin
+          return Integer(text)
+        rescue ArgumentError => err
+          return nil
+        end
+      end
+
+      def parse_float(text)
+        begin
+          return Float(text)
+        rescue ArgumentError => err
+          return nil
+        end
+      end
+
       #
       # override below in subclass
       #

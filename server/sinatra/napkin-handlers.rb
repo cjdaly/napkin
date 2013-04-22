@@ -80,6 +80,14 @@ module Napkin
         end
       end
 
+      def parse_float(text)
+        begin
+          return Float(text)
+        rescue ArgumentError => err
+          return nil
+        end
+      end
+
       #
       # override below in subclass
       #
@@ -96,7 +104,14 @@ module Napkin
 
     class DefaultGetHandler < HandlerBase
       def handle
-        return Neo.get_properties_text(@segment_node_id)
+        param_key = get_param('key')
+
+        if param_key.nil? then
+          return Neo.get_properties_text(@segment_node_id)
+        end
+
+        value = Neo.get_property(param_key, @segment_node_id)
+        return value.to_s
       end
     end
 

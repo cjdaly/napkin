@@ -79,7 +79,7 @@ module Napkin
         end
 
         value = Neo.get_property(param_key, @segment_node_id)
-        return value
+        return value.to_s
       end
     end
   end
