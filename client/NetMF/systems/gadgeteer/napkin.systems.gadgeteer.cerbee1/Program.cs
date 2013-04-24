@@ -33,10 +33,23 @@ namespace napkin.systems.gadgeteer.cerbee1
 
             _credential = new NetworkCredential(DeviceId, DeviceId);
 
+            temperatureHumidity.MeasurementComplete += new TemperatureHumidity.MeasurementCompleteEventHandler(temperatureHumidity_MeasurementComplete);
+
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
         }
 
+
+        private double _temperature = 0;
+        private double _relativeHumidity = 0;
+        void temperatureHumidity_MeasurementComplete(TemperatureHumidity sender, double temperature, double relativeHumidity)
+        {
+            _temperature = temperature;
+            _relativeHumidity = relativeHumidity;
+        }
+
+
+        private int _cycleCount = 0;
         private void CycleDriver()
         {
             bool exit = false;
@@ -49,21 +62,34 @@ namespace napkin.systems.gadgeteer.cerbee1
 
         private void Cycle()
         {
-            Debug.Print("Cycle");
-
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("foo.1=hello");
-            sb.AppendLine("foo.2=world");
-            string chatterRequestText = sb.ToString();
+            _cycleCount++;
+            Debug.Print("Cycle: " + _cycleCount);
 
             string configUri = NapkinServerUri + "/config";
             string responseText = HttpUtil.DoHttpMethod("GET", configUri, _credential, null);
             Debug.Print("GOT: " + responseText);
 
-            Thread.Sleep(3000);
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("napkin.device.cycleCount~i=" + _cycleCount);
 
+            long memoryBytesFree = Debug.GC(false);
+            sb.AppendLine("napkin.device.memoryBytesFree~i=" + _cycleCount);
+
+            temperatureHumidity.RequestMeasurement();
+            Thread.Sleep(1000);
+            sb.AppendLine("temperatureHumidity.temperature~f=" + _temperature.ToString());
+            sb.AppendLine("temperatureHumidity.relativeHumidity~f=" + _relativeHumidity.ToString());
+
+            double lightSensorPercentage = lightSensor.ReadLightSensorPercentage();
+            sb.AppendLine("lightSensor.lightSensorPercentage~f=" + lightSensorPercentage.ToString());
+
+            Thread.Sleep(1000);
+
+            string chatterRequestText = sb.ToString();
             string chatterUri = NapkinServerUri + "/chatter?format=keyset";
             HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText, false);
+
+            Thread.Sleep(10 * 1000);
         }
     }
 }
