@@ -25,22 +25,44 @@ namespace napkin.systems.gadgeteer.cerbee1
         public readonly string NapkinServerUri = "http://192.168.2.50:4567";
         private NetworkCredential _credential;
 
+        private Thread _cycleThread;
+
         void ProgramStarted()
         {
             Debug.Print("Hello from: " + DeviceId);
 
             _credential = new NetworkCredential(DeviceId, DeviceId);
+
+            _cycleThread = new Thread(CycleDriver);
+            _cycleThread.Start();
         }
 
-        private void Foo()
+        private void CycleDriver()
         {
+            bool exit = false;
+            while (!exit)
+            {
+                Thread.Sleep(5000);
+                Cycle();
+            }
+        }
+
+        private void Cycle()
+        {
+            Debug.Print("Cycle");
+
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("foo.1=hello");
             sb.AppendLine("foo.2=world");
-
             string chatterRequestText = sb.ToString();
 
-            string chatterUri = NapkinServerUri + "/chatter?format=napkin_kv";
+            string configUri = NapkinServerUri + "/config";
+            string responseText = HttpUtil.DoHttpMethod("GET", configUri, _credential, null);
+            Debug.Print("GOT: " + responseText);
+
+            Thread.Sleep(3000);
+
+            string chatterUri = NapkinServerUri + "/chatter?format=keyset";
             HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText, false);
         }
     }
