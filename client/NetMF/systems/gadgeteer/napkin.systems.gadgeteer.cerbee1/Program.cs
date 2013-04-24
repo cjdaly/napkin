@@ -22,7 +22,7 @@ namespace napkin.systems.gadgeteer.cerbee1
     public partial class Program
     {
         public readonly string DeviceId = "cerbee1";
-        public readonly string NapkinServerUri = "http://192.168.2.50:4567";
+        public readonly string NapkinServerUri = "http://192.168.2.159:4567";
         private NetworkCredential _credential;
 
         private Thread _cycleThread;
@@ -73,7 +73,7 @@ namespace napkin.systems.gadgeteer.cerbee1
             sb.AppendLine("napkin.device.cycleCount~i=" + _cycleCount);
 
             long memoryBytesFree = Debug.GC(false);
-            sb.AppendLine("napkin.device.memoryBytesFree~i=" + _cycleCount);
+            sb.AppendLine("napkin.device.memoryBytesFree~i=" + memoryBytesFree);
 
             temperatureHumidity.RequestMeasurement();
             Thread.Sleep(1000);
@@ -86,7 +86,7 @@ namespace napkin.systems.gadgeteer.cerbee1
             Thread.Sleep(1000);
 
             string chatterRequestText = sb.ToString();
-            string chatterUri = NapkinServerUri + "/chatter?format=keyset";
+            string chatterUri = NapkinServerUri + "/chatter?format=napkin_kv";
             HttpUtil.DoHttpMethod("POST", chatterUri, _credential, chatterRequestText, false);
 
             Thread.Sleep(10 * 1000);
