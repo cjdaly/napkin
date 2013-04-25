@@ -63,7 +63,6 @@ namespace napkin.util.http
                 counter++;
 
                 ConfigUtil.PutConfigValue(napkinServerUri + "/config/" + configPath, key, counter.ToString(), credential);
-                Debug.Print("IncrementCounter: " + counter);
             }
             catch (Exception ex)
             {

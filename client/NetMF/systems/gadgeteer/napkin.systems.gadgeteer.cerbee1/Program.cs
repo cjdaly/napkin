@@ -52,10 +52,20 @@ namespace napkin.systems.gadgeteer.cerbee1
         private int _cycleCount = 0;
         private void CycleDriver()
         {
-            string deviceConfigUri = NapkinServerUri + "/config?sub=" + DeviceId;
-            HttpUtil.DoHttpMethod("POST", deviceConfigUri, _credential, null, false);
+            Thread.Sleep(5000);
 
-            int start_count = ConfigUtil.IncrementCounter(NapkinServerUri, DeviceId, "start_count", _credential);
+            string deviceConfigUri = NapkinServerUri + "/config/" + DeviceId;
+            string responseText = HttpUtil.DoHttpMethod("GET", deviceConfigUri, _credential, null);
+            Debug.Print("Config: " + responseText);
+
+            Thread.Sleep(2000);
+
+            string deviceConfigPostUri = NapkinServerUri + "/config?sub=" + DeviceId;
+            HttpUtil.DoHttpMethod("POST", deviceConfigPostUri, _credential, "", false);
+
+            Thread.Sleep(2000);
+
+            int start_count = ConfigUtil.IncrementCounter(NapkinServerUri, DeviceId, "napkin.systems.start_count~i", _credential);
             Debug.Print("Starts: " + start_count);
 
             bool exit = false;
@@ -70,10 +80,6 @@ namespace napkin.systems.gadgeteer.cerbee1
         {
             _cycleCount++;
             Debug.Print("Cycle: " + _cycleCount);
-
-            string configUri = NapkinServerUri + "/config";
-            string responseText = HttpUtil.DoHttpMethod("GET", configUri, _credential, null);
-            Debug.Print("GOT: " + responseText);
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("napkin.device.cycleCount~i=" + _cycleCount);
