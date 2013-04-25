@@ -52,6 +52,12 @@ namespace napkin.systems.gadgeteer.cerbee1
         private int _cycleCount = 0;
         private void CycleDriver()
         {
+            string deviceConfigUri = NapkinServerUri + "/config?sub=" + DeviceId;
+            HttpUtil.DoHttpMethod("POST", deviceConfigUri, _credential, null, false);
+
+            int start_count = ConfigUtil.IncrementCounter(NapkinServerUri, DeviceId, "start_count", _credential);
+            Debug.Print("Starts: " + start_count);
+
             bool exit = false;
             while (!exit)
             {
