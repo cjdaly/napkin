@@ -45,7 +45,6 @@ module Napkin
 
   module Handlers
     class Handler_Chatter_Post < HandlerBase
-      KEY_TYPE_I_MATCH = /.*~i$/
       def handle
         handle_time = Time.now
 
@@ -64,6 +63,8 @@ module Napkin
           next if KEY_MATCH.match(key).nil?
           if (KEY_TYPE_I_MATCH.match(key) != nil) then
             value = parse_int(value)
+          elsif (KEY_TYPE_F_MATCH.match(key) != nil) then
+            value = parse_float(value)
           end
           Neo.set_node_property(key, value, chatter_node_id) unless value.nil?
         end

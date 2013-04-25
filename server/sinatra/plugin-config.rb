@@ -64,7 +64,14 @@ module Napkin
         return nil if param_key.nil?
 
         value = get_body_text
-        Neo.set_node_property(param_key, value, @segment_node_id)
+
+        if (KEY_TYPE_I_MATCH.match(param_key) != nil) then
+          value = parse_int(value)
+        elsif (KEY_TYPE_F_MATCH.match(param_key) != nil) then
+          value = parse_float(value)
+        end
+
+        Neo.set_node_property(param_key, value, @segment_node_id) unless value.nil?
 
         return "OK"
       end

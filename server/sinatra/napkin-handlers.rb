@@ -17,6 +17,8 @@ module Napkin
     Neo = Napkin::Neo4jUtil
     #
     KEY_MATCH = /^[-_.a-zA-Z0-9~]+$/
+    KEY_TYPE_I_MATCH = /.+~i$/
+    KEY_TYPE_F_MATCH = /.+~f$/
     #
     class HandlerBase
       def initialize(segment_node_id, handle_node_id, request, segments, segment_index, user)

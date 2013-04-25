@@ -36,5 +36,5 @@ end
 
 ## chatter
 chatter_url = "http://test:test@localhost:4567/chatter"
-response = napkin_post(chatter_url, "foo~x=hello\nbar_x=yyy\nbaz~i=-12")
+response = napkin_post(chatter_url, "foo~f=1.03\nbar_x=yyy\nbaz~i=-12")
 
