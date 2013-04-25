@@ -27,10 +27,10 @@ module Napkin
       Neo.pin!(:starts, Neo.get_sub_id!('starts', Neo.pin(:napkin)))
       Neo.pin!(:start, Neo.next_sub_id!(Neo.pin(:starts)))
 
-      Neo.set_property('napkin.starts.start_time', "#{start_time}", Neo.pin(:start))
-      Neo.set_property('napkin.starts.start_time_i', start_time.to_i, Neo.pin(:start))
+      Neo.set_node_property('napkin.starts.start_time', "#{start_time}", Neo.pin(:start))
+      Neo.set_node_property('napkin.starts.start_time_i', start_time.to_i, Neo.pin(:start))
 
-      start_count = Neo.get_property('napkin.sub_count', Neo.pin(:starts))
+      start_count = Neo.get_node_property('napkin.sub_count', Neo.pin(:starts))
       puts "STARTS: #{start_count}"
 
       Neo.pin!(:tasks, Neo.get_sub_id!('tasks', Neo.pin(:napkin)))
@@ -54,7 +54,7 @@ module Napkin
         segments = path.split('/')
 
         handle_node_id = Neo.next_sub_id!(Neo.pin(:handles))
-        Neo.set_property('napkin.handles.handle_time', handle_time.to_i, handle_node_id)
+        Neo.set_node_property('napkin.handles.handle_time', handle_time.to_i, handle_node_id)
 
         segment_node_id = Neo.pin(:root)
         segments.each_with_index do |segment, i|
@@ -76,11 +76,11 @@ module Napkin
       end
 
       # TODO: some kind of 404
-      return Neo.get_properties_text(Neo.pin(:root))
+      return Neo.get_node_properties_text(Neo.pin(:root))
     end
 
     def get_handler_class(method, segment_node_id)
-      handler_class_name = Neo.get_property("napkin.handlers.#{method}.class_name", segment_node_id)
+      handler_class_name = Neo.get_node_property("napkin.handlers.#{method}.class_name", segment_node_id)
       if (handler_class_name.nil?) then
         return (method == "GET") ? Handlers::DefaultGetHandler : nil
       end

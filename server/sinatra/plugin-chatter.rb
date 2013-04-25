@@ -31,7 +31,7 @@ module Napkin
       def init
         root_node_id = Neo.pin(:root)
         chatter_id = Neo.get_sub_id!('chatter', root_node_id)
-        Neo.set_property('napkin.handlers.POST.class_name', 'Handler_Chatter_Post', chatter_id)
+        Neo.set_node_property('napkin.handlers.POST.class_name', 'Handler_Chatter_Post', chatter_id)
       end
 
       def todo?
@@ -55,7 +55,7 @@ module Napkin
         user_node_id = Neo.get_sub_id!(@user, @segment_node_id)
         chatter_node_id = Neo.next_sub_id!(user_node_id)
 
-        Neo.set_property('chatter.handle_time~i', handle_time.to_i, chatter_node_id)
+        Neo.set_node_property('chatter.handle_time~i', handle_time.to_i, chatter_node_id)
 
         body_text = get_body_text
         body_text.each do |line|
@@ -65,7 +65,7 @@ module Napkin
           if (KEY_TYPE_I_MATCH.match(key) != nil) then
             value = parse_int(value)
           end
-          Neo.set_property(key, value, chatter_node_id) unless value.nil?
+          Neo.set_node_property(key, value, chatter_node_id) unless value.nil?
         end
 
         return "OK"

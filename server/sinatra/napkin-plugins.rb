@@ -40,7 +40,7 @@ module Napkin
         if ((c_obj.is_a? Class) && (c_obj < PluginBase)) then
           plugin = c_obj.new()
           task_node_id = Neo.get_sub_id!(plugin.get_segment, Neo.pin(:tasks))
-          Neo.set_property('napkin.tasks.task_class_name', plugin.get_task_class_name, task_node_id)
+          Neo.set_node_property('napkin.tasks.task_class_name', plugin.get_task_class_name, task_node_id)
         end
       end
     end

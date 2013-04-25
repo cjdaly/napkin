@@ -31,7 +31,7 @@ module Napkin
       def init
         root_node_id = Neo.pin(:root)
         config_id = Neo.get_sub_id!('config', root_node_id)
-        Neo.set_property('napkin.handlers.POST.class_name', 'Handler_Config_Post', config_id)
+        Neo.set_node_property('napkin.handlers.POST.class_name', 'Handler_Config_Post', config_id)
       end
 
       def todo?
@@ -50,9 +50,9 @@ module Napkin
         return nil if param_sub.nil?
 
         sub_node_id = Neo.get_sub_id!(param_sub, @segment_node_id)
-        Neo.set_property('napkin.handlers.POST.class_name', 'Handler_Config_Post', sub_node_id)
-        Neo.set_property('napkin.handlers.PUT.class_name', 'Handler_Config_Put', sub_node_id)
-        Neo.set_property('napkin.handlers.GET.class_name', 'Handler_Config_Get', sub_node_id)
+        Neo.set_node_property('napkin.handlers.POST.class_name', 'Handler_Config_Post', sub_node_id)
+        Neo.set_node_property('napkin.handlers.PUT.class_name', 'Handler_Config_Put', sub_node_id)
+        Neo.set_node_property('napkin.handlers.GET.class_name', 'Handler_Config_Get', sub_node_id)
 
         return "OK"
       end
@@ -64,7 +64,7 @@ module Napkin
         return nil if param_key.nil?
 
         value = get_body_text
-        Neo.set_property(param_key, value, @segment_node_id)
+        Neo.set_node_property(param_key, value, @segment_node_id)
 
         return "OK"
       end
@@ -75,10 +75,10 @@ module Napkin
         param_key = get_param('key')
 
         if param_key.nil? then
-          return Neo.get_properties_text(@segment_node_id)
+          return Neo.get_node_properties_text(@segment_node_id)
         end
 
-        value = Neo.get_property(param_key, @segment_node_id)
+        value = Neo.get_node_property(param_key, @segment_node_id)
         return value.to_s
       end
     end

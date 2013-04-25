@@ -51,12 +51,12 @@ module Napkin
       return response_json_object
     end
 
-    def Neo4jUtil.get_properties(node_id)
+    def Neo4jUtil.get_node_properties(node_id)
       return Neo4jUtil.get("#{SRN}/#{node_id}/properties")
     end
 
-    def Neo4jUtil.get_properties_text(node_id)
-      node_properties = Neo4jUtil.get_properties(node_id)
+    def Neo4jUtil.get_node_properties_text(node_id)
+      node_properties = Neo4jUtil.get_node_properties(node_id)
 
       properties_text = "ID=#{node_id}\n"
       node_properties.each do |key, value|
@@ -65,30 +65,30 @@ module Napkin
       return properties_text
     end
 
-    def Neo4jUtil.get_property(key, node_id)
+    def Neo4jUtil.get_node_property(key, node_id)
       return nil unless Neo4jUtil.valid_segment?(key)
 
-      cypher_get_property = {
+      cypher_get_node_property = {
         "query" => "START n=node({node_id}) RETURN n.`#{key}`?",
         "params" => {
         "node_id" => node_id,
         }
       }
-      raw = Neo4jUtil.post(SRC, cypher_get_property)
+      raw = Neo4jUtil.post(SRC, cypher_get_node_property)
       return Neo4jUtil.extract_cypher_result(raw['data'])
     end
 
-    def Neo4jUtil.set_property(key, value, node_id)
+    def Neo4jUtil.set_node_property(key, value, node_id)
       return nil unless Neo4jUtil.valid_segment?(key)
 
-      cypher_set_property = {
+      cypher_set_node_property = {
         "query" => "START n=node({node_id}) SET n.`#{key}`={value} RETURN null",
         "params" => {
         "node_id" => node_id,
         "value" => value,
         }
       }
-      raw = Neo4jUtil.post(SRC, cypher_set_property)
+      raw = Neo4jUtil.post(SRC, cypher_set_node_property)
       return nil
     end
 
@@ -109,7 +109,7 @@ module Napkin
       sub_count = Neo4jUtil.increment_counter('napkin.sub_count', sup_node_id)
       return nil if sub_count.nil?
       sub_node_id =  Neo4jUtil.get_sub_id!(sub_count.to_s, sup_node_id)
-      Neo4jUtil.set_property('napkin.position', sub_count, sub_node_id)
+      Neo4jUtil.set_node_property('napkin.position', sub_count, sub_node_id)
       return sub_node_id
     end
 
@@ -166,7 +166,19 @@ module Napkin
     end
 
     def Neo4jUtil.get_root_node_id()
-      return Neo4jUtil.get_sub_id!('ROOT', 0)
+      return Neo4jUtil.get_sub_id!('NAPKIN_ROOT', 0)
+    end
+
+    def Neo4jUtil.set_ref!(from_node_id, to_node_id)
+      cypher_create_unique_ref = {
+        "query" => 'START from_node=node({from_node_id}), to_node=node({to_node_id}) CREATE UNIQUE from_node-[r:NAPKIN_REF]->to_node RETURN ID(r)',
+        "params" => {
+        "from_node_id" => from_node_id,
+        "to_node_id" => to_node_id
+        }
+      }
+      raw = Neo4jUtil.post(SRC, cypher_create_unique_ref)
+      return Neo4jUtil.extract_cypher_result(raw['data'])
     end
 
     #internal helpers

@@ -32,7 +32,8 @@ module Napkin
             puts "Pulse thread started..."
 
             pulse_node_id = Neo.next_sub_id!(@pulses_node_id)
-            Neo.set_property('napkin.pulse.start_time_i', Time.now.to_i, pulse_node_id)
+            Neo.set_node_property('napkin.pulse.start_time_i', Time.now.to_i, pulse_node_id)
+            Neo.set_ref!(Neo.pin(:start), pulse_node_id)
 
             end_of_pulse = false
             pulse_skip_count = 0
@@ -49,10 +50,10 @@ module Napkin
               sleep 1
               if (end_of_pulse) then
                 puts "Pulse thread - new pulse..."
-                Neo.set_property('napkin.pulse.pulse_skip_count', pulse_skip_count, pulse_node_id)
-                Neo.set_property('napkin.pulse.end_time_i', Time.now.to_i, pulse_node_id)
+                Neo.set_node_property('napkin.pulse.pulse_skip_count', pulse_skip_count, pulse_node_id)
+                Neo.set_node_property('napkin.pulse.end_time_i', Time.now.to_i, pulse_node_id)
                 pulse_node_id = Neo.next_sub_id!(@pulses_node_id)
-                Neo.set_property('napkin.pulse.start_time_i', Time.now.to_i, pulse_node_id)
+                Neo.set_node_property('napkin.pulse.start_time_i', Time.now.to_i, pulse_node_id)
                 end_of_pulse = false
                 pulse_skip_count = 0
               end
@@ -83,7 +84,7 @@ module Napkin
       end
 
       def get_task_instance(task_node_id, pulse_node_id)
-        task_class_name = Neo.get_property("napkin.tasks.task_class_name", task_node_id)
+        task_class_name = Neo.get_node_property("napkin.tasks.task_class_name", task_node_id)
         return nil if task_class_name.nil?
 
         begin
@@ -94,7 +95,7 @@ module Napkin
 
         return nil if task_class.nil?
 
-        task_segment = Neo.get_property('napkin.segment', task_node_id)
+        task_segment = Neo.get_node_property('napkin.segment', task_node_id)
         if (TaskData[task_segment].nil?) then
           TaskData[task_segment] = {}
         end

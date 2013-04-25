@@ -30,8 +30,7 @@ module Napkin
     class Task_Vitals < TaskBase
       def init
         vitals_node_id = Neo.get_sub_id!('vitals', Neo.pin(:napkin))
-        puts "Task_Vitals: #{vitals_node_id}"
-        Neo.set_property('napkin.handlers.GET.class_name', 'Handler_Vitals_Get', vitals_node_id)
+        Neo.set_node_property('napkin.handlers.GET.class_name', 'Handler_Vitals_Get', vitals_node_id)
 
         @task_data['vitals.sup_node_id'] = vitals_node_id
         @task_data['vitals.skip_count'] = 0
@@ -54,21 +53,21 @@ module Napkin
       def doit
         vitals_check_time_i = Time.now.to_i
         vitals_node_id = Neo.next_sub_id!(@task_data['vitals.sup_node_id'])
-        Neo.set_property('vitals.check_time_i', vitals_check_time_i, vitals_node_id)
+        Neo.set_node_property('vitals.check_time_i', vitals_check_time_i, vitals_node_id)
 
         memfree = `cat /proc/meminfo | grep MemFree`
         memfree_kb = MEMFREE_CAPTURE.match(memfree).captures[0]
         memfree_kb_i = parse_int(memfree_kb)
-        Neo.set_property('vitals.memfree_kb', memfree_kb_i, vitals_node_id)
+        Neo.set_node_property('vitals.memfree_kb', memfree_kb_i, vitals_node_id)
 
         loadavg = `cat /proc/loadavg`
         loadavg_split = loadavg.split
         loadavg_1_min = parse_float(loadavg_split[0])
-        Neo.set_property('vitals.loadavg_1_min', loadavg_1_min, vitals_node_id)
+        Neo.set_node_property('vitals.loadavg_1_min', loadavg_1_min, vitals_node_id)
         loadavg_5_min = parse_float(loadavg_split[1])
-        Neo.set_property('vitals.loadavg_5_min', loadavg_5_min, vitals_node_id)
+        Neo.set_node_property('vitals.loadavg_5_min', loadavg_5_min, vitals_node_id)
         loadavg_15_min = parse_float(loadavg_split[2])
-        Neo.set_property('vitals.loadavg_15_min', loadavg_15_min, vitals_node_id)
+        Neo.set_node_property('vitals.loadavg_15_min', loadavg_15_min, vitals_node_id)
       end
     end
   end
