@@ -17,8 +17,8 @@
 #
 # Serial LCD setup
 import serLcdUtil
-serDisplay1 = initializeDisplay(LCD_01)
-serDisplay2 = initializeDisplay(LCD_02)
+serDisplay1 = serLcdUtil.initializeDisplay(1)
+serDisplay2 = serLcdUtil.initializeDisplay(2)
 
 
 #
@@ -41,12 +41,12 @@ cycle=0
 configCycle=8
 postCycle=256
 
-startCountText = getOrInitConfigValue('device_start_count', '0')
+startCountText = napkinUtil.getOrInitConfigValue('device_start_count', '0')
 startCount = int(startCountText)
 startCount += 1
 startCountText = str(startCount)
-putConfigValue('device_start_count', startCountText)
-# print "startCount: " + startCountText
+napkinUtil.putConfigValue('device_start_count', startCountText)
+print "startCount: " + startCountText
 
 #
 # main loop
@@ -55,14 +55,14 @@ while(not done):
     cycle += 1
     #
     if (cycle%configCycle == 0):
-        status = getConfigValue('status')
+        status = napkinUtil.getConfigValue('status')
 	# print "Config: status=" + status
     #
     if (cycle%postCycle == 0):
-        chatterText = composeChatterText(cycle, startCount)
-        chatterResponse = postChatter(chatterText)
+        chatterText = napkinUtil.composeChatterText(cycle, startCount)
+        chatterResponse = napkinUtil.postChatter(chatterText)
 	# print "Chatter: " + chatterResponse
     #
-    updateLcds(serDisplay1, serDisplay2, startCount, cycle, status)
+    serLcdUtil.updateLcds(serDisplay1, serDisplay2, startCount, cycle, status)
     time.sleep(1)
 

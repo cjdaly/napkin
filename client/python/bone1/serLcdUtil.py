@@ -42,7 +42,11 @@ def writeToDisplay(serDisplay, s):
     serDisplay.write(s)
     time.sleep(0.1) # Sparkfun LCD backpack needs pause between commands
 
-def initializeDisplay(lcd):
+def initializeDisplay(lcd_index):
+    if lcd_index == 2:
+        lcd = LCD_02
+    else
+        lcd = LCD_01
     # set the RX pin for Mode 0 with receive bit on
     # - use %X formatter, since value written must be in hex (e.g. write "21" for mode 1 with receive enabled = 33)
     open('/sys/kernel/debug/omap_mux/' + lcd['rx_mux'], 'wb').write("%X" % (RECEIVE_ENABLE + lcd['mux_mode']))
