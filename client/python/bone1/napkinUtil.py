@@ -9,10 +9,7 @@
 #   cjdaly - initial API and implementation
 ####
 
-# import urllib, urllib2, base64
 import urllib2, base64
-# import sys, time, datetime, array
-# import serial
 import re
 
 #

@@ -13,10 +13,8 @@
 #   http://gigamega-micro.googlecode.com/files/serdisplay.py
 #
 
-# import urllib, urllib2, base64
 import sys, time, datetime, array
 import serial
-# import re
 
 # -------------- configurable settings ---------
 

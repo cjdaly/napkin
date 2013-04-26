@@ -9,10 +9,7 @@
 #   cjdaly - initial API and implementation
 ####
 
-# import urllib, urllib2, base64
-# import sys, time, datetime, array
-# import serial
-# import re
+import time
 
 #
 # Serial LCD setup
@@ -20,9 +17,9 @@ import serLcdUtil
 serDisplay1 = serLcdUtil.initializeDisplay(1)
 serDisplay2 = serLcdUtil.initializeDisplay(2)
 
-
-import napkinUtil
 #
+#
+import napkinUtil
 
 #
 # init
@@ -31,10 +28,12 @@ status="???"
 done=False
 cycle=0
 configCycle=8
-postCycle=256
+postCycle=16
 
+# post /config/DEVICE_ID if it doesn't already exist
 napkinUtil.postDeviceConfig()
 
+# increment startCount
 startCountText = napkinUtil.getOrInitConfigValue('device_start_count', '0')
 startCount = int(startCountText)
 startCount += 1
@@ -49,7 +48,7 @@ while(not done):
     cycle += 1
     #
     if (cycle%configCycle == 0):
-        status = napkinUtil.getConfigValue('status')
+        # status = napkinUtil.getConfigValue('status')
 	# print "Config: status=" + status
     #
     if (cycle%postCycle == 0):
@@ -57,6 +56,6 @@ while(not done):
         chatterResponse = napkinUtil.postChatter(chatterText)
 	# print "Chatter: " + chatterResponse
     #
-    serLcdUtil.updateLcds(serDisplay1, serDisplay2, startCount, cycle, status, DEVICE_ID)
+    serLcdUtil.updateLcds(serDisplay1, serDisplay2, startCount, cycle, status, napkinUtil.DEVICE_ID)
     time.sleep(1)
 
