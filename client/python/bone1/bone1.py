@@ -34,11 +34,11 @@ postCycle=16
 napkinUtil.postDeviceConfig()
 
 # increment startCount
-startCountText = napkinUtil.getOrInitConfigValue('device_start_count', '0')
+startCountText = napkinUtil.getOrInitConfigValue('napkin.systems.startCount~i', '0')
 startCount = int(startCountText)
 startCount += 1
 startCountText = str(startCount)
-napkinUtil.putConfigValue('device_start_count', startCountText)
+napkinUtil.putConfigValue('napkin.systems.startCount~i', startCountText)
 print "startCount: " + startCountText
 
 #
@@ -47,7 +47,7 @@ print "startCount: " + startCountText
 while(not done):
     cycle += 1
     #
-    if (cycle%configCycle == 0):
+    # if (cycle%configCycle == 0):
         # status = napkinUtil.getConfigValue('status')
 	# print "Config: status=" + status
     #

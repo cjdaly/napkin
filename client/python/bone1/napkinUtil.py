@@ -82,9 +82,9 @@ def getOrInitConfigValue(key, defaultValue):
 
 def composeChatterText(cycle, startCount):
     chatterText = ""
-    chatterText += "chatter.device.vitals.id=" + DEVICE_ID + "\n"
-    chatterText += "chatter.device.vitals.startCount~i=" + str(startCount) + "\n"
-    chatterText += "chatter.device.vitals.currentCycle~i=" + str(cycle) + "\n"
+    chatterText += "vitals.id=" + DEVICE_ID + "\n"
+    chatterText += "vitals.startCount~i=" + str(startCount) + "\n"
+    chatterText += "vitals.currentCycle~i=" + str(cycle) + "\n"
     return chatterText
 
 def postChatter(chatterText):

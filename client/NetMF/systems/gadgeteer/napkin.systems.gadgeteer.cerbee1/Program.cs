@@ -82,18 +82,19 @@ namespace napkin.systems.gadgeteer.cerbee1
             Debug.Print("Cycle: " + _cycleCount);
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("napkin.device.cycleCount~i=" + _cycleCount);
+            sb.AppendLine("vitals.id=" + DeviceId);
+            sb.AppendLine("vitals.currentCycle~i=" + _cycleCount);
 
             long memoryBytesFree = Debug.GC(false);
-            sb.AppendLine("napkin.device.memoryBytesFree~i=" + memoryBytesFree);
+            sb.AppendLine("vitals.memoryBytesFree~i=" + memoryBytesFree);
 
             temperatureHumidity.RequestMeasurement();
             Thread.Sleep(1000);
-            sb.AppendLine("temperatureHumidity.temperature~f=" + _temperature.ToString());
-            sb.AppendLine("temperatureHumidity.relativeHumidity~f=" + _relativeHumidity.ToString());
+            sb.AppendLine("sensor.temperatureHumidity.temperature~f=" + _temperature.ToString());
+            sb.AppendLine("sensor.temperatureHumidity.relativeHumidity~f=" + _relativeHumidity.ToString());
 
             double lightSensorPercentage = lightSensor.ReadLightSensorPercentage();
-            sb.AppendLine("lightSensor.lightSensorPercentage~f=" + lightSensorPercentage.ToString());
+            sb.AppendLine("sensor.lightSensor.lightSensorPercentage~f=" + lightSensorPercentage.ToString());
 
             Thread.Sleep(1000);
 
