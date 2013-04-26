@@ -16,6 +16,14 @@ import urllib2, base64
 import re
 
 #
+# Napkin config
+DEVICE_ID="bone1"
+NAPKIN_URL="http://192.168.2.159:4567"
+NAPKIN_CONFIG_URL=NAPKIN_URL + "/config/" + DEVICE_ID
+NAPKIN_CHATTER_URL=NAPKIN_URL + "/chatter"
+NAPKIN_CONFIG_KEYS =[None, 'test', None, None]
+
+#
 # Napkin util
 
 def getConfigValue(key):

@@ -45,7 +45,7 @@ def writeToDisplay(serDisplay, s):
 def initializeDisplay(lcd_index):
     if lcd_index == 2:
         lcd = LCD_02
-    else
+    else:
         lcd = LCD_01
     # set the RX pin for Mode 0 with receive bit on
     # - use %X formatter, since value written must be in hex (e.g. write "21" for mode 1 with receive enabled = 33)
