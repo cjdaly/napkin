@@ -33,6 +33,8 @@ cycle=0
 configCycle=8
 postCycle=256
 
+napkinUtil.postDeviceConfig()
+
 startCountText = napkinUtil.getOrInitConfigValue('device_start_count', '0')
 startCount = int(startCountText)
 startCount += 1

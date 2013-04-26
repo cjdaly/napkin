@@ -53,11 +53,27 @@ def putConfigValue(key, value):
 	request.get_method = lambda: 'PUT'
         configValue = opener.open(request).read()
     except urllib2.URLError as urlError:
-        print "URL Error in getConfigValue: {0}".format(urlError.strerror)
+        print "URL Error in putConfigValue: {0}".format(urlError.strerror)
     except urllib2.HTTPError as httpError:
-        print "HTTP Error in getConfigValue: {0}".format(httpError.strerror)
+        print "HTTP Error in putConfigValue: {0}".format(httpError.strerror)
     #
     return configValue
+
+def postDeviceConfig()
+    postDeviceConfigUrl=NAPKIN_CONFIG_URL + "?sub=" + DEVICE_ID
+    try:
+        request = urllib2.Request(postDeviceConfigUrl, "")
+        authHeader = base64.encodestring('%s:%s' % (DEVICE_ID, DEVICE_ID)).replace('\n', '')
+        request.add_header("Authorization", "Basic %s" % authHeader)
+        request.add_header("Content-Type", "text/plain")
+        response = urllib2.urlopen(request)
+        responseText = response.read()
+    except urllib2.URLError as urlError:
+        print "URL Error in postConfigNode: {0}".format(urlError.strerror)
+    except urllib2.HTTPError as httpError:
+        print "HTTP Error in postConfigNode: {0}".format(httpError.strerror)
+    #
+    return responseText
 
 def getOrInitConfigValue(key, defaultValue):
     currentValue = getConfigValue(key)
@@ -84,9 +100,9 @@ def postChatter(chatterText):
         response = urllib2.urlopen(request)
         responseText = response.read()
     except urllib2.URLError as urlError:
-        print "URL Error in getConfigValue: {0}".format(urlError.strerror)
+        print "URL Error in postChatter: {0}".format(urlError.strerror)
     except urllib2.HTTPError as httpError:
-        print "HTTP Error in getConfigValue: {0}".format(httpError.strerror)
+        print "HTTP Error in postChatter: {0}".format(httpError.strerror)
     #
     return responseText
 
