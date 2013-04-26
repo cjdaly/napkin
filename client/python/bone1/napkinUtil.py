@@ -19,7 +19,8 @@ import re
 # Napkin config
 DEVICE_ID="bone1"
 NAPKIN_URL="http://192.168.2.159:4567"
-NAPKIN_CONFIG_URL=NAPKIN_URL + "/config/" + DEVICE_ID
+NAPKIN_CONFIG_URL=NAPKIN_URL + "/config"
+NAPKIN_CONFIG_DEVICE_URL=NAPKIN_CONFIG_URL + "/" + DEVICE_ID
 NAPKIN_CHATTER_URL=NAPKIN_URL + "/chatter"
 NAPKIN_CONFIG_KEYS =[None, 'test', None, None]
 
@@ -27,7 +28,7 @@ NAPKIN_CONFIG_KEYS =[None, 'test', None, None]
 # Napkin util
 
 def getConfigValue(key):
-    napkinConfigUrl=NAPKIN_CONFIG_URL + "?key=" + key
+    napkinConfigUrl=NAPKIN_CONFIG_DEVICE_URL + "?key=" + key
     configValue="??? error ???"
     try:
         request = urllib2.Request(napkinConfigUrl);
@@ -42,7 +43,7 @@ def getConfigValue(key):
     return configValue
 
 def putConfigValue(key, value):
-    napkinConfigUrl=NAPKIN_CONFIG_URL + "?key=" + key
+    napkinConfigUrl=NAPKIN_CONFIG_DEVICE_URL + "?key=" + key
     configValue="??? error ???"
     try:
 	opener = urllib2.build_opener(urllib2.HTTPHandler)
@@ -59,7 +60,7 @@ def putConfigValue(key, value):
     #
     return configValue
 
-def postDeviceConfig()
+def postDeviceConfig():
     postDeviceConfigUrl=NAPKIN_CONFIG_URL + "?sub=" + DEVICE_ID
     try:
         request = urllib2.Request(postDeviceConfigUrl, "")

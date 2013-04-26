@@ -57,6 +57,6 @@ while(not done):
         chatterResponse = napkinUtil.postChatter(chatterText)
 	# print "Chatter: " + chatterResponse
     #
-    serLcdUtil.updateLcds(serDisplay1, serDisplay2, startCount, cycle, status)
+    serLcdUtil.updateLcds(serDisplay1, serDisplay2, startCount, cycle, status, DEVICE_ID)
     time.sleep(1)
 

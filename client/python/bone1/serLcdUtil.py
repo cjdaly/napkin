@@ -136,7 +136,7 @@ TIME_LINE_MASKS = [
     "%I:%M*%a %d %b",
 ]
 
-def updateLcds(serDisplay1, serDisplay2, startCount, cycle, status):
+def updateLcds(serDisplay1, serDisplay2, startCount, cycle, status, deviceId):
     timeNow = time.localtime()
     timeLineMask = TIME_LINE_MASKS[cycle%len(TIME_LINE_MASKS)]
     timeLine = time.strftime(timeLineMask, timeNow)
@@ -144,7 +144,7 @@ def updateLcds(serDisplay1, serDisplay2, startCount, cycle, status):
     #
     line1 = timeLine
     line2 = getLineArg(1)
-    line3 = DEVICE_ID + "[" + str(startCount) + "," + str(cycle) + "]"
+    line3 = deviceId + "[" + str(startCount) + "," + str(cycle) + "]"
     line4 = status
     #
     writeLines(line1, line2, serDisplay2)
