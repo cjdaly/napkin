@@ -15,6 +15,7 @@ require 'napkin-pulse'
 require 'napkin-handlers'
 
 module Napkin
+  NAPKIN_VERSION = "0.1"
   module Helpers
     #
     Neo = Napkin::Neo4jUtil
@@ -24,6 +25,15 @@ module Napkin
 
       Neo.pin!(:root, Neo.get_root_node_id())
       Neo.pin!(:napkin, Neo.get_sub_id!('napkin', Neo.pin(:root)))
+
+      version = Neo.get_node_property('napkin.VERSION', Neo.pin(:napkin))
+      if (version.to_s == "") then
+        Neo.set_node_property('napkin.VERSION', NAPKIN_VERSION, Neo.pin(:napkin))
+      elsif (version != NAPKIN_VERSION)
+        raise "Helpers.init_neo4j - database version mismatch!"
+      end
+      puts "Napkin version: #{NAPKIN_VERSION}"
+
       Neo.pin!(:starts, Neo.get_sub_id!('starts', Neo.pin(:napkin)))
       Neo.pin!(:start, Neo.next_sub_id!(Neo.pin(:starts)))
 
