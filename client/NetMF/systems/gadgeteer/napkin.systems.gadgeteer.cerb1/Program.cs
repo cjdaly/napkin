@@ -1,4 +1,14 @@
-﻿using System;
+﻿/****
+ * Copyright (c) 2013 Chris J Daly (github user cjdaly)
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *   cjdaly - initial API and implementation
+ ****/
+using System;
 using System.Collections;
 using System.Net;
 using System.Text;
@@ -17,11 +27,12 @@ using Gadgeteer.Modules.Seeed;
 
 using napkin.util.http;
 
-namespace napkin.systems.gadgeteer.cerbee1
+namespace napkin.systems.gadgeteer.cerb1
 {
+
     public partial class Program
     {
-        public readonly string DeviceId = "cerbee1";
+        public readonly string DeviceId = "cerb1";
         public readonly string NapkinServerUri = "http://192.168.2.78:4567";
         private NetworkCredential _credential;
 

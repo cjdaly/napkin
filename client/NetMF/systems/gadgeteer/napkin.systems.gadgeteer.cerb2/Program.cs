@@ -1,4 +1,14 @@
-﻿using System;
+﻿/****
+ * Copyright (c) 2013 Chris J Daly (github user cjdaly)
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *   cjdaly - initial API and implementation
+ ****/
+using System;
 using System.Collections;
 using System.Net;
 using System.Text;
@@ -17,11 +27,12 @@ using Gadgeteer.Modules.Seeed;
 
 using napkin.util.http;
 
-namespace napkin.systems.gadgeteer.cerbee1
+namespace napkin.systems.gadgeteer.cerb2
 {
+
     public partial class Program
     {
-        public readonly string DeviceId = "cerbee1";
+        public readonly string DeviceId = "cerb2";
         public readonly string NapkinServerUri = "http://192.168.2.78:4567";
         private NetworkCredential _credential;
 
@@ -33,21 +44,9 @@ namespace napkin.systems.gadgeteer.cerbee1
 
             _credential = new NetworkCredential(DeviceId, DeviceId);
 
-            temperatureHumidity.MeasurementComplete += new TemperatureHumidity.MeasurementCompleteEventHandler(temperatureHumidity_MeasurementComplete);
-
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
         }
-
-
-        private double _temperature = 0;
-        private double _relativeHumidity = 0;
-        void temperatureHumidity_MeasurementComplete(TemperatureHumidity sender, double temperature, double relativeHumidity)
-        {
-            _temperature = temperature;
-            _relativeHumidity = relativeHumidity;
-        }
-
 
         private int _cycleCount = 0;
         private void CycleDriver()
@@ -73,11 +72,6 @@ namespace napkin.systems.gadgeteer.cerbee1
 
             long memoryBytesFree = Debug.GC(false);
             sb.AppendLine("vitals.memoryBytesFree~i=" + memoryBytesFree);
-
-            temperatureHumidity.RequestMeasurement();
-            Thread.Sleep(1000);
-            sb.AppendLine("sensor.temperatureHumidity.temperature~f=" + _temperature.ToString());
-            sb.AppendLine("sensor.temperatureHumidity.relativeHumidity~f=" + _relativeHumidity.ToString());
 
             double lightSensorPercentage = lightSensor.ReadLightSensorPercentage();
             sb.AppendLine("sensor.lightSensor.lightSensorPercentage~f=" + lightSensorPercentage.ToString());

@@ -33,6 +33,7 @@
     <Compile Include="ConfigUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HttpUtil.cs" />
+    <Compile Include="StartupUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.SPOT.Native">

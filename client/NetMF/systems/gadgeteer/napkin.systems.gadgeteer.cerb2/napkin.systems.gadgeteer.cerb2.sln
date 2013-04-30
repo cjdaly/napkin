@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "napkin.systems.gadgeteer.cerb2", "napkin.systems.gadgeteer.cerb2.csproj", "{2A5F4FBA-234A-427A-A61D-749BBA7340F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "napkin.util.http", "..\..\..\libraries\util\napkin.util.http\napkin.util.http.csproj", "{EB6D49D3-9F93-4632-9D12-F221C9D47D30}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A5F4FBA-234A-427A-A61D-749BBA7340F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A5F4FBA-234A-427A-A61D-749BBA7340F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A5F4FBA-234A-427A-A61D-749BBA7340F0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2A5F4FBA-234A-427A-A61D-749BBA7340F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A5F4FBA-234A-427A-A61D-749BBA7340F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A5F4FBA-234A-427A-A61D-749BBA7340F0}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{EB6D49D3-9F93-4632-9D12-F221C9D47D30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB6D49D3-9F93-4632-9D12-F221C9D47D30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB6D49D3-9F93-4632-9D12-F221C9D47D30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB6D49D3-9F93-4632-9D12-F221C9D47D30}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
