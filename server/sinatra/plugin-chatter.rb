@@ -57,7 +57,7 @@ module Napkin
         Neo.set_node_property('chatter.handle_time~i', handle_time.to_i, chatter_node_id)
 
         body_text = get_body_text
-        body_text.each do |line|
+        body_text.lines do |line|
           key, value = line.split('=', 2)
           key.strip! ; value.strip!
           next if KEY_MATCH.match(key).nil?
