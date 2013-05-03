@@ -40,7 +40,7 @@ module Napkin
 
             puts "Pulse thread initialized..."
             while (@enabled)
-              puts "Pulse thread looping..."
+              # puts "Pulse thread looping..."
               task_node_ids = Neo.get_sub_ids(@tasks_node_id)
               task_node_ids.each do |task_node_id|
                 task = get_task_instance(task_node_id, pulse_node_id)
@@ -49,11 +49,12 @@ module Napkin
               end
               sleep 1
               if (end_of_pulse) then
-                puts "Pulse thread - new pulse..."
                 Neo.set_node_property('napkin.pulse.pulse_skip_count', pulse_skip_count, pulse_node_id)
                 Neo.set_node_property('napkin.pulse.end_time_i', Time.now.to_i, pulse_node_id)
                 pulse_node_id = Neo.next_sub_id!(@pulses_node_id)
                 Neo.set_node_property('napkin.pulse.start_time_i', Time.now.to_i, pulse_node_id)
+                pulse_count = Neo.get_node_property('napkin.position', pulse_node_id)
+                puts "Pulse thread - new pulse (#{pulse_count})..."
                 end_of_pulse = false
                 pulse_skip_count = 0
               end
