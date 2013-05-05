@@ -8,6 +8,7 @@
 # Contributors:
 #   cjdaly - initial API and implementation
 ####
+require 'json'
 require 'neo4j-util'
 require 'napkin-plugins'
 require 'napkin-tasks'
@@ -16,16 +17,30 @@ require 'napkin-handlers'
 
 module Napkin
   NAPKIN_VERSION = "0.1"
+  #
   module Helpers
     #
-    Neo = Napkin::Neo4jUtil
+    Config = {}
     #
+    Neo = Napkin::Neo4jUtil
+
+    #
+    def Helpers.init_system_config()
+      system_config_file = ARGV[0].to_s
+      raise "Specify system configuration file!" unless File.exist?(system_config_file)
+      system_config_hash = JSON.parse(File.read(system_config_file))
+      Config[:system] = system_config_hash
+      puts "Napkin system name: #{Config[:system]['napkin.config.system_name']}"
+    end
+
     def Helpers.init_neo4j()
       start_time = Time.now
 
+      # create top-level nodes
       Neo.pin!(:root, Neo.get_root_node_id())
       Neo.pin!(:napkin, Neo.get_sub_id!('napkin', Neo.pin(:root)))
 
+      # Napkin version
       version = Neo.get_node_property('napkin.VERSION', Neo.pin(:napkin))
       if (version.to_s == "") then
         Neo.set_node_property('napkin.VERSION', NAPKIN_VERSION, Neo.pin(:napkin))
@@ -34,6 +49,15 @@ module Napkin
       end
       puts "Napkin version: #{NAPKIN_VERSION}"
 
+      # system name
+      system_name = Config[:system]['napkin.config.system_name']
+      Neo.set_node_property('napkin.config.system_name', system_name, Neo.pin(:napkin))
+
+      # Neo4j database path
+      neo4j_db_path = Config[:system]['napkin.config.Neo4J_db_path']
+      Neo.set_node_property('napkin.config.Neo4J_db_path', neo4j_db_path, Neo.pin(:napkin))
+
+      # starts
       Neo.pin!(:starts, Neo.get_sub_id!('starts', Neo.pin(:napkin)))
       Neo.pin!(:start, Neo.next_sub_id!(Neo.pin(:starts)))
 
@@ -43,18 +67,19 @@ module Napkin
       start_count = Neo.get_node_property('napkin.sub_count', Neo.pin(:starts))
       puts "STARTS: #{start_count}"
 
+      # tasks, pulses, handles, ...
       Neo.pin!(:tasks, Neo.get_sub_id!('tasks', Neo.pin(:napkin)))
       Neo.pin!(:pulses, Neo.get_sub_id!('pulses', Neo.pin(:napkin)))
       Neo.pin!(:handles, Neo.get_sub_id!('handles', Neo.pin(:napkin)))
     end
 
+    def Helpers.init_plugins()
+      Napkin::Plugins.init()
+    end
+
     def Helpers.start_pulse()
       pulse = Napkin::Pulse::Driver.new(Neo.pin(:pulses), Neo.pin(:tasks))
       pulse.start()
-    end
-
-    def Helpers.init_plugins()
-      Napkin::Plugins.init()
     end
 
     def handle_request(path, request, user)

@@ -21,6 +21,7 @@ set :bind, '0.0.0.0'
 require 'napkin-helpers'
 
 helpers Napkin::Helpers
+Napkin::Helpers::init_system_config()
 Napkin::Helpers::init_neo4j()
 
 #

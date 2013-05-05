@@ -1,0 +1,4 @@
+{
+  "napkin.config.system_name" : "pcduino-1",
+  "napkin.config.Neo4J_db_path" : "/media/PCDUINO-SD/napkin-neo4j-db"
+}
