@@ -49,17 +49,20 @@ module Napkin
       end
 
       MEMFREE_CAPTURE = /^MemFree:\s+(\d+)\skB/
+      DB_USAGE_CAPTURE = /^(\d+)\s+/
 
       def doit
         vitals_check_time_i = Time.now.to_i
         vitals_node_id = Neo.next_sub_id!(@task_data['vitals.sup_node_id'])
         Neo.set_node_property('vitals.check_time_i', vitals_check_time_i, vitals_node_id)
 
+        # free memory
         memfree = `cat /proc/meminfo | grep MemFree`
         memfree_kb = MEMFREE_CAPTURE.match(memfree).captures[0]
         memfree_kb_i = parse_int(memfree_kb)
         Neo.set_node_property('vitals.memfree_kb', memfree_kb_i, vitals_node_id)
 
+        # load averages
         loadavg = `cat /proc/loadavg`
         loadavg_split = loadavg.split
         loadavg_1_min = parse_float(loadavg_split[0])
@@ -68,6 +71,15 @@ module Napkin
         Neo.set_node_property('vitals.loadavg_5_min', loadavg_5_min, vitals_node_id)
         loadavg_15_min = parse_float(loadavg_split[2])
         Neo.set_node_property('vitals.loadavg_15_min', loadavg_15_min, vitals_node_id)
+
+        # database disk usage
+        neo4j_db_path = Neo.get_node_property('napkin.config.Neo4J_db_path', Neo.pin(:napkin))
+        if (!neo4j_db_path.to_s.empty?) then
+          neo4j_db_du = `du -sb #{neo4j_db_path}`
+          neo4j_db_du_bytes_text = DB_USAGE_CAPTURE.match(neo4j_db_du).captures[0]
+          neo4j_db_du_bytes = parse_int(neo4j_db_du_bytes_text)
+          Neo.set_node_property('vitals.neo4j_db_usage_bytes', neo4j_db_du_bytes, vitals_node_id)
+        end
       end
     end
   end
