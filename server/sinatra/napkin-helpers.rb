@@ -65,7 +65,7 @@ module Napkin
       Neo.set_node_property('napkin.starts.start_time_i', start_time.to_i, Neo.pin(:start))
 
       start_count = Neo.get_node_property('napkin.sub_count', Neo.pin(:starts))
-      puts "STARTS: #{start_count}"
+      puts "Napkin system starts: #{start_count}"
 
       # tasks, pulses, handles, ...
       Neo.pin!(:tasks, Neo.get_sub_id!('tasks', Neo.pin(:napkin)))
