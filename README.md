@@ -8,20 +8,20 @@ Napkin began when I was clued into the emergence of small, inexpensive but HTTP 
 ### Details
 
 The Napkin server can run in (at least) these configurations:
-* [Ubuntu (x86) 12.04](Server-on-Ubuntu-x86)
-* [pcduino (running Ubuntu 12.04)](Server-on-pcduino)
-* [BeagleBone black (running Ubuntu 13.04)](Server-on-BeagleBone-black)
+* [Ubuntu (x86) 12.04](https://github.com/cjdaly/napkin/wiki/Server-on-Ubuntu-x86)
+* [pcduino (running Ubuntu 12.04)](https://github.com/cjdaly/napkin/wiki/Server-on-pcduino)
+* [BeagleBone black (running Ubuntu 13.04)](https://github.com/cjdaly/napkin/wiki/Server-on-BeagleBone-black)
 
 Napkin clients use REST-style HTTP communication to access services such as:
-* [config](Plugin-config) - allows devices to store and retrieve hierarchical configuration data
-* [chatter](Plugin-chatter) - allows devices to post time series data
+* [config](https://github.com/cjdaly/napkin/wiki/Plugin-config) - allows devices to store and retrieve hierarchical configuration data
+* [chatter](https://github.com/cjdaly/napkin/wiki/Plugin-chatter) - allows devices to post time series data
 * vitals - periodically stores data about the state of the napkin server (such as memory and disk usage)
 * new services can be implemented as plugins
 
 Napkin client examples:
 * .Net Gadgeteer (C#)
-  * [cerbee1](Gadgeteer-client-cerbee1)
-  * [cerb1](Gadgeteer-client-cerb1)
-  * [cerb2](Gadgeteer-client-cerb2)
+  * [cerbee1](https://github.com/cjdaly/napkin/wiki/Gadgeteer-client-cerbee1)
+  * [cerb1](https://github.com/cjdaly/napkin/wiki/Gadgeteer-client-cerb1)
+  * [cerb2](https://github.com/cjdaly/napkin/wiki/Gadgeteer-client-cerb2)
 * BeagleBone (Python)
-  * [bone1](Beaglebone-client-bone1)
+  * [bone1](https://github.com/cjdaly/napkin/wiki/Beaglebone-client-bone1)
