@@ -1,3 +1,5 @@
+### Napkin
+
 Napkin is an interaction platform for HTTP enabled devices.  The Napkin server offers a REST API with predefined services for storing and retrieving configuration information and collecting time series data from client devices.  A plug-in model provides extensibility in HTTP handling and periodic processing of stored data.  The Napkin server runs on Ruby [Sinatra](http://www.sinatrarb.com/) and the [Neo4j](http://www.neo4j.org/) graph database.
 
 Napkin began when I discovered small, inexpensive but HTTP capable (ARM-based, "[arduino](http://en.wikipedia.org/wiki/Arduino)-ish") computers like the [Netduino Plus](http://www.netduino.com/), [.Net Gadgeteer](http://www.ghielectronics.com/catalog/category/274), [BeagleBone](http://beagleboard.org/bone), [Raspberry Pi](http://www.raspberrypi.org/), etc. and parts websites like [Sparkfun](https://www.sparkfun.com/), [Adafruit](http://adafruit.com/), etc. I built systems based on these devices to monitor and control the environment around my home (temperature, humidity, light levels, sounds, etc.) and needed a way to collect, store and process all of the data.
