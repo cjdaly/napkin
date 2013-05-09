@@ -1,8 +1,0 @@
-## To download and uncompress Neo4j:
-# wget -O neo4j-community-1.8.2.tgz 'http://download.neo4j.org/artifact?edition=community&version=1.8.2&distribution=tarball'
-# tar xvf neo4j-community-1.8.2.tgz
-
-# add Neo4j to $PATH
-export NEO4J_ROOT=$PWD/neo4j-community-1.8.2
-export PATH=$NEO4J_ROOT/bin:$PATH
-
