@@ -44,17 +44,17 @@ use Rack::Auth::Basic, "authenticate" do |username, password|
 end
 
 get '/*' do |path|
-  handle_request(path, request, user)
+  handle_request(path, user)
 end
 
 post '/*' do |path|
-  handle_request(path, request, user)
+  handle_request(path, user)
 end
 
 put '/*' do |path|
-  handle_request(path, request, user)
+  handle_request(path, user)
 end
 
 delete '/*' do |path|
-  handle_request(path, request, user)
+  handle_request(path, user)
 end

@@ -21,10 +21,11 @@ module Napkin
     KEY_TYPE_F_MATCH = /.+~f$/
     #
     class HandlerBase
-      def initialize(segment_node_id, handle_node_id, request, segments, segment_index, user)
+      def initialize(segment_node_id, handle_node_id, request, response, segments, segment_index, user)
         @segment_node_id = segment_node_id
         @handle_node_id = handle_node_id
         @request = request
+        @response = response
         @segments = segments
         @segment_index = segment_index
         @user = user

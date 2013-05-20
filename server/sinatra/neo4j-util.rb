@@ -181,6 +181,15 @@ module Napkin
       return Neo4jUtil.extract_cypher_result(raw['data'])
     end
 
+    def Neo4jUtil.cypher_query(cypher_hash)
+      raw = Neo4jUtil.post(SRC, cypher_hash)
+      raw_data = raw['data']
+      if (raw_data.length == 1) then
+        return raw_data[0]
+      end
+      return nil
+    end
+
     #internal helpers
 
     def Neo4jUtil.extract_cypher_result(raw_data)

@@ -12,6 +12,8 @@ require 'neo4j-util'
 require 'napkin-plugins'
 require 'napkin-tasks'
 require 'napkin-handlers'
+require 'gchart'
+require 'haml'
 
 module Napkin
   module Plugins
@@ -75,10 +77,10 @@ module Napkin
         # database disk usage
         neo4j_db_path = Neo.get_node_property('napkin.config.Neo4J_db_path', Neo.pin(:napkin))
         if (!neo4j_db_path.to_s.empty?) then
-          neo4j_db_du = `du -sb #{neo4j_db_path}`
-          neo4j_db_du_bytes_text = DB_USAGE_CAPTURE.match(neo4j_db_du).captures[0]
-          neo4j_db_du_bytes = parse_int(neo4j_db_du_bytes_text)
-          Neo.set_node_property('vitals.neo4j_db_usage_bytes', neo4j_db_du_bytes, vitals_node_id)
+          neo4j_db_du = `du -sk #{neo4j_db_path}`
+          neo4j_db_du_kb_text = DB_USAGE_CAPTURE.match(neo4j_db_du).captures[0]
+          neo4j_db_du_kb = parse_int(neo4j_db_du_kb_text)
+          Neo.set_node_property('vitals.neo4j_db_usage_kb', neo4j_db_du_kb, vitals_node_id)
         end
       end
     end
@@ -87,9 +89,105 @@ module Napkin
   module Handlers
     class Handler_Vitals_Get < DefaultGetHandler
       def handle
-        # TODO: return summary of vitals
-        return super
+        time_now_i = Time.now.to_i
+        start_time_i = time_now_i-600
+        end_time_i = time_now_i
+
+        time_interval_seconds = 600
+        time_slices = 10
+
+        memfree_avgs = []
+        neo4j_db_usage_avgs = []
+        time_labels = []
+
+        for i in 1..time_slices
+          start_time_i = time_now_i - (time_interval_seconds * i)
+          end_time_i = start_time_i + time_interval_seconds
+          values = get_averages(start_time_i, end_time_i)
+          memfree_avgs.insert(0, (values[1] || 0))
+          neo4j_db_usage_avgs.insert(0, (values[2] || 0))
+          time_labels.insert(0, Time.at(start_time_i).strftime("%I:%M"))
+        end
+
+        start_time_i = time_now_i - (time_interval_seconds * time_slices)
+        end_time_i = time_now_i
+
+        minimums = get_minimums(start_time_i, end_time_i)
+        maximims = get_maximums(start_time_i, end_time_i)
+
+        memfree_y = [0, maximims[1]]
+        memfree_chart = Gchart.line(
+        :title => "free memory (kb)",
+        :data => memfree_avgs,
+        :size => "640x200",
+        :axis_with_labels => 'x,y',
+        :axis_labels => [time_labels, memfree_y],
+        :format => 'image_tag'
+        )
+
+        neo4j_db_usage_y = [0, maximims[2]]
+        neo4j_db_usage_chart = Gchart.line(
+        :title => "Neo4j disk usage (kb)",
+        :data => neo4j_db_usage_avgs,
+        :size => "640x200",
+        :axis_with_labels => 'x,y',
+        :axis_labels => [time_labels, neo4j_db_usage_y],
+        :format => 'image_tag'
+        )
+
+        @response.headers['Content-Type'] = 'text/html'
+
+        haml_text = "%html\n"
+        haml_text << "  %body\n"
+        haml_text << "    %h1 Napkin vitals\n"
+        haml_text << "    %br\n"
+        haml_text << "    ! #{memfree_chart}\n"
+        haml_text << "    %br\n"
+        haml_text << "    ! #{neo4j_db_usage_chart}\n"
+        haml_engine = Haml::Engine.new(haml_text)
+        return haml_engine.render
       end
+
+      def get_averages(start_time_i, end_time_i)
+        cypher_query_returns = "RETURN COUNT(sub)"
+        cypher_query_returns << ", avg(sub.`vitals.memfree_kb`?)"
+        cypher_query_returns << ", avg(sub.`vitals.neo4j_db_usage_kb`?)"
+        return get_interval_data(start_time_i, end_time_i, cypher_query_returns)
+      end
+
+      def get_minimums(start_time_i, end_time_i)
+        cypher_query_returns = "RETURN COUNT(sub)"
+        cypher_query_returns << ", min(sub.`vitals.memfree_kb`?)"
+        cypher_query_returns << ", min(sub.`vitals.neo4j_db_usage_kb`?)"
+        return get_interval_data(start_time_i, end_time_i, cypher_query_returns)
+      end
+
+      def get_maximums(start_time_i, end_time_i)
+        cypher_query_returns = "RETURN COUNT(sub)"
+        cypher_query_returns << ", max(sub.`vitals.memfree_kb`?)"
+        cypher_query_returns << ", max(sub.`vitals.neo4j_db_usage_kb`?)"
+        return get_interval_data(start_time_i, end_time_i, cypher_query_returns)
+      end
+
+      def get_interval_data(start_time_i, end_time_i, cypher_query_returns)
+        cypher_query = "START sup=node({sup_node_id}) "
+        cypher_query << "MATCH sup-[:NAPKIN_SUB]->sub "
+        cypher_query << "WHERE ( (sub.`vitals.check_time_i` >= {start_time_i}) and (sub.`vitals.check_time_i` < {end_time_i}) ) "
+        cypher_query << cypher_query_returns
+
+        cypher_query_hash = {
+          "query" => cypher_query,
+          "params" => {
+          "sup_node_id" => @segment_node_id,
+          "start_time_i" => start_time_i,
+          "end_time_i" => end_time_i,
+          }
+        }
+
+        values = Neo.cypher_query(cypher_query_hash)
+        return values
+      end
+
     end
   end
 end

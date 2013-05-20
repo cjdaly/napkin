@@ -82,7 +82,7 @@ module Napkin
       pulse.start()
     end
 
-    def handle_request(path, request, user)
+    def handle_request(path, user)
       begin
         handle_time = Time.now
         content_type 'text/plain'
@@ -98,7 +98,7 @@ module Napkin
 
           handler_class = get_handler_class(request.request_method, segment_node_id)
           if (!handler_class.nil?) then
-            handler = handler_class.new(segment_node_id, handle_node_id, request, segments, i, user)
+            handler = handler_class.new(segment_node_id, handle_node_id, request, response, segments, i, user)
             if (handler.handle?) then
               result = handler.handle
               return result if !result.nil?
