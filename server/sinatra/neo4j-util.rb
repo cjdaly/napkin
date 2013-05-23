@@ -74,8 +74,8 @@ module Napkin
         "node_id" => node_id,
         }
       }
-      raw = Neo4jUtil.post(SRC, cypher_get_node_property)
-      return Neo4jUtil.extract_cypher_result(raw['data'])
+      value = Neo4jUtil.cypher_query(cypher_get_node_property, true)
+      return value
     end
 
     def Neo4jUtil.set_node_property(key, value, node_id)
@@ -101,8 +101,8 @@ module Napkin
         "node_id" => node_id,
         }
       }
-      raw = Neo4jUtil.post(SRC, cypher_increment_counter)
-      return Neo4jUtil.extract_cypher_result(raw['data'])
+      value = Neo4jUtil.cypher_query(cypher_increment_counter, true)
+      return value
     end
 
     def Neo4jUtil.next_sub_id!(sup_node_id)
@@ -132,8 +132,8 @@ module Napkin
         "sub_node_segment" => sub_node_segment
         }
       }
-      raw = Neo4jUtil.post(SRC, cypher_create_unique)
-      return Neo4jUtil.extract_cypher_result(raw['data'])
+      value = Neo4jUtil.cypher_query(cypher_create_unique, true)
+      return value
     end
 
     def Neo4jUtil.get_sub_id(sub_node_segment, sup_node_id)
@@ -146,8 +146,8 @@ module Napkin
         "sub_node_segment" => sub_node_segment
         }
       }
-      raw =  Neo4jUtil.post(SRC, cypher_get_sub)
-      return extract_cypher_result(raw['data'])
+      value = Neo4jUtil.cypher_query(cypher_get_sub, true)
+      return value
     end
 
     def Neo4jUtil.get_sub_ids(sup_node_id)
@@ -177,26 +177,66 @@ module Napkin
         "to_node_id" => to_node_id
         }
       }
-      raw = Neo4jUtil.post(SRC, cypher_create_unique_ref)
-      return Neo4jUtil.extract_cypher_result(raw['data'])
+      value = Neo4jUtil.cypher_query(cypher_create_unique_ref, true)
+      return value
     end
 
-    def Neo4jUtil.cypher_query(cypher_hash)
+    def Neo4jUtil.get_time_series(
+      sup_node_id, sub_numeric_data_key,
+      sub_time_key, finish_time_i,
+      time_slice_count, time_slice_seconds)
+      #
+
+      time_series = []
+      for i in 1..time_slice_count
+        start_time_i = finish_time_i - (time_slice_seconds * i)
+        end_time_i = start_time_i + time_slice_seconds
+        midpoint_time_i = start_time_i + time_slice_seconds/2
+
+        values = Neo4jUtil.get_interval_data(
+        sup_node_id, sub_numeric_data_key, "avg",
+        sub_time_key, start_time_i, end_time_i
+        )
+
+        data_value = values[0] || 0
+        time_label = Time.at(midpoint_time_i).strftime("%I:%M%P")
+
+        time_series.insert(0, [time_label, data_value])
+      end
+
+      return time_series
+    end
+
+    def Neo4jUtil.get_interval_data(
+      sup_node_id, sub_numeric_data_key, aggregate_function,
+      sub_time_key, start_time_i, end_time_i)
+      #
+      cypher_query = "START sup=node({sup_node_id}) "
+      cypher_query << "MATCH sup-[:NAPKIN_SUB]->sub "
+      cypher_query << "WHERE ( (sub.`#{sub_time_key}` >= {start_time_i}) and (sub.`#{sub_time_key}` < {end_time_i}) ) "
+      cypher_query << "RETURN #{aggregate_function}(sub.`#{sub_numeric_data_key}`?)"
+
+      cypher_query_hash = {
+        "query" => cypher_query,
+        "params" => {
+        "sup_node_id" => sup_node_id,
+        "start_time_i" => start_time_i,
+        "end_time_i" => end_time_i,
+        }
+      }
+
+      values = Neo4jUtil.cypher_query(cypher_query_hash)
+      return values
+    end
+
+    def Neo4jUtil.cypher_query(cypher_hash, extract_single_result = false)
       raw = Neo4jUtil.post(SRC, cypher_hash)
       raw_data = raw['data']
       if (raw_data.length == 1) then
-        return raw_data[0]
-      end
-      return nil
-    end
-
-    #internal helpers
-
-    def Neo4jUtil.extract_cypher_result(raw_data)
-      if (raw_data.length == 1) then
-        data_item = raw_data[0]
-        if ((data_item.is_a? Array) && (data_item.length == 1)) then
-          return data_item[0]
+        if (extract_single_result) then
+          return raw_data[0][0]
+        else
+          return raw_data[0]
         end
       end
       return nil

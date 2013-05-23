@@ -10,11 +10,13 @@
 ####
 require 'cgi'
 require 'neo4j-util'
+require 'haml-util'
 
 module Napkin
   module Handlers
     #
     Neo = Napkin::Neo4jUtil
+    Haml = Napkin::HamlUtil
     #
     KEY_MATCH = /^[-_.a-zA-Z0-9~]+$/
     KEY_TYPE_I_MATCH = /.+~i$/

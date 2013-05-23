@@ -9,6 +9,7 @@
 #   cjdaly - initial API and implementation
 ####
 require 'neo4j-util'
+require 'haml-util'
 require 'napkin-plugins'
 require 'napkin-tasks'
 require 'napkin-handlers'
@@ -31,6 +32,7 @@ module Napkin
       def init
         root_node_id = Neo.pin(:root)
         chatter_id = Neo.get_sub_id!('chatter', root_node_id)
+        Neo.set_node_property('napkin.handlers.GET.class_name', 'Handler_Chatter_Get', chatter_id)
         Neo.set_node_property('napkin.handlers.POST.class_name', 'Handler_Chatter_Post', chatter_id)
       end
 
@@ -72,5 +74,39 @@ module Napkin
         return "OK"
       end
     end
+
+    class Handler_Chatter_Get < HandlerBase
+      def handle?
+        # is there one more segment?
+        return false unless (@segments.length() == @segment_index+2)
+
+        # is there a 'key' param
+        return false if get_param('key').nil?
+
+        return true;
+      end
+
+      def handle
+        time_now_i = Time.now.to_i
+
+        user_segment = get_segment(@segment_index+1)
+        user_node_id = Neo.get_sub_id(user_segment, @segment_node_id)
+
+        return nil if user_node_id.nil?
+
+        param_key = get_param('key')
+
+        time_series = Neo.get_time_series(
+        user_node_id, param_key,
+        'chatter.handle_time~i', time_now_i,
+        10, 600
+        )
+
+        @response.headers['Content-Type'] = 'text/html'
+        haml_out = Haml.render_line_chart("#{user_segment} chatter", [param_key], time_series)
+        return haml_out
+      end
+    end
+
   end
 end
