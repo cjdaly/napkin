@@ -14,7 +14,7 @@ The Napkin server can run in (at least) these configurations:
 Napkin clients use REST-style HTTP communication to access services such as:
 * [config](https://github.com/cjdaly/napkin/wiki/Plugin-config) - allows devices to store and retrieve hierarchical configuration data
 * [chatter](https://github.com/cjdaly/napkin/wiki/Plugin-chatter) - allows devices to post time series data
-* vitals - periodically stores data about the state of the napkin server (such as memory and disk usage)
+* [vitals](https://github.com/cjdaly/napkin/wiki/Plugin-vitals) - periodically stores data about the state of the napkin server
 * new services can be implemented as plugins
 
 Napkin client examples:
