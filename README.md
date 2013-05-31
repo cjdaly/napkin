@@ -10,6 +10,7 @@ The Napkin server can run in (at least) these configurations:
 * [Ubuntu (x86) 12.04](https://github.com/cjdaly/napkin/wiki/Server-on-Ubuntu-x86)
 * [pcduino (running Ubuntu 12.04)](https://github.com/cjdaly/napkin/wiki/Server-on-pcduino)
 * [BeagleBone black (running Ubuntu 13.04)](https://github.com/cjdaly/napkin/wiki/Server-on-BeagleBone-black)
+* [Cubieboard (running Ubuntu 13.01)](https://github.com/cjdaly/napkin/wiki/Server-on-Cubieboard)
 
 Napkin clients use REST-style HTTP communication to access services such as:
 * [config](https://github.com/cjdaly/napkin/wiki/Plugin-config) - allows devices to store and retrieve hierarchical configuration data
