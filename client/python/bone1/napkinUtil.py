@@ -15,17 +15,23 @@ import re
 #
 # Napkin config
 DEVICE_ID="bone1"
-NAPKIN_URL="http://192.168.2.78:4567"
-NAPKIN_CONFIG_URL=NAPKIN_URL + "/config"
-NAPKIN_CONFIG_DEVICE_URL=NAPKIN_CONFIG_URL + "/" + DEVICE_ID
-NAPKIN_CHATTER_URL=NAPKIN_URL + "/chatter"
-NAPKIN_CONFIG_KEYS =[None, 'test', None, None]
+NAPKIN_URLS=["http://192.168.2.78:4567", "http://192.168.2.35:4567", "http://192.168.2.236:4567"]
+NAPKIN_URL_INDEX = 1
+
+def getConfigUrl(napkinUrl):
+	return napkinUrl + "/config"
+
+def getConfigDeviceUrl(napkinUrl):
+	return napkinUrl + "/config/" + DEVICE_ID
+
+def getChatterUrl(napkinUrl):
+	return napkinUrl + "/chatter"
 
 #
 # Napkin util
 
 def getConfigValue(key):
-    napkinConfigUrl=NAPKIN_CONFIG_DEVICE_URL + "?key=" + key
+    napkinConfigUrl=getConfigDeviceUrl(NAPKIN_URLS[NAPKIN_URL_INDEX]) + "?key=" + key
     configValue="??? error ???"
     try:
         request = urllib2.Request(napkinConfigUrl);
@@ -40,7 +46,7 @@ def getConfigValue(key):
     return configValue
 
 def putConfigValue(key, value):
-    napkinConfigUrl=NAPKIN_CONFIG_DEVICE_URL + "?key=" + key
+    napkinConfigUrl=getConfigDeviceUrl(NAPKIN_URLS[NAPKIN_URL_INDEX]) + "?key=" + key
     configValue="??? error ???"
     try:
 	opener = urllib2.build_opener(urllib2.HTTPHandler)
@@ -58,7 +64,7 @@ def putConfigValue(key, value):
     return configValue
 
 def postDeviceConfig():
-    postDeviceConfigUrl=NAPKIN_CONFIG_URL + "?sub=" + DEVICE_ID
+    postDeviceConfigUrl=getConfigUrl(NAPKIN_URLS[NAPKIN_URL_INDEX]) + "?sub=" + DEVICE_ID
     try:
         request = urllib2.Request(postDeviceConfigUrl, "")
         authHeader = base64.encodestring('%s:%s' % (DEVICE_ID, DEVICE_ID)).replace('\n', '')
@@ -88,7 +94,7 @@ def composeChatterText(cycle, startCount):
     return chatterText
 
 def postChatter(chatterText):
-    napkinChatterUrl=NAPKIN_CHATTER_URL + "?format=napkin_kv"
+    napkinChatterUrl=getChatterUrl(NAPKIN_URLS[NAPKIN_URL_INDEX]) + "?format=napkin_kv"
     responseText="??? error ???"
     try:
         request = urllib2.Request(napkinChatterUrl, chatterText)
