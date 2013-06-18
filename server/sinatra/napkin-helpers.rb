@@ -67,10 +67,9 @@ module Napkin
       start_count = Neo.get_node_property('napkin.sub_count', Neo.pin(:starts))
       puts "Napkin system starts: #{start_count}"
 
-      # tasks, pulses, handles, ...
+      # tasks, pulses, ...
       Neo.pin!(:tasks, Neo.get_sub_id!('tasks', Neo.pin(:napkin)))
       Neo.pin!(:pulses, Neo.get_sub_id!('pulses', Neo.pin(:napkin)))
-      Neo.pin!(:handles, Neo.get_sub_id!('handles', Neo.pin(:napkin)))
     end
 
     def Helpers.init_plugins()
@@ -88,9 +87,6 @@ module Napkin
         content_type 'text/plain'
         segments = path.split('/')
 
-        handle_node_id = Neo.next_sub_id!(Neo.pin(:handles))
-        Neo.set_node_property('napkin.handles.handle_time', handle_time.to_i, handle_node_id)
-
         segment_node_id = Neo.pin(:root)
         segments.each_with_index do |segment, i|
           segment_node_id = Neo.get_sub_id(segment, segment_node_id)
@@ -98,7 +94,7 @@ module Napkin
 
           handler_class = get_handler_class(request.request_method, segment_node_id)
           if (!handler_class.nil?) then
-            handler = handler_class.new(segment_node_id, handle_node_id, request, response, segments, i, user)
+            handler = handler_class.new(segment_node_id, request, response, segments, i, user)
             if (handler.handle?) then
               result = handler.handle
               return result if !result.nil?
