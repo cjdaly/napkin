@@ -29,6 +29,7 @@ module Napkin
 
   module Tasks
     class Task_Vitals < TaskBase
+      NEO4J_PID_CAPTURE = /^Neo4j Server is running at pid (\d+)/
       def init
         vitals_node_id = Neo.get_sub_id!('vitals', Neo.pin(:napkin))
         Neo.set_node_property('napkin.handlers.GET.class_name', 'Handler_Vitals_Get', vitals_node_id)
@@ -36,6 +37,11 @@ module Napkin
         @task_data['vitals.sup_node_id'] = vitals_node_id
         @task_data['vitals.skip_count'] = 0
         @task_data['vitals.skip_count_max'] = 6
+
+        @task_data['vitals.sinatra_pid'] = Process.pid
+
+        neo4j_status = `neo4j status`
+        @task_data['vitals.neo4j_pid'] = NEO4J_PID_CAPTURE.match(neo4j_status).captures[0]
       end
 
       def todo?
@@ -49,6 +55,7 @@ module Napkin
         end
       end
 
+      VMPEAK_CAPTURE = /^VmPeak:\s+(\d+)\skB/
       MEMFREE_CAPTURE = /^MemFree:\s+(\d+)\skB/
       DB_USAGE_CAPTURE = /^(\d+)\s+/
 
@@ -56,6 +63,18 @@ module Napkin
         vitals_check_time_i = Time.now.to_i
         vitals_node_id = Neo.next_sub_id!(@task_data['vitals.sup_node_id'])
         Neo.set_node_property('vitals.check_time_i', vitals_check_time_i, vitals_node_id)
+
+        # VmPeak for Neo4j
+        vmpeak_kb_neo4j_raw = `cat /proc/#{@task_data['vitals.neo4j_pid']}/status | grep VmPeak`
+        vmpeak_kb_neo4j = VMPEAK_CAPTURE.match(vmpeak_kb_neo4j_raw).captures[0]
+        vmpeak_kb_neo4j_i = parse_int(vmpeak_kb_neo4j)
+        Neo.set_node_property('vitals.vmpeak_kb_neo4j', vmpeak_kb_neo4j_i, vitals_node_id)
+
+        # VmPeak for Sinatra
+        vmpeak_kb_sinatra_raw = `cat /proc/#{@task_data['vitals.sinatra_pid']}/status | grep VmPeak`
+        vmpeak_kb_sinatra = VMPEAK_CAPTURE.match(vmpeak_kb_sinatra_raw).captures[0]
+        vmpeak_kb_sinatra_i = parse_int(vmpeak_kb_sinatra)
+        Neo.set_node_property('vitals.vmpeak_kb_sinatra', vmpeak_kb_sinatra_i, vitals_node_id)
 
         # free memory
         memfree = `cat /proc/meminfo | grep MemFree`
