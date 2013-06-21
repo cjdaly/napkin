@@ -33,8 +33,12 @@ module Napkin
         @query_hash = CGI.parse(@request.query_string)
       end
 
+      def remaining_segments
+        return @segments.length() - (@segment_index + 1)
+      end
+
       def at_destination?
-        return @segments.length() == @segment_index + 1
+        return remaining_segments == 0
       end
 
       def get_segment(index = @segment_index)

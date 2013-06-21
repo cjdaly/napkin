@@ -17,9 +17,8 @@ module Napkin
     Neo = Napkin::Neo4jUtil
     #
     class TaskBase
-      def initialize(task_node_id, pulse_node_id, task_data, task_segment)
+      def initialize(task_node_id, task_data, task_segment)
         @task_node_id = task_node_id
-        @pulse_node_id = pulse_node_id
         @task_data = task_data
         @task_segment = task_segment
       end

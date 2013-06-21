@@ -16,7 +16,7 @@ require 'napkin-pulse'
 require 'napkin-handlers'
 
 module Napkin
-  NAPKIN_VERSION = "0.1"
+  NAPKIN_VERSION = "0.2"
   #
   module Helpers
     #
@@ -67,9 +67,8 @@ module Napkin
       start_count = Neo.get_node_property('napkin.sub_count', Neo.pin(:starts))
       puts "Napkin system starts: #{start_count}"
 
-      # tasks, pulses, ...
+      # tasks
       Neo.pin!(:tasks, Neo.get_sub_id!('tasks', Neo.pin(:napkin)))
-      Neo.pin!(:pulses, Neo.get_sub_id!('pulses', Neo.pin(:napkin)))
     end
 
     def Helpers.init_plugins()
@@ -77,7 +76,7 @@ module Napkin
     end
 
     def Helpers.start_pulse()
-      pulse = Napkin::Pulse::Driver.new(Neo.pin(:pulses), Neo.pin(:tasks))
+      pulse = Napkin::Pulse::Driver.new
       pulse.start()
     end
 

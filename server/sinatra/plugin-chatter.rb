@@ -32,7 +32,6 @@ module Napkin
       def init
         root_node_id = Neo.pin(:root)
         chatter_id = Neo.get_sub_id!('chatter', root_node_id)
-        Neo.set_node_property('napkin.handlers.GET.class_name', 'Handler_Chatter_Get', chatter_id)
         Neo.set_node_property('napkin.handlers.POST.class_name', 'Handler_Chatter_Post', chatter_id)
       end
 
@@ -53,8 +52,14 @@ module Napkin
         param_format = get_param('format')
         return nil unless (param_format.nil? || param_format == 'napkin_kv')
 
-        user_node_id = Neo.get_sub_id!(@user, @segment_node_id)
-        chatter_node_id = Neo.next_sub_id!(user_node_id)
+        user_node_id = Neo.get_sub_id(@user, @segment_node_id)
+        if (user_node_id.nil?) then
+          user_node_id = Neo.get_sub_id!(@user, @segment_node_id)
+          Neo.set_node_property('napkin.handlers.GET.class_name', 'Handler_Chatter_Get', user_node_id)
+        end
+
+        sub_list = Neo::SubList.new(user_node_id)
+        chatter_node_id = sub_list.next_sub_id!
 
         Neo.set_node_property('chatter.handle_time~i', handle_time.to_i, chatter_node_id)
 
@@ -75,18 +80,30 @@ module Napkin
       end
     end
 
-    class Handler_Chatter_Get < HandlerBase
+    class Handler_Chatter_Get < DefaultGetHandler
       def handle?
-        # is there one more segment?
-        return false unless (@segments.length() == @segment_index+2)
-
-        # is there a 'key' param
-        return false if get_param('key').nil?
-
-        return true;
+        return at_destination? || (remaining_segments == 1)
       end
 
       def handle
+        return super if at_destination?
+
+        sub_list = Neo::SubList.new(@segment_node_id)
+        sub_index = get_segment(@segment_index+1)
+        sub_node_id = sub_list.get_sub_id(sub_index)
+        return super if sub_node_id.nil?
+
+        param_key = get_param('key')
+
+        if param_key.nil? then
+          return Neo.get_node_properties_text(sub_node_id)
+        end
+
+        value = Neo.get_node_property(param_key, sub_node_id)
+        return value.to_s
+      end
+
+      def handle_OLD
         time_now_i = Time.now.to_i
 
         user_segment = get_segment(@segment_index+1)

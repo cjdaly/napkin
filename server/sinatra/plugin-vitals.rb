@@ -61,7 +61,8 @@ module Napkin
 
       def doit
         vitals_check_time_i = Time.now.to_i
-        vitals_node_id = Neo.next_sub_id!(@task_data['vitals.sup_node_id'])
+        sub_list = Neo::SubList.new(@task_data['vitals.sup_node_id'])
+        vitals_node_id = sub_list.next_sub_id!
         Neo.set_node_property('vitals.check_time_i', vitals_check_time_i, vitals_node_id)
 
         # VmPeak for Neo4j
@@ -106,7 +107,29 @@ module Napkin
 
   module Handlers
     class Handler_Vitals_Get < DefaultGetHandler
+      def handle?
+        return at_destination? || (remaining_segments == 1)
+      end
+
       def handle
+        return super if at_destination?
+
+        sub_list = Neo::SubList.new(@segment_node_id)
+        sub_index = get_segment(@segment_index+1)
+        sub_node_id = sub_list.get_sub_id(sub_index)
+        return super if sub_node_id.nil?
+
+        param_key = get_param('key')
+
+        if param_key.nil? then
+          return Neo.get_node_properties_text(sub_node_id)
+        end
+
+        value = Neo.get_node_property(param_key, sub_node_id)
+        return value.to_s
+      end
+
+      def handle_OLD
         time_now_i = Time.now.to_i
 
         memfree_time_series = Neo.get_time_series(

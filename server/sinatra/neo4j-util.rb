@@ -242,5 +242,82 @@ module Napkin
       return nil
     end
 
+    class SubList
+      def initialize(sup_node_id)
+        @sup_node_id = sup_node_id
+      end
+
+      NEXT_SUB_CYPHER ='
+      START sup=node({sup_node_id})
+      CREATE UNIQUE sup-[:NAPKIN_SUB]->
+        (millions {`napkin.segment` : {millions_segment}, `napkin.position` : {millions_position}})-[:NAPKIN_SUB]->
+        (thousands {`napkin.segment` : {thousands_segment}, `napkin.position` : {thousands_position}})-[:NAPKIN_SUB]->
+        (ones {`napkin.segment` : {ones_segment}, `napkin.position` : {ones_position}})
+      RETURN ID(ones)'
+
+      GET_SUB_CYPHER ='
+      START sup=node({sup_node_id})
+      MATCH sup-[:NAPKIN_SUB]->(millions)-[:NAPKIN_SUB]->(thousands)-[:NAPKIN_SUB]->(ones)
+      WHERE ((millions.`napkin.segment`! = {millions_segment})
+        AND (thousands.`napkin.segment`! = {thousands_segment})
+        AND (ones.`napkin.segment`! = {ones_segment}))
+      RETURN ID(ones)
+      '
+
+      def next_sub_id!
+        sublist_count = Neo4jUtil.increment_counter('napkin.sublist_count', @sup_node_id)
+        sublist_index = sublist_count-1
+        millions, thousands, ones = get_segment_values(sublist_index)
+        cypher_query = {
+          "query" => NEXT_SUB_CYPHER,
+          "params" => {
+          "sup_node_id" => @sup_node_id,
+          "millions_segment" => millions.to_s, "millions_position" => millions,
+          "thousands_segment" => thousands.to_s, "thousands_position" => thousands,
+          "ones_segment" => ones.to_s, "ones_position" => ones
+          }
+        }
+        value = Neo4jUtil.cypher_query(cypher_query, true)
+        return value
+      end
+
+      def get_sub_id(sub_index)
+        if (sub_index.is_a? String) then
+          sub_index = parse_int(sub_index)
+        end
+
+        return nil unless sub_index.is_a?(Integer)
+        millions, thousands, ones = get_segment_values(sub_index)
+        cypher_query = {
+          "query" => GET_SUB_CYPHER,
+          "params" => {
+          "sup_node_id" => @sup_node_id,
+          "millions_segment" => millions.to_s,
+          "thousands_segment" => thousands.to_s,
+          "ones_segment" => ones.to_s
+          }
+        }
+        value = Neo4jUtil.cypher_query(cypher_query, true)
+        return value
+      end
+
+      def get_segment_values(sub_index)
+        # rollover at 1 billion
+        sub_index %= 1000000000
+
+        millions = sub_index / 1000000
+        thousands = (sub_index % 1000000) / 1000
+        ones = sub_index % 1000
+        return millions, thousands, ones
+      end
+
+      def parse_int(text)
+        begin
+          return Integer(text)
+        rescue ArgumentError => err
+          return nil
+        end
+      end
+    end
   end
 end

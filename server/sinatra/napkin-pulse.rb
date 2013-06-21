@@ -20,46 +20,26 @@ module Napkin
     TaskData = {}
 
     class Driver
-      def initialize(pulses_node_id, tasks_node_id)
-        @pulses_node_id = pulses_node_id
-        @tasks_node_id = tasks_node_id
-      end
-
       def start()
         @enabled = true
         @thread = Thread.new do
           begin
             puts "Pulse thread started..."
+            tasks_node_id = Neo.pin(:tasks)
+            start_node_id = Neo.pin(:start)
+            pulse_count = Neo4jUtil.increment_counter('napkin.pulse_count', start_node_id)
+            puts "Pulse thread initialized (#{pulse_count})..."
 
-            pulse_node_id = Neo.next_sub_id!(@pulses_node_id)
-            Neo.set_node_property('napkin.pulse.start_time_i', Time.now.to_i, pulse_node_id)
-            Neo.set_ref!(Neo.pin(:start), pulse_node_id)
-
-            end_of_pulse = false
-            pulse_skip_count = 0
-
-            puts "Pulse thread initialized..."
             while (@enabled)
-              # puts "Pulse thread looping..."
-              task_node_ids = Neo.get_sub_ids(@tasks_node_id)
+              sleep 5
+              pulse_count = Neo4jUtil.increment_counter('napkin.pulse_count', start_node_id)
+              puts "Pulse thread - new pulse (#{pulse_count})..."
+
+              task_node_ids = Neo.get_sub_ids(tasks_node_id)
               task_node_ids.each do |task_node_id|
-                task = get_task_instance(task_node_id, pulse_node_id)
-                work_pulse = pulse_task(task) unless task.nil?
-                end_of_pulse ||= work_pulse
+                task = get_task_instance(task_node_id)
+                pulse_task(task) unless task.nil?
               end
-              sleep 1
-              if (end_of_pulse) then
-                Neo.set_node_property('napkin.pulse.pulse_skip_count', pulse_skip_count, pulse_node_id)
-                Neo.set_node_property('napkin.pulse.end_time_i', Time.now.to_i, pulse_node_id)
-                pulse_node_id = Neo.next_sub_id!(@pulses_node_id)
-                Neo.set_node_property('napkin.pulse.start_time_i', Time.now.to_i, pulse_node_id)
-                pulse_count = Neo.get_node_property('napkin.position', pulse_node_id)
-                puts "Pulse thread - new pulse (#{pulse_count})..."
-                end_of_pulse = false
-                pulse_skip_count = 0
-              end
-              pulse_skip_count += 1
-              sleep 1
             end
             puts "Pulse thread stopped..."
           rescue StandardError => err
@@ -84,7 +64,7 @@ module Napkin
         return false
       end
 
-      def get_task_instance(task_node_id, pulse_node_id)
+      def get_task_instance(task_node_id)
         task_class_name = Neo.get_node_property("napkin.tasks.task_class_name", task_node_id)
         return nil if task_class_name.nil?
 
@@ -102,7 +82,7 @@ module Napkin
         end
         task_data = TaskData[task_segment]
 
-        task_instance = task_class.new(task_node_id, pulse_node_id, task_data, task_segment)
+        task_instance = task_class.new(task_node_id, task_data, task_segment)
         return task_instance
       end
     end
