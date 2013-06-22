@@ -109,7 +109,6 @@ module Napkin
       sub_count = Neo4jUtil.increment_counter('napkin.sub_count', sup_node_id)
       return nil if sub_count.nil?
       sub_node_id =  Neo4jUtil.get_sub_id!(sub_count.to_s, sup_node_id)
-      Neo4jUtil.set_node_property('napkin.position', sub_count, sub_node_id)
       return sub_node_id
     end
 
@@ -250,9 +249,9 @@ module Napkin
       NEXT_SUB_CYPHER ='
       START sup=node({sup_node_id})
       CREATE UNIQUE sup-[:NAPKIN_SUB]->
-        (millions {`napkin.segment` : {millions_segment}, `napkin.position` : {millions_position}})-[:NAPKIN_SUB]->
-        (thousands {`napkin.segment` : {thousands_segment}, `napkin.position` : {thousands_position}})-[:NAPKIN_SUB]->
-        (ones {`napkin.segment` : {ones_segment}, `napkin.position` : {ones_position}})
+        (millions {`napkin.segment` : {millions_segment}})-[:NAPKIN_SUB]->
+        (thousands {`napkin.segment` : {thousands_segment}})-[:NAPKIN_SUB]->
+        (ones {`napkin.segment` : {ones_segment}, `napkin.sublist_position` : {sublist_position}})
       RETURN ID(ones)'
 
       GET_SUB_CYPHER ='
@@ -266,28 +265,32 @@ module Napkin
 
       def next_sub_id!
         sublist_count = Neo4jUtil.increment_counter('napkin.sublist_count', @sup_node_id)
+        # sublist_index is zero-based storage scheme
         sublist_index = sublist_count-1
+        # sublist_position is one-based for REST API
+        sublist_position = sublist_count
         millions, thousands, ones = get_segment_values(sublist_index)
         cypher_query = {
           "query" => NEXT_SUB_CYPHER,
           "params" => {
           "sup_node_id" => @sup_node_id,
-          "millions_segment" => millions.to_s, "millions_position" => millions,
-          "thousands_segment" => thousands.to_s, "thousands_position" => thousands,
-          "ones_segment" => ones.to_s, "ones_position" => ones
+          "millions_segment" => millions.to_s,
+          "thousands_segment" => thousands.to_s,
+          "ones_segment" => ones.to_s,
+          "sublist_position" => sublist_position
           }
         }
         value = Neo4jUtil.cypher_query(cypher_query, true)
         return value
       end
 
-      def get_sub_id(sub_index)
-        if (sub_index.is_a? String) then
-          sub_index = parse_int(sub_index)
+      def get_sub_id(sublist_position)
+        if (sublist_position.is_a? String) then
+          sublist_position = parse_int(sublist_position)
         end
-
-        return nil unless sub_index.is_a?(Integer)
-        millions, thousands, ones = get_segment_values(sub_index)
+        return nil unless sublist_position.is_a?(Integer)
+        sublist_index = sublist_position - 1
+        millions, thousands, ones = get_segment_values(sublist_index)
         cypher_query = {
           "query" => GET_SUB_CYPHER,
           "params" => {
@@ -301,13 +304,13 @@ module Napkin
         return value
       end
 
-      def get_segment_values(sub_index)
+      def get_segment_values(sublist_index)
         # rollover at 1 billion
-        sub_index %= 1000000000
+        sublist_index %= 1000000000
 
-        millions = sub_index / 1000000
-        thousands = (sub_index % 1000000) / 1000
-        ones = sub_index % 1000
+        millions = sublist_index / 1000000
+        thousands = (sublist_index % 1000000) / 1000
+        ones = sublist_index % 1000
         return millions, thousands, ones
       end
 

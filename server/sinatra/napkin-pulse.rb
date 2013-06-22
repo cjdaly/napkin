@@ -27,12 +27,14 @@ module Napkin
             puts "Pulse thread started..."
             tasks_node_id = Neo.pin(:tasks)
             start_node_id = Neo.pin(:start)
-            pulse_count = Neo4jUtil.increment_counter('napkin.pulse_count', start_node_id)
+            Neo.set_node_property('napkin.pulses.first_pulse_time_i', Time.now.to_i, start_node_id)
+            pulse_count = Neo4jUtil.increment_counter('napkin.pulses.pulse_count', start_node_id)
             puts "Pulse thread initialized (#{pulse_count})..."
 
             while (@enabled)
               sleep 5
-              pulse_count = Neo4jUtil.increment_counter('napkin.pulse_count', start_node_id)
+              Neo.set_node_property('napkin.pulses.last_pulse_time_i', Time.now.to_i, start_node_id)
+              pulse_count = Neo4jUtil.increment_counter('napkin.pulses.pulse_count', start_node_id)
               puts "Pulse thread - new pulse (#{pulse_count})..."
 
               task_node_ids = Neo.get_sub_ids(tasks_node_id)
