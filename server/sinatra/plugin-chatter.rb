@@ -13,6 +13,7 @@ require 'haml-util'
 require 'napkin-plugins'
 require 'napkin-tasks'
 require 'napkin-handlers'
+require 'plugin-times'
 
 module Napkin
   module Plugins
@@ -75,6 +76,11 @@ module Napkin
           end
           Neo.set_node_property(key, value, chatter_node_id) unless value.nil?
         end
+
+        Napkin::Plugins::Plugin_Times.round_to_minute(handle_time, "CHATTER")
+        minute_node_id = Napkin::Plugins::Plugin_Times.get_nearest_minute_node_id!(handle_time)
+        ref_id = Neo.set_ref!(chatter_node_id, minute_node_id)
+        Neo.set_ref_property('times.producer', @user, ref_id)
 
         return "OK"
       end

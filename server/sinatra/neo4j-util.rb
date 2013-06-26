@@ -168,9 +168,15 @@ module Napkin
       return Neo4jUtil.get_sub_id!('NAPKIN_ROOT', 0)
     end
 
+    CREATE_UNIQUE_REF_CYPHER ='
+    START from_node=node({from_node_id}), to_node=node({to_node_id})
+    CREATE UNIQUE from_node-[r:NAPKIN_REF]->to_node
+    RETURN ID(r)
+    '
+
     def Neo4jUtil.set_ref!(from_node_id, to_node_id)
       cypher_create_unique_ref = {
-        "query" => 'START from_node=node({from_node_id}), to_node=node({to_node_id}) CREATE UNIQUE from_node-[r:NAPKIN_REF]->to_node RETURN ID(r)',
+        "query" => CREATE_UNIQUE_REF_CYPHER,
         "params" => {
         "from_node_id" => from_node_id,
         "to_node_id" => to_node_id
@@ -178,6 +184,20 @@ module Napkin
       }
       value = Neo4jUtil.cypher_query(cypher_create_unique_ref, true)
       return value
+    end
+
+    def Neo4jUtil.set_ref_property(key, value, ref_id)
+      return nil unless Neo4jUtil.valid_segment?(key)
+
+      cypher_hash = {
+        "query" => "START r=rel({ref_id}) SET r.`#{key}`={value} RETURN null",
+        "params" => {
+        "ref_id" => ref_id,
+        "value" => value,
+        }
+      }
+      raw = Neo4jUtil.post(SRC, cypher_hash)
+      return nil
     end
 
     def Neo4jUtil.get_time_series(
@@ -231,14 +251,14 @@ module Napkin
     def Neo4jUtil.cypher_query(cypher_hash, extract_single_result = false)
       raw = Neo4jUtil.post(SRC, cypher_hash)
       raw_data = raw['data']
-      if (raw_data.length == 1) then
-        if (extract_single_result) then
-          return raw_data[0][0]
-        else
-          return raw_data[0]
-        end
+
+      if (extract_single_result) then
+        return nil if (raw_data.length == 0)
+        return nil if (raw_data[0].length == 0)
+        return raw_data[0][0]
+      else
+        return raw_data
       end
-      return nil
     end
 
     class SubList
@@ -270,7 +290,7 @@ module Napkin
         # sublist_position is one-based for REST API
         sublist_position = sublist_count
         millions, thousands, ones = get_segment_values(sublist_index)
-        cypher_query = {
+        cypher_hash = {
           "query" => NEXT_SUB_CYPHER,
           "params" => {
           "sup_node_id" => @sup_node_id,
@@ -280,7 +300,7 @@ module Napkin
           "sublist_position" => sublist_position
           }
         }
-        value = Neo4jUtil.cypher_query(cypher_query, true)
+        value = Neo4jUtil.cypher_query(cypher_hash, true)
         return value
       end
 
@@ -291,7 +311,7 @@ module Napkin
         return nil unless sublist_position.is_a?(Integer)
         sublist_index = sublist_position - 1
         millions, thousands, ones = get_segment_values(sublist_index)
-        cypher_query = {
+        cypher_hash = {
           "query" => GET_SUB_CYPHER,
           "params" => {
           "sup_node_id" => @sup_node_id,
@@ -300,7 +320,7 @@ module Napkin
           "ones_segment" => ones.to_s
           }
         }
-        value = Neo4jUtil.cypher_query(cypher_query, true)
+        value = Neo4jUtil.cypher_query(cypher_hash, true)
         return value
       end
 

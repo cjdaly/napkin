@@ -13,6 +13,7 @@ require 'haml-util'
 require 'napkin-plugins'
 require 'napkin-tasks'
 require 'napkin-handlers'
+require 'plugin-times'
 
 module Napkin
   module Plugins
@@ -46,7 +47,7 @@ module Napkin
 
       def todo?
         skip_count = @task_data['vitals.skip_count'] + 1
-        if (skip_count > @task_data['vitals.skip_count_max']) then
+        if (skip_count >= @task_data['vitals.skip_count_max']) then
           @task_data['vitals.skip_count'] = 0
           return true
         else
@@ -60,7 +61,8 @@ module Napkin
       DB_USAGE_CAPTURE = /^(\d+)\s+/
 
       def doit
-        vitals_check_time_i = Time.now.to_i
+        vitals_check_time = Time.now
+        vitals_check_time_i = vitals_check_time.to_i
         sub_list = Neo::SubList.new(@task_data['vitals.sup_node_id'])
         vitals_node_id = sub_list.next_sub_id!
         Neo.set_node_property('vitals.check_time_i', vitals_check_time_i, vitals_node_id)
@@ -88,10 +90,10 @@ module Napkin
         loadavg_split = loadavg.split
         loadavg_1_min = parse_float(loadavg_split[0])
         Neo.set_node_property('vitals.loadavg_1_min', loadavg_1_min, vitals_node_id)
-        loadavg_5_min = parse_float(loadavg_split[1])
-        Neo.set_node_property('vitals.loadavg_5_min', loadavg_5_min, vitals_node_id)
-        loadavg_15_min = parse_float(loadavg_split[2])
-        Neo.set_node_property('vitals.loadavg_15_min', loadavg_15_min, vitals_node_id)
+        # loadavg_5_min = parse_float(loadavg_split[1])
+        # Neo.set_node_property('vitals.loadavg_5_min', loadavg_5_min, vitals_node_id)
+        # loadavg_15_min = parse_float(loadavg_split[2])
+        # Neo.set_node_property('vitals.loadavg_15_min', loadavg_15_min, vitals_node_id)
 
         # database disk usage
         neo4j_db_path = Neo.get_node_property('napkin.config.Neo4J_db_path', Neo.pin(:napkin))
@@ -101,6 +103,11 @@ module Napkin
           neo4j_db_du_kb = parse_int(neo4j_db_du_kb_text)
           Neo.set_node_property('vitals.neo4j_db_usage_kb', neo4j_db_du_kb, vitals_node_id)
         end
+
+        Napkin::Plugins::Plugin_Times.round_to_minute(vitals_check_time, "VITALS")
+        minute_node_id = Napkin::Plugins::Plugin_Times.get_nearest_minute_node_id!(vitals_check_time)
+        ref_id = Neo.set_ref!(vitals_node_id, minute_node_id)
+        Neo.set_ref_property('times.producer', 'napkin.vitals', ref_id)
       end
     end
   end
