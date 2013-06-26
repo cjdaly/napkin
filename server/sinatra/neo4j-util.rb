@@ -200,54 +200,6 @@ module Napkin
       return nil
     end
 
-    def Neo4jUtil.get_time_series(
-      sup_node_id, sub_numeric_data_key,
-      sub_time_key, finish_time_i,
-      time_slice_count, time_slice_seconds)
-      #
-
-      time_series = []
-      for i in 1..time_slice_count
-        start_time_i = finish_time_i - (time_slice_seconds * i)
-        end_time_i = start_time_i + time_slice_seconds
-        midpoint_time_i = start_time_i + time_slice_seconds/2
-
-        values = Neo4jUtil.get_interval_data(
-        sup_node_id, sub_numeric_data_key, "avg",
-        sub_time_key, start_time_i, end_time_i
-        )
-
-        data_value = values[0] || 0
-        time_label = Time.at(midpoint_time_i).strftime("%I:%M%P")
-
-        time_series.insert(0, [time_label, data_value])
-      end
-
-      return time_series
-    end
-
-    def Neo4jUtil.get_interval_data(
-      sup_node_id, sub_numeric_data_key, aggregate_function,
-      sub_time_key, start_time_i, end_time_i)
-      #
-      cypher_query = "START sup=node({sup_node_id}) "
-      cypher_query << "MATCH sup-[:NAPKIN_SUB]->sub "
-      cypher_query << "WHERE ( (sub.`#{sub_time_key}` >= {start_time_i}) and (sub.`#{sub_time_key}` < {end_time_i}) ) "
-      cypher_query << "RETURN #{aggregate_function}(sub.`#{sub_numeric_data_key}`?)"
-
-      cypher_query_hash = {
-        "query" => cypher_query,
-        "params" => {
-        "sup_node_id" => sup_node_id,
-        "start_time_i" => start_time_i,
-        "end_time_i" => end_time_i,
-        }
-      }
-
-      values = Neo4jUtil.cypher_query(cypher_query_hash)
-      return values
-    end
-
     def Neo4jUtil.cypher_query(cypher_hash, extract_single_result = false)
       raw = Neo4jUtil.post(SRC, cypher_hash)
       raw_data = raw['data']

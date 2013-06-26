@@ -77,7 +77,6 @@ module Napkin
           Neo.set_node_property(key, value, chatter_node_id) unless value.nil?
         end
 
-        Napkin::Plugins::Plugin_Times.round_to_minute(handle_time, "CHATTER")
         minute_node_id = Napkin::Plugins::Plugin_Times.get_nearest_minute_node_id!(handle_time)
         ref_id = Neo.set_ref!(chatter_node_id, minute_node_id)
         Neo.set_ref_property('times.producer', @user, ref_id)
@@ -108,28 +107,6 @@ module Napkin
         value = Neo.get_node_property(param_key, sub_node_id)
         return value.to_s
       end
-
-      def handle_OLD
-        time_now_i = Time.now.to_i
-
-        user_segment = get_segment(@segment_index+1)
-        user_node_id = Neo.get_sub_id(user_segment, @segment_node_id)
-
-        return nil if user_node_id.nil?
-
-        param_key = get_param('key')
-
-        time_series = Neo.get_time_series(
-        user_node_id, param_key,
-        'chatter.handle_time~i', time_now_i,
-        10, 600
-        )
-
-        @response.headers['Content-Type'] = 'text/html'
-        haml_out = Haml.render_line_chart("#{user_segment} chatter", [param_key], time_series)
-        return haml_out
-      end
     end
-
   end
 end

@@ -113,9 +113,9 @@ module Napkin
         return_statement = nil
         keys.each do |key|
           if (return_statement.nil?) then
-            return_statement = "RETURN producer.`#{key}`"
+            return_statement = "RETURN AVG(producer.`#{key}`)"
           else
-            return_statement << ", producer.`#{key}`"
+            return_statement << ", AVG(producer.`#{key}`)"
           end
         end
 
@@ -193,26 +193,37 @@ module Napkin
         handle_time = Time.now
         minute_time = PT.round_to_minute(handle_time)
         minute_time_i = minute_time.to_i
+        total_minutes = 15
 
-        minute_time_i = minute_time_i - (60 * 10)
-        for i in 1..10
+        minute_time_i = minute_time_i - (60 * total_minutes)
+        time_series = []
+        for i in 1..total_minutes
           minute_time_i += 60
           minute_time = Time.at(minute_time_i)
-          PT.round_to_minute(minute_time, "NOW-#{i}")
+          minute_time_label = minute_time.strftime("%I:%M%P")
           data = PT.get_nearest_minute_data(
           minute_time,
           'napkin.vitals',
-          ['vitals.loadavg_1_min', 'vitals.memfree_kb', 'vitals.vmpeak_kb_neo4j', 'vitals.vmpeak_kb_sinatra']
+          ['vitals.memfree_kb', 'vitals.vmpeak_kb_neo4j', 'vitals.vmpeak_kb_sinatra']
           )
 
-          if (!data.nil?)
-            puts "DATA (at #{minute_time.hour}:#{minute_time.min}): #{data.to_json}"
-          else
-            puts "NO DATA (at #{minute_time.hour}:#{minute_time.min})"
+          row = [minute_time_label]
+          bogus = false
+          data[0].each do |val|
+            if val.nil? then
+              bogus = true if (i == total_minutes)
+              val = 0
+            end
+            row << val
           end
+
+          time_series << row unless bogus
         end
 
-        return super
+        @response.headers['Content-Type'] = 'text/html'
+        value_labels = ["free memory (kb)", "Neo4j VmPeak (kb)", "Sinatra VmPeak (kb)"]
+        haml_out = Haml.render_line_chart('Napkin vitals', value_labels, time_series)
+        return haml_out
       end
     end
   end

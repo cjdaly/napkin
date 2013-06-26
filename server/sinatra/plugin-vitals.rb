@@ -104,7 +104,6 @@ module Napkin
           Neo.set_node_property('vitals.neo4j_db_usage_kb', neo4j_db_du_kb, vitals_node_id)
         end
 
-        Napkin::Plugins::Plugin_Times.round_to_minute(vitals_check_time, "VITALS")
         minute_node_id = Napkin::Plugins::Plugin_Times.get_nearest_minute_node_id!(vitals_check_time)
         ref_id = Neo.set_ref!(vitals_node_id, minute_node_id)
         Neo.set_ref_property('times.producer', 'napkin.vitals', ref_id)
@@ -135,33 +134,6 @@ module Napkin
         value = Neo.get_node_property(param_key, sub_node_id)
         return value.to_s
       end
-
-      def handle_OLD
-        time_now_i = Time.now.to_i
-
-        memfree_time_series = Neo.get_time_series(
-        @segment_node_id, 'vitals.memfree_kb',
-        'vitals.check_time_i', time_now_i,
-        10, 600
-        )
-
-        neo4j_db_usage_time_series = Neo.get_time_series(
-        @segment_node_id, 'vitals.neo4j_db_usage_kb',
-        'vitals.check_time_i', time_now_i,
-        10, 600
-        )
-
-        time_series = neo4j_db_usage_time_series
-        time_series.each_with_index do |row, index|
-          row << memfree_time_series[index][1]
-        end
-
-        @response.headers['Content-Type'] = 'text/html'
-        value_labels = ["Neo4j DB usage (kb)", "free memory (kb)"]
-        haml_out = Haml.render_line_chart('Napkin vitals', value_labels, time_series)
-        return haml_out
-      end
-
     end
   end
 end
