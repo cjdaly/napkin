@@ -195,17 +195,21 @@ module Napkin
         minute_time_i = minute_time.to_i
         total_minutes = 15
 
+        param_producer = get_param('producer')
+        param_key = get_param('key')
+
+        if param_producer.nil? then
+          param_producer = 'napkin.vitals'
+          param_key = 'vitals.memfree_kb'
+        end
+
         minute_time_i = minute_time_i - (60 * total_minutes)
         time_series = []
         for i in 1..total_minutes
           minute_time_i += 60
           minute_time = Time.at(minute_time_i)
           minute_time_label = minute_time.strftime("%I:%M%P")
-          data = PT.get_nearest_minute_data(
-          minute_time,
-          'napkin.vitals',
-          ['vitals.memfree_kb', 'vitals.vmpeak_kb_neo4j', 'vitals.vmpeak_kb_sinatra']
-          )
+          data = PT.get_nearest_minute_data(minute_time, param_producer,[param_key])
 
           row = [minute_time_label]
           bogus = false
@@ -221,8 +225,8 @@ module Napkin
         end
 
         @response.headers['Content-Type'] = 'text/html'
-        value_labels = ["free memory (kb)", "Neo4j VmPeak (kb)", "Sinatra VmPeak (kb)"]
-        haml_out = Haml.render_line_chart('Napkin vitals', value_labels, time_series)
+        value_labels = [param_key]
+        haml_out = Haml.render_line_chart('Napkin data now!', value_labels, time_series)
         return haml_out
       end
     end

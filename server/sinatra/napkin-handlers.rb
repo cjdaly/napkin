@@ -18,7 +18,6 @@ module Napkin
     Neo = Napkin::Neo4jUtil
     Haml = Napkin::HamlUtil
     #
-    KEY_MATCH = /^[-_.a-zA-Z0-9~]+$/
     KEY_TYPE_I_MATCH = /.+~i$/
     KEY_TYPE_F_MATCH = /.+~f$/
     #
@@ -70,7 +69,7 @@ module Napkin
         param = @query_hash[key].first
         return nil if param.to_s.empty?
         if (validate_as_segment) then
-          return nil if KEY_MATCH.match(param).nil?
+          return nil unless Neo.valid_segment?(param)
         end
         return param
       end

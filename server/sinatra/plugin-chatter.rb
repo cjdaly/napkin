@@ -68,7 +68,7 @@ module Napkin
         body_text.lines do |line|
           key, value = line.split('=', 2)
           key.strip! ; value.strip!
-          next if KEY_MATCH.match(key).nil?
+          next unless Neo.valid_segment?(key)
           if (KEY_TYPE_I_MATCH.match(key) != nil) then
             value = parse_int(value)
           elsif (KEY_TYPE_F_MATCH.match(key) != nil) then
@@ -79,7 +79,7 @@ module Napkin
 
         minute_node_id = Napkin::Plugins::Plugin_Times.get_nearest_minute_node_id!(handle_time)
         ref_id = Neo.set_ref!(chatter_node_id, minute_node_id)
-        Neo.set_ref_property('times.producer', @user, ref_id)
+        Neo.set_ref_property('times.producer', "chatter.#{@user}", ref_id)
 
         return "OK"
       end
