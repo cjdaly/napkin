@@ -97,25 +97,25 @@ module Napkin
         (month)-[:NAPKIN_SUB]->
         (day)-[:NAPKIN_SUB]->
         (hour)-[:NAPKIN_SUB]->
-        (minute)<-[producer_ref:NAPKIN_REF]-(producer)
+        (minute)<-[source_ref:NAPKIN_REF]-(source)
       WHERE ((year.`napkin.segment`! = {year_segment})
         AND  (month.`napkin.segment`! = {month_segment})
         AND  (day.`napkin.segment`! = {day_segment})
         AND  (hour.`napkin.segment`! = {hour_segment})
         AND  (minute.`napkin.segment`! = {minute_segment})
-        AND  (producer_ref.`times.producer`! = {producer_name}))
+        AND  (source_ref.`times.source`! = {source_name}))
       RETURN_STATEMENT
       '
 
-      def Plugin_Times.get_nearest_minute_data(time, producer_name, keys)
+      def Plugin_Times.get_nearest_minute_data(time, source_name, keys)
         rounded_time = Plugin_Times.round_to_minute(time)
 
         return_statement = nil
         keys.each do |key|
           if (return_statement.nil?) then
-            return_statement = "RETURN AVG(producer.`#{key}`)"
+            return_statement = "RETURN AVG(source.`#{key}`)"
           else
-            return_statement << ", AVG(producer.`#{key}`)"
+            return_statement << ", AVG(source.`#{key}`)"
           end
         end
 
@@ -129,7 +129,7 @@ module Napkin
           "day_segment" => rounded_time.day.to_s,
           "hour_segment" => rounded_time.hour.to_s,
           "minute_segment" => rounded_time.min.to_s,
-          "producer_name" => producer_name
+          "source_name" => source_name
           }
         }
 
@@ -137,22 +137,18 @@ module Napkin
         return minute_data
       end
 
-      def Plugin_Times.round_to_minute(time, message = nil)
+      def Plugin_Times.round_to_minute(time, interval_minutes = 1)
         time_i = time.to_i
+        interval_seconds = 60 * interval_minutes
 
-        if (time.sec < 30) then
-          rounded_time_i = time_i - time.sec
+        time_mod = time_i % interval_seconds
+        if (time_mod < (interval_seconds / 2)) then
+          rounded_time_i = time_i - time_mod
         else
-          rounded_time_i = time_i + (60 - time.sec)
+          rounded_time_i = (time_i - time_mod) + interval_seconds
         end
 
         rounded_time = Time.at(rounded_time_i)
-
-        if (!message.nil?) then
-          rt = rounded_time
-          puts "#{message}: #{rt.year}/#{rt.month}/#{rt.day}/#{rt.hour}/#{rt.min}/(#{rt.sec})"
-        end
-
         return rounded_time
       end
     end
@@ -183,23 +179,18 @@ module Napkin
   module Handlers
     class Handler_Times_Now_Get < DefaultGetHandler
       PT = Napkin::Plugins::Plugin_Times
-
-      GET_REFS_CYPHER = '
-      START minute=node({minute_node_id})
-      MATCH refs-[:NAPKIN_REF]->minute
-      RETURN ID(refs)
-      '
+      #
       def handle
         handle_time = Time.now
         minute_time = PT.round_to_minute(handle_time)
         minute_time_i = minute_time.to_i
         total_minutes = 15
 
-        param_producer = get_param('producer')
+        param_source = get_param('source')
         param_key = get_param('key')
 
-        if param_producer.nil? then
-          param_producer = 'napkin.vitals'
+        if param_source.nil? then
+          param_source = 'napkin.vitals'
           param_key = 'vitals.memfree_kb'
         end
 
@@ -208,10 +199,9 @@ module Napkin
         for i in 1..total_minutes
           minute_time_i += 60
           minute_time = Time.at(minute_time_i)
-          minute_time_label = minute_time.strftime("%I:%M%P")
-          data = PT.get_nearest_minute_data(minute_time, param_producer,[param_key])
+          row = ["new Date(#{minute_time.year},#{minute_time.month-1},#{minute_time.day},#{minute_time.hour},#{minute_time.min})"]
 
-          row = [minute_time_label]
+          data = PT.get_nearest_minute_data(minute_time, param_source,[param_key])
           bogus = false
           data[0].each do |val|
             if val.nil? then

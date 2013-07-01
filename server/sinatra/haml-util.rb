@@ -20,23 +20,23 @@ module Napkin
       haml_text << "      google.load('visualization', '1.0', {'packages':['corechart']});\n"
       haml_text << "      google.setOnLoadCallback(drawChart);\n"
       haml_text << "      function drawChart() {\n"
-      haml_text << "      var data = new google.visualization.arrayToDataTable([\n"
-
-      haml_text << "      ['Time'"
+      haml_text << "      var data = new google.visualization.DataTable();\n"
+      haml_text << "      data.addColumn('datetime', 'Date');\n"
       value_labels.each do |label|
-        haml_text << ", '#{label}'"
+        haml_text << "      data.addColumn('number', '#{label}');\n"
       end
-      haml_text << "]\n"
+      haml_text << "      var rows = [\n"
 
       time_series.each do |row|
-        haml_text << "      ,['#{row[0]}'"
+        haml_text << "      [#{row[0]}"
         value_labels.each_with_index do |label, index|
           haml_text << ", #{row[index+1]}"
         end
-        haml_text << "]\n"
+        haml_text << "],\n"
       end
 
-      haml_text << "      ]);\n"
+      haml_text << "      ];\n"
+      haml_text << "      data.addRows(rows);\n"
       haml_text << "      var options = {\n"
       haml_text << "      'title':'#{title}',\n"
       haml_text << "      'width':800, 'height':200\n"

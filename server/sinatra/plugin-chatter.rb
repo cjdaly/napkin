@@ -79,7 +79,7 @@ module Napkin
 
         minute_node_id = Napkin::Plugins::Plugin_Times.get_nearest_minute_node_id!(handle_time)
         ref_id = Neo.set_ref!(chatter_node_id, minute_node_id)
-        Neo.set_ref_property('times.producer', "chatter.#{@user}", ref_id)
+        Neo.set_ref_property('times.source', "chatter.#{@user}", ref_id)
 
         return "OK"
       end

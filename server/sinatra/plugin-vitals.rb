@@ -106,7 +106,7 @@ module Napkin
 
         minute_node_id = Napkin::Plugins::Plugin_Times.get_nearest_minute_node_id!(vitals_check_time)
         ref_id = Neo.set_ref!(vitals_node_id, minute_node_id)
-        Neo.set_ref_property('times.producer', 'napkin.vitals', ref_id)
+        Neo.set_ref_property('times.source', 'napkin.vitals', ref_id)
       end
     end
   end
