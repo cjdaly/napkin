@@ -231,7 +231,7 @@ module Napkin
 
         @response.headers['Content-Type'] = 'text/html'
         value_labels = [keys[1]]
-        haml_out = Haml.render_line_chart(param_data_key, value_labels, time_series)
+        haml_out = Haml.render_line_chart(param_source, value_labels, time_series)
         return haml_out
       end
 
@@ -279,7 +279,7 @@ module Napkin
 
         @response.headers['Content-Type'] = 'text/html'
         value_labels = keys
-        haml_out = Haml.render_line_chart('Napkin data now!', value_labels, time_series)
+        haml_out = Haml.render_line_chart(param_source, value_labels, time_series)
         return haml_out
       end
     end
