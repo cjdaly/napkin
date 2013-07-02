@@ -105,17 +105,18 @@ module Napkin
         AND  (minute.`napkin.segment`! = {minute_segment})
         AND  (source_ref.`times.source`! = {source_name}))
       RETURN_STATEMENT
+      ORDER_BY_STATEMENT
       '
 
-      def Plugin_Times.get_nearest_minute_data(time, source_name, keys)
+      def Plugin_Times.get_nearest_minute_data(time, source_name, keys, function = "AVG", time_i_key = nil)
         rounded_time = Plugin_Times.round_to_minute(time)
 
         return_statement = nil
         keys.each do |key|
           if (return_statement.nil?) then
-            return_statement = "RETURN AVG(sources.`#{key}`?)"
+            return_statement = "RETURN #{function}(sources.`#{key}`?)"
           else
-            return_statement << ", AVG(sources.`#{key}`?)"
+            return_statement << ", #{function}(sources.`#{key}`?)"
           end
         end
 
@@ -132,6 +133,13 @@ module Napkin
           "source_name" => source_name
           }
         }
+
+        if (time_i_key.nil?) then
+          order_by_statement = ""
+        else
+          order_by_statement = "ORDER BY sources.`#{time_i_key}`?"
+        end
+        query_text.sub!(/ORDER_BY_STATEMENT/, order_by_statement)
 
         minute_data = Neo.cypher_query(cypher_hash, false)
         return minute_data
@@ -181,6 +189,55 @@ module Napkin
       PT = Napkin::Plugins::Plugin_Times
       #
       def handle
+        if (get_param('data_key').nil?) then
+          handle_orig
+        else
+          handle_new
+        end
+      end
+
+      def handle_new
+        handle_time = Time.now
+        minute_time = PT.round_to_minute(handle_time)
+        minute_time_i = minute_time.to_i
+        total_minutes = 15
+
+        param_source = get_param('source')
+        param_time_i_key = get_param('time_i_key')
+        param_data_key = get_param('data_key')
+
+        if (param_source.nil? || param_time_i_key.nil?) then
+          param_source = 'napkin.vitals'
+          keys = ['vitals.check_time_i', 'vitals.memfree_kb']
+        else
+          keys = [param_time_i_key, param_data_key]
+        end
+
+        minute_time_i = minute_time_i - (60 * total_minutes)
+        time_series = []
+        for i in 1..total_minutes
+          minute_time_i += 60
+          minute_time = Time.at(minute_time_i)
+
+          data = PT.get_nearest_minute_data(minute_time, param_source, keys, function="")
+          data.each do |time_value|
+            time_i = time_value[0]
+            time = Time.at(time_i)
+            time_javascript = "new Date(#{time.year},#{time.month-1},#{time.day},#{time.hour},#{time.min},#{time.sec})"
+
+            value = time_value[1]
+
+            time_series << [time_javascript, value]
+          end
+        end
+
+        @response.headers['Content-Type'] = 'text/html'
+        value_labels = keys
+        haml_out = Haml.render_line_chart(param_data_key, value_labels, time_series)
+        return haml_out
+      end
+
+      def handle_orig
         handle_time = Time.now
         minute_time = PT.round_to_minute(handle_time)
         minute_time_i = minute_time.to_i
