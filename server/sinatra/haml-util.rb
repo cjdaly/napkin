@@ -30,7 +30,12 @@ module Napkin
       time_series.each do |row|
         haml_text << "      [#{row[0]}"
         value_labels.each_with_index do |label, index|
-          haml_text << ", #{row[index+1]}"
+          value = row[index+1]
+          if (value.nil?) then
+            haml_text << ", null"
+          else
+            haml_text << ", #{value}"
+          end
         end
         haml_text << "],\n"
       end
@@ -39,6 +44,7 @@ module Napkin
       haml_text << "      data.addRows(rows);\n"
       haml_text << "      var options = {\n"
       haml_text << "      'title':'#{title}',\n"
+      haml_text << "      'interpolateNulls':'true',\n"
       haml_text << "      'width':800, 'height':200\n"
       haml_text << "      };\n"
       haml_text << "      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));\n"

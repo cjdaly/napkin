@@ -97,7 +97,7 @@ module Napkin
         (month)-[:NAPKIN_SUB]->
         (day)-[:NAPKIN_SUB]->
         (hour)-[:NAPKIN_SUB]->
-        (minute)<-[source_ref:NAPKIN_REF]-(source)
+        (minute)<-[source_ref:NAPKIN_REF]-(sources)
       WHERE ((year.`napkin.segment`! = {year_segment})
         AND  (month.`napkin.segment`! = {month_segment})
         AND  (day.`napkin.segment`! = {day_segment})
@@ -113,9 +113,9 @@ module Napkin
         return_statement = nil
         keys.each do |key|
           if (return_statement.nil?) then
-            return_statement = "RETURN AVG(source.`#{key}`)"
+            return_statement = "RETURN AVG(sources.`#{key}`?)"
           else
-            return_statement << ", AVG(source.`#{key}`)"
+            return_statement << ", AVG(sources.`#{key}`?)"
           end
         end
 
@@ -187,11 +187,18 @@ module Napkin
         total_minutes = 15
 
         param_source = get_param('source')
-        param_key = get_param('key')
+        param_keys = get_param('keys', false)
 
-        if param_source.nil? then
+        if (param_source.nil? || param_keys.nil?) then
           param_source = 'napkin.vitals'
-          param_key = 'vitals.memfree_kb'
+          keys = ['vitals.memfree_kb']
+        else
+          keys = []
+          param_keys.split(',').each do |key|
+            if (Neo.valid_segment?(key)) then
+              keys << key
+            end
+          end
         end
 
         minute_time_i = minute_time_i - (60 * total_minutes)
@@ -201,21 +208,22 @@ module Napkin
           minute_time = Time.at(minute_time_i)
           row = ["new Date(#{minute_time.year},#{minute_time.month-1},#{minute_time.day},#{minute_time.hour},#{minute_time.min})"]
 
-          data = PT.get_nearest_minute_data(minute_time, param_source,[param_key])
-          bogus = false
-          data[0].each do |val|
-            if val.nil? then
-              bogus = true if (i == total_minutes)
-              val = 0
+          data = PT.get_nearest_minute_data(minute_time, param_source, keys)
+          if (data[0].nil?) then
+            keys.each do |key|
+              row << nil
             end
-            row << val
+          else
+            data[0].each do |value|
+              row << value
+            end
           end
 
-          time_series << row unless bogus
+          time_series << row
         end
 
         @response.headers['Content-Type'] = 'text/html'
-        value_labels = [param_key]
+        value_labels = keys
         haml_out = Haml.render_line_chart('Napkin data now!', value_labels, time_series)
         return haml_out
       end
