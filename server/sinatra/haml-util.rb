@@ -45,6 +45,8 @@ module Napkin
       haml_text << "      var options = {\n"
       haml_text << "      'title':'#{title}',\n"
       haml_text << "      'interpolateNulls':'true',\n"
+      haml_text << "      'legend':{'position':'bottom'},\n"
+      haml_text << "      'pointSize':3,\n"
       haml_text << "      'width':800, 'height':200\n"
       haml_text << "      };\n"
       haml_text << "      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));\n"

@@ -119,8 +119,15 @@ module Napkin
             return_statement << ", #{function}(sources.`#{key}`?)"
           end
         end
-
         query_text = GET_MINUTE_DATA_CYPHER.sub(/RETURN_STATEMENT/, return_statement)
+
+        if (time_i_key.nil?) then
+          order_by_statement = ""
+        else
+          order_by_statement = "ORDER BY sources.`#{time_i_key}`?"
+        end
+        query_text.sub!(/ORDER_BY_STATEMENT/, order_by_statement)
+
         cypher_hash = {
           "query" => query_text,
           "params" => {
@@ -133,13 +140,6 @@ module Napkin
           "source_name" => source_name
           }
         }
-
-        if (time_i_key.nil?) then
-          order_by_statement = ""
-        else
-          order_by_statement = "ORDER BY sources.`#{time_i_key}`?"
-        end
-        query_text.sub!(/ORDER_BY_STATEMENT/, order_by_statement)
 
         minute_data = Neo.cypher_query(cypher_hash, false)
         return minute_data
@@ -219,20 +219,18 @@ module Napkin
           minute_time_i += 60
           minute_time = Time.at(minute_time_i)
 
-          data = PT.get_nearest_minute_data(minute_time, param_source, keys, function="")
+          data = PT.get_nearest_minute_data(minute_time, param_source, keys, function="", param_time_i_key)
           data.each do |time_value|
             time_i = time_value[0]
             time = Time.at(time_i)
             time_javascript = "new Date(#{time.year},#{time.month-1},#{time.day},#{time.hour},#{time.min},#{time.sec})"
-
             value = time_value[1]
-
             time_series << [time_javascript, value]
           end
         end
 
         @response.headers['Content-Type'] = 'text/html'
-        value_labels = keys
+        value_labels = [keys[1]]
         haml_out = Haml.render_line_chart(param_data_key, value_labels, time_series)
         return haml_out
       end
