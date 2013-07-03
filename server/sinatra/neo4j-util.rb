@@ -287,6 +287,7 @@ module Napkin
       end
 
       def parse_int(text)
+        return nil if text.nil?
         begin
           return Integer(text)
         rescue ArgumentError => err

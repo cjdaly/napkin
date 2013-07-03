@@ -200,7 +200,9 @@ module Napkin
         handle_time = Time.now
         minute_time = PT.round_to_minute(handle_time)
         minute_time_i = minute_time.to_i
-        total_minutes = 15
+
+        samples = parse_int(get_param('samples')) || 15
+        skip = parse_int(get_param('skip')) || 1
 
         param_source = get_param('source')
         param_time_i_key = get_param('time_i_key')
@@ -213,10 +215,10 @@ module Napkin
           keys = [param_time_i_key, param_data_key]
         end
 
-        minute_time_i = minute_time_i - (60 * total_minutes)
+        minute_time_i = minute_time_i - (60 * samples * skip)
         time_series = []
-        for i in 1..total_minutes
-          minute_time_i += 60
+        for i in 1..samples
+          minute_time_i += (60 * skip)
           minute_time = Time.at(minute_time_i)
 
           data = PT.get_nearest_minute_data(minute_time, param_source, keys, function="", param_time_i_key)
@@ -239,7 +241,9 @@ module Napkin
         handle_time = Time.now
         minute_time = PT.round_to_minute(handle_time)
         minute_time_i = minute_time.to_i
-        total_minutes = 15
+
+        samples = parse_int(get_param('samples')) || 15
+        skip = parse_int(get_param('skip')) || 1
 
         param_source = get_param('source')
         param_keys = get_param('keys', false)
@@ -256,10 +260,10 @@ module Napkin
           end
         end
 
-        minute_time_i = minute_time_i - (60 * total_minutes)
+        minute_time_i = minute_time_i - (60 * samples * skip)
         time_series = []
-        for i in 1..total_minutes
-          minute_time_i += 60
+        for i in 1..samples
+          minute_time_i += (60 * skip)
           minute_time = Time.at(minute_time_i)
           row = ["new Date(#{minute_time.year},#{minute_time.month-1},#{minute_time.day},#{minute_time.hour},#{minute_time.min})"]
 
