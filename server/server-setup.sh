@@ -23,7 +23,7 @@ java -version
 echo
 if ! which neo4j &> /dev/null ; then
   echo "Adding neo4j to PATH"
-  export NEO4J_HOME=~/neo4j/neo4j-community-1.8.2
+  export NEO4J_HOME=~/neo4j/neo4j-community-1.9.1
   export PATH=$NEO4J_HOME/bin:$PATH
 fi
 echo "Neo4j status"
