@@ -11,12 +11,14 @@
 require 'cgi'
 require 'neo4j-util'
 require 'haml-util'
+require 'kramdown-util'
 
 module Napkin
   module Handlers
     #
     Neo = Napkin::Neo4jUtil
     Haml = Napkin::HamlUtil
+    Kram = Napkin::KramdownUtil
     #
     KEY_TYPE_I_MATCH = /.+~i$/
     KEY_TYPE_F_MATCH = /.+~f$/
@@ -41,28 +43,19 @@ module Napkin
       end
 
       def get_segment(index = @segment_index)
+        return nil if ((index < 0) || (index >= @segments.length))
         return @segments[index]
       end
 
-      def get_path(start_index=0, end_index=-1)
-        if (end_index == -1) then
-          end_index = @segments.length - 1
-        end
-
+      def get_path(start_index=0, end_index=@segment_index)
         path = ""
         index = start_index
         while index <= end_index do
-          if path != "" then
-            path << "/"
-          end
+          path << "/"
           path << @segments[index]
           index += 1
         end
         return path
-      end
-
-      def get_current_path
-        return get_path(0, @segment_index)
       end
 
       def get_param(key, validate_as_segment = true)
@@ -115,14 +108,57 @@ module Napkin
       def handle
         param_key = get_param('key')
 
-        if param_key.nil? then
-          return Neo.get_node_properties_text(@segment_node_id)
+        unless param_key.nil?
+          value = Neo.get_node_property(param_key, @segment_node_id)
+          return value.to_s
         end
 
-        value = Neo.get_node_property(param_key, @segment_node_id)
-        return value.to_s
+        kramdown_text = prepare_kramdown
+        return kramdown_to_html(kramdown_text)
+      end
+
+      def prepare_kramdown(segment_node_id=@segment_node_id, segment_index=@segment_index)
+        kramdown_text = kramdown_preamble(segment_node_id, segment_index)
+        kramdown_text << kramdown_subordinates(segment_node_id, segment_index)
+        kramdown_text << kramdown_properties(segment_node_id, segment_index)
+        return kramdown_text
+      end
+
+      def kramdown_preamble(segment_node_id, segment_index)
+        sup_segment = get_segment(segment_index-1) || "nil"
+        sup_path = get_path(0, segment_index-1)
+
+        kramdown_text = "
+# #{get_segment}
+
+| *Path* | #{get_path}
+| *Node ID* | #{segment_node_id}
+| *Superior* | [#{sup_segment}](#{sup_path})
+"
+        return kramdown_text
+      end
+
+      def kramdown_subordinates(segment_node_id, segment_index)
+        return "| *Subordinates* | ???\n"
+      end
+
+      def kramdown_properties(segment_node_id, segment_index)
+        kramdown_text = "| *Properties* | *key* | *type* | *value*\n"
+        property_hash = Neo.get_node_properties(segment_node_id)
+        property_hash.each do |key, value|
+          kramdown_text << "| | #{key} | #{value.class} | #{value}\n"
+        end
+        return kramdown_text
+      end
+
+      def kramdown_to_html(kramdown_text)
+        @response.headers['Content-Type'] = 'text/html'
+
+        html_text = Kram.default_node_get_html(kramdown_text, get_segment)
+        return html_text
       end
     end
 
   end
 end
+

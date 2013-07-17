@@ -10,6 +10,7 @@
 ####
 require 'neo4j-util'
 require 'haml-util'
+require 'kramdown-util'
 require 'napkin-plugins'
 require 'napkin-tasks'
 require 'napkin-handlers'
@@ -120,19 +121,16 @@ module Napkin
       def handle
         return super if at_destination?
 
+        param_key = get_param('key')
+        return super unless param_key.nil?
+
         sub_list = Neo::SubList.new(@segment_node_id)
         sub_index = get_segment(@segment_index+1)
         sub_node_id = sub_list.get_sub_id(sub_index)
         return super if sub_node_id.nil?
 
-        param_key = get_param('key')
-
-        if param_key.nil? then
-          return Neo.get_node_properties_text(sub_node_id)
-        end
-
-        value = Neo.get_node_property(param_key, sub_node_id)
-        return value.to_s
+        kramdown_text = prepare_kramdown(sub_node_id, @segment_index+1)
+        return kramdown_to_html(kramdown_text)
       end
     end
   end
