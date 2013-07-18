@@ -235,6 +235,12 @@ module Napkin
       RETURN ID(ones)
       '
 
+      def get_count
+        sublist_count = Neo4jUtil.get_node_property('napkin.sublist_count', @sup_node_id)
+        return 0 if sublist_count.nil?
+        return sublist_count
+      end
+
       def next_sub_id!
         sublist_count = Neo4jUtil.increment_counter('napkin.sublist_count', @sup_node_id)
         # sublist_index is zero-based storage scheme

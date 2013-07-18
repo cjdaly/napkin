@@ -142,6 +142,23 @@ module Napkin
         return "| *Subordinates* | ???\n"
       end
 
+      def kramdown_subordinates_sublist(segment_node_id, segment_index)
+        sub_list = Neo::SubList.new(segment_node_id)
+        sublist_count = sub_list.get_count
+
+        kramdown_text = "| *Subordinates* | *index*\n"
+        sub_offset = 0
+        while (sub_offset < 8)
+          sub_index = sublist_count-sub_offset
+          if (sub_index > 0)
+            kramdown_text << "| | [#{sub_index}](#{get_path}/#{sub_index})\n"
+          end
+          sub_offset += 1
+        end
+
+        return kramdown_text
+      end
+
       def kramdown_properties(segment_node_id, segment_index)
         kramdown_text = "| *Properties* | *key* | *type* | *value*\n"
         property_hash = Neo.get_node_properties(segment_node_id)

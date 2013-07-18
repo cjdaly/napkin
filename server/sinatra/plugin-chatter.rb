@@ -105,6 +105,11 @@ module Napkin
         kramdown_text = prepare_kramdown(sub_node_id, @segment_index+1)
         return kramdown_to_html(kramdown_text)
       end
+
+      def kramdown_subordinates(segment_node_id, segment_index)
+        return super unless at_destination?
+        return kramdown_subordinates_sublist(segment_node_id, segment_index)
+      end
     end
   end
 end
