@@ -107,14 +107,17 @@ module Napkin
     class DefaultGetHandler < HandlerBase
       def handle
         param_key = get_param('key')
-
-        unless param_key.nil?
-          value = Neo.get_node_property(param_key, @segment_node_id)
-          return value.to_s
+        if (param_key.nil?) then
+          kramdown_text = prepare_kramdown
+          return kramdown_to_html(kramdown_text)
+        else
+          return handle_property_get(param_key, @segment_node_id)
         end
+      end
 
-        kramdown_text = prepare_kramdown
-        return kramdown_to_html(kramdown_text)
+      def handle_property_get(param_key, node_id)
+        value = Neo.get_node_property(param_key, node_id)
+        return value.to_s
       end
 
       def prepare_kramdown(segment_node_id=@segment_node_id, segment_index=@segment_index)
@@ -125,13 +128,15 @@ module Napkin
       end
 
       def kramdown_preamble(segment_node_id, segment_index)
+        segment = get_segment(segment_index)
+        path = get_path(0, segment_index)
         sup_segment = get_segment(segment_index-1) || "nil"
         sup_path = get_path(0, segment_index-1)
 
         kramdown_text = "
-# #{get_segment}
+# #{segment}
 
-| *Path* | #{get_path}
+| *Path* | #{path}
 | *Node ID* | #{segment_node_id}
 | *Superior* | [#{sup_segment}](#{sup_path})
 "
@@ -173,6 +178,43 @@ module Napkin
 
         html_text = Kram.default_node_get_html(kramdown_text, get_segment)
         return html_text
+      end
+    end
+
+    class SubListGetHandler < DefaultGetHandler
+      def handle?
+        return at_destination? || (remaining_segments == 1)
+      end
+
+      def handle
+        return super if at_destination?
+
+        sub_segment = get_segment(@segment_index+1)
+        return handle_special_segment(sub_segment) if parse_int(sub_segment).nil?
+
+        sub_list = Neo::SubList.new(@segment_node_id)
+        sub_node_id = sub_list.get_sub_id(sub_segment)
+        return super if sub_node_id.nil?
+
+        param_key = get_param('key')
+        return handle_property_get(param_key, sub_node_id) unless param_key.nil?
+
+        kramdown_text = prepare_kramdown(sub_node_id, @segment_index+1)
+        return kramdown_to_html(kramdown_text)
+      end
+
+      def handle_special_segment(segment)
+        case segment
+        when 'charts'
+          return "..."
+        else
+          return nil
+        end
+      end
+
+      def kramdown_subordinates(segment_node_id, segment_index)
+        return super unless at_destination?
+        return kramdown_subordinates_sublist(segment_node_id, segment_index)
       end
     end
 

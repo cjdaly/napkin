@@ -113,41 +113,7 @@ module Napkin
   end
 
   module Handlers
-    class Handler_Vitals_Get < DefaultGetHandler
-      def handle?
-        return at_destination? || (remaining_segments == 1)
-      end
-
-      def handle
-        return super if at_destination?
-
-        param_key = get_param('key')
-        return super unless param_key.nil?
-
-        sub_segment = get_segment(@segment_index+1)
-        return handle_special_segment(sub_segment) if parse_int(sub_segment).nil?
-
-        sub_list = Neo::SubList.new(@segment_node_id)
-        sub_node_id = sub_list.get_sub_id(sub_segment)
-        return super if sub_node_id.nil?
-
-        kramdown_text = prepare_kramdown(sub_node_id, @segment_index+1)
-        return kramdown_to_html(kramdown_text)
-      end
-
-      def handle_special_segment(segment)
-        case segment
-        when 'now'
-          return "..."
-        else
-          return nil
-        end
-      end
-
-      def kramdown_subordinates(segment_node_id, segment_index)
-        return super unless at_destination?
-        return kramdown_subordinates_sublist(segment_node_id, segment_index)
-      end
+    class Handler_Vitals_Get < SubListGetHandler
     end
   end
 end
