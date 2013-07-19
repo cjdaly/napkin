@@ -122,6 +122,7 @@ module Napkin
 
       def prepare_kramdown(segment_node_id=@segment_node_id, segment_index=@segment_index)
         kramdown_text = kramdown_preamble(segment_node_id, segment_index)
+        kramdown_text << kramdown_specials(segment_node_id, segment_index)
         kramdown_text << kramdown_subordinates(segment_node_id, segment_index)
         kramdown_text << kramdown_properties(segment_node_id, segment_index)
         return kramdown_text
@@ -141,6 +142,10 @@ module Napkin
 | *Superior* | [#{sup_segment}](#{sup_path})
 "
         return kramdown_text
+      end
+
+      def kramdown_specials(segment_node_id, segment_index)
+        return "| *Specials* | ???\n"
       end
 
       def kramdown_subordinates(segment_node_id, segment_index)
@@ -206,10 +211,111 @@ module Napkin
       def handle_special_segment(segment)
         case segment
         when 'charts'
-          return "..."
-        else
+          if (get_param('data_key').nil?) then
+            return handle_chart_multi
+          else
+            return handle_chart_single
+          end
+        end
+        return nil
+      end
+
+      def handle_chart_single()
+        handle_time = Time.now
+        minute_time = round_to_minute_helper(handle_time)
+        minute_time_i = minute_time.to_i
+
+        offset = parse_int(get_param('offset')) || 0
+        minute_time_i -= (offset * 60)
+
+        samples = parse_int(get_param('samples')) || 15
+        skip = parse_int(get_param('skip')) || 1
+
+        param_source = get_param('source')
+        param_time_i_key = get_param('time_i_key')
+        param_data_key = get_param('data_key')
+
+        if (param_source.nil? || param_time_i_key.nil?) then
           return nil
         end
+        keys = [param_time_i_key, param_data_key]
+
+        minute_time_i = minute_time_i - (60 * samples * skip)
+        time_series = []
+        for i in 1..samples
+          minute_time_i += (60 * skip)
+          minute_time = Time.at(minute_time_i)
+
+          data = get_nearest_minute_data_helper(minute_time, param_source, keys, function="", param_time_i_key)
+          data.each do |time_value|
+            time_i = time_value[0]
+            time = Time.at(time_i)
+            time_javascript = "new Date(#{time.year},#{time.month-1},#{time.day},#{time.hour},#{time.min},#{time.sec})"
+            value = time_value[1]
+            time_series << [time_javascript, value]
+          end
+        end
+
+        @response.headers['Content-Type'] = 'text/html'
+        value_labels = [keys[1]]
+        haml_out = Haml.render_line_chart(param_source, value_labels, time_series)
+        return haml_out
+      end
+
+      def handle_chart_multi()
+        handle_time = Time.now
+        minute_time = round_to_minute_helper(handle_time)
+        minute_time_i = minute_time.to_i
+
+        offset = parse_int(get_param('offset')) || 0
+        minute_time_i -= (offset * 60)
+
+        samples = parse_int(get_param('samples')) || 15
+        skip = parse_int(get_param('skip')) || 1
+
+        param_source = get_param('source')
+        param_keys = get_param('keys', false)
+
+        keys = []
+        param_keys.split(',').each do |key|
+          if (Neo.valid_segment?(key)) then
+            keys << key
+          end
+        end
+
+        minute_time_i = minute_time_i - (60 * samples * skip)
+        time_series = []
+        for i in 1..samples
+          minute_time_i += (60 * skip)
+          minute_time = Time.at(minute_time_i)
+          row = ["new Date(#{minute_time.year},#{minute_time.month-1},#{minute_time.day},#{minute_time.hour},#{minute_time.min})"]
+
+          data = get_nearest_minute_data_helper(minute_time, param_source, keys)
+          if (data[0].nil?) then
+            keys.each do |key|
+              row << nil
+            end
+          else
+            data[0].each do |value|
+              row << value
+            end
+          end
+
+          time_series << row
+        end
+
+        @response.headers['Content-Type'] = 'text/html'
+        value_labels = keys
+        haml_out = Haml.render_line_chart(param_source, value_labels, time_series)
+        return haml_out
+      end
+
+      def get_nearest_minute_data_helper(time, source_name, keys, function = "AVG", time_i_key = nil)
+        return nil
+      end
+
+      def round_to_minute_helper(time)
+        return nil
       end
 
       def kramdown_subordinates(segment_node_id, segment_index)
