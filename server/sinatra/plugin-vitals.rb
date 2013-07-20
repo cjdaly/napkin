@@ -123,11 +123,13 @@ module Napkin
         return PT.round_to_minute(time)
       end
 
-      def kramdown_specials(segment_node_id, segment_index)
+      def kramdown_specials(node_id)
         return super unless at_destination?
 
         kramdown_text = "| *Specials* | *name*\n"
-        kramdown_text << "| | [chart1](#{get_path()}/charts?offset=0&samples=120&skip=5&source=napkin.vitals&keys=vitals.memfree_kb,vitals.vmpeak_kb_neo4j,vitals.vmpeak_kb_sinatra)\n"
+        kramdown_text << "| | [memory usage](#{get_path}/charts?offset=0&samples=120&skip=5&source=napkin.vitals&keys=vitals.memfree_kb,vitals.vmpeak_kb_neo4j,vitals.vmpeak_kb_sinatra)\n"
+        kramdown_text << "| | [Neo4j DB disk usage](#{get_path}/charts?offset=0&samples=120&skip=5&source=napkin.vitals&data_key=vitals.neo4j_db_usage_kb&time_i_key=vitals.check_time_i)\n"
+        kramdown_text << "| | [load average](#{get_path}/charts?offset=0&samples=120&skip=5&source=napkin.vitals&data_key=vitals.loadavg_1_min&time_i_key=vitals.check_time_i)\n"
         return kramdown_text
       end
     end

@@ -96,15 +96,25 @@ module Napkin
         return PT.round_to_minute(time)
       end
 
-      def kramdown_specials(segment_node_id, segment_index)
+      def kramdown_specials(node_id)
         return super unless at_destination?
 
+        sub_list = Neo::SubList.new(node_id)
+        sublist_count = sub_list.get_count
+        last_sub_id = sub_list.get_sub_id(sublist_count)
+
+        return super if last_sub_id.nil?
+
         kramdown_text = "| *Specials* | *name*\n"
-        kramdown_text << "| | [temperature](#{get_path()}/charts?offset=0&samples=120&skip=10&source=chatter.cerbee1&data_key=sensor.temperatureHumidity.temperature~f&time_i_key=chatter.handle_time~i)\n"
-        kramdown_text << "| | [humidity](#{get_path()}/charts?offset=0&samples=120&skip=10&source=chatter.cerbee1&data_key=sensor.temperatureHumidity.relativeHumidity~f&time_i_key=chatter.handle_time~i)\n"
-        kramdown_text << "| | [brightness](#{get_path()}/charts?offset=0&samples=120&skip=10&source=chatter.cerbee1&data_key=sensor.lightSensor.lightSensorPercentage~f&time_i_key=chatter.handle_time~i)\n"
+        property_hash = Neo.get_node_properties(last_sub_id)
+        property_hash.each do |key, value|
+          if (value.is_a? Numeric) then
+            kramdown_text << "| | [chart property #{key}](#{get_path}/charts?offset=0&samples=120&skip=10&source=chatter.#{get_segment}&data_key=#{key}&time_i_key=chatter.handle_time~i)\n"
+          end
+        end
         return kramdown_text
       end
+
     end
   end
 end

@@ -120,15 +120,15 @@ module Napkin
         return value.to_s
       end
 
-      def prepare_kramdown(segment_node_id=@segment_node_id, segment_index=@segment_index)
-        kramdown_text = kramdown_preamble(segment_node_id, segment_index)
-        kramdown_text << kramdown_specials(segment_node_id, segment_index)
-        kramdown_text << kramdown_subordinates(segment_node_id, segment_index)
-        kramdown_text << kramdown_properties(segment_node_id, segment_index)
+      def prepare_kramdown(node_id=@segment_node_id, segment_index=@segment_index)
+        kramdown_text = kramdown_preamble(node_id, segment_index)
+        kramdown_text << kramdown_specials(node_id)
+        kramdown_text << kramdown_subordinates(node_id)
+        kramdown_text << kramdown_properties(node_id)
         return kramdown_text
       end
 
-      def kramdown_preamble(segment_node_id, segment_index)
+      def kramdown_preamble(node_id, segment_index)
         segment = get_segment(segment_index)
         path = get_path(0, segment_index)
         sup_segment = get_segment(segment_index-1) || "nil"
@@ -138,40 +138,23 @@ module Napkin
 # #{segment}
 
 | *Path* | #{path}
-| *Node ID* | #{segment_node_id}
+| *Node ID* | #{node_id}
 | *Superior* | [#{sup_segment}](#{sup_path})
 "
         return kramdown_text
       end
 
-      def kramdown_specials(segment_node_id, segment_index)
+      def kramdown_specials(node_id)
         return "| *Specials* | ???\n"
       end
 
-      def kramdown_subordinates(segment_node_id, segment_index)
+      def kramdown_subordinates(node_id)
         return "| *Subordinates* | ???\n"
       end
 
-      def kramdown_subordinates_sublist(segment_node_id, segment_index)
-        sub_list = Neo::SubList.new(segment_node_id)
-        sublist_count = sub_list.get_count
-
-        kramdown_text = "| *Subordinates* | *index*\n"
-        sub_offset = 0
-        while (sub_offset < 8)
-          sub_index = sublist_count-sub_offset
-          if (sub_index > 0)
-            kramdown_text << "| | [#{sub_index}](#{get_path}/#{sub_index})\n"
-          end
-          sub_offset += 1
-        end
-
-        return kramdown_text
-      end
-
-      def kramdown_properties(segment_node_id, segment_index)
+      def kramdown_properties(node_id)
         kramdown_text = "| *Properties* | *key* | *type* | *value*\n"
-        property_hash = Neo.get_node_properties(segment_node_id)
+        property_hash = Neo.get_node_properties(node_id)
         property_hash.each do |key, value|
           kramdown_text << "| | #{key} | #{value.class} | #{value}\n"
         end
@@ -318,9 +301,23 @@ module Napkin
         return nil
       end
 
-      def kramdown_subordinates(segment_node_id, segment_index)
+      def kramdown_subordinates(node_id)
         return super unless at_destination?
-        return kramdown_subordinates_sublist(segment_node_id, segment_index)
+
+        sub_list = Neo::SubList.new(node_id)
+        sublist_count = sub_list.get_count
+
+        kramdown_text = "| *Subordinates* | *index*\n"
+        sub_offset = 0
+        while (sub_offset < 8)
+          sub_index = sublist_count-sub_offset
+          if (sub_index > 0)
+            kramdown_text << "| | [#{sub_index}](#{get_path}/#{sub_index})\n"
+          end
+          sub_offset += 1
+        end
+
+        return kramdown_text
       end
     end
 
