@@ -10,6 +10,7 @@
 ####
 require 'neo4j-util'
 require 'napkin-handlers'
+require 'napkin-util'
 
 module Napkin
   module Tasks
@@ -17,6 +18,7 @@ module Napkin
     Neo = Napkin::Neo4jUtil
     #
     class TaskBase
+      include ConversionUtil
       def initialize(task_node_id, task_data, task_segment)
         @task_node_id = task_node_id
         @task_data = task_data
@@ -29,24 +31,6 @@ module Napkin
 
       def init!
         @task_data['napkin.tasks.task_init'] = true
-      end
-
-      def parse_int(text)
-        return nil if text.nil?
-        begin
-          return Integer(text)
-        rescue ArgumentError => err
-          return nil
-        end
-      end
-
-      def parse_float(text)
-        return nil if text.nil?
-        begin
-          return Float(text)
-        rescue ArgumentError => err
-          return nil
-        end
       end
 
       #

@@ -11,6 +11,7 @@
 require 'rubygems'
 require 'rest_client'
 require 'json'
+require 'napkin-util'
 
 module Napkin
   module Neo4jUtil
@@ -214,6 +215,7 @@ module Napkin
     end
 
     class SubList
+      include ConversionUtil
       def initialize(sup_node_id)
         @sup_node_id = sup_node_id
       end
@@ -292,14 +294,6 @@ module Napkin
         return millions, thousands, ones
       end
 
-      def parse_int(text)
-        return nil if text.nil?
-        begin
-          return Integer(text)
-        rescue ArgumentError => err
-          return nil
-        end
-      end
     end
   end
 end

@@ -11,6 +11,7 @@
 require 'cgi'
 require 'neo4j-util'
 require 'kramdown-util'
+require 'napkin-util'
 
 module Napkin
   module Handlers
@@ -22,6 +23,7 @@ module Napkin
     KEY_TYPE_F_MATCH = /.+~f$/
     #
     class HandlerBase
+      include ConversionUtil
       def initialize(segment_node_id, request, response, segments, segment_index, user)
         @segment_node_id = segment_node_id
         @request = request
@@ -68,24 +70,6 @@ module Napkin
       def get_body_text
         @request.body.rewind
         return @request.body.read
-      end
-
-      def parse_int(text)
-        return nil if text.nil?
-        begin
-          return Integer(text)
-        rescue ArgumentError => err
-          return nil
-        end
-      end
-
-      def parse_float(text)
-        return nil if text.nil?
-        begin
-          return Float(text)
-        rescue ArgumentError => err
-          return nil
-        end
       end
 
       #
