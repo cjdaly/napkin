@@ -9,7 +9,6 @@
 #   cjdaly - initial API and implementation
 ####
 require 'neo4j-util'
-require 'haml-util'
 require 'napkin-plugins'
 require 'napkin-tasks'
 require 'napkin-handlers'
@@ -170,9 +169,6 @@ module Napkin
         times_ce_node_id = Neo.get_sub_id!('ce', times_node_id)
         # TODO: is there a better caching mechanism than 'pin'?
         Neo.pin!(:times_ce, times_ce_node_id)
-
-        times_now_node_id = Neo.get_sub_id!('now', times_node_id)
-        Neo.set_node_property('napkin.handlers.GET.class_name', 'Handler_Times_Now_Get', times_now_node_id)
       end
 
       def todo?
@@ -185,107 +181,5 @@ module Napkin
   end
 
   module Handlers
-    class Handler_Times_Now_Get < DefaultGetHandler
-      PT = Napkin::Plugins::Plugin_Times
-      #
-      def handle
-        if (get_param('data_key').nil?) then
-          handle_orig
-        else
-          handle_new
-        end
-      end
-
-      def handle_new
-        handle_time = Time.now
-        minute_time = PT.round_to_minute(handle_time)
-        minute_time_i = minute_time.to_i
-
-        samples = parse_int(get_param('samples')) || 15
-        skip = parse_int(get_param('skip')) || 1
-
-        param_source = get_param('source')
-        param_time_i_key = get_param('time_i_key')
-        param_data_key = get_param('data_key')
-
-        if (param_source.nil? || param_time_i_key.nil?) then
-          param_source = 'napkin.vitals'
-          keys = ['vitals.check_time_i', 'vitals.memfree_kb']
-        else
-          keys = [param_time_i_key, param_data_key]
-        end
-
-        minute_time_i = minute_time_i - (60 * samples * skip)
-        time_series = []
-        for i in 1..samples
-          minute_time_i += (60 * skip)
-          minute_time = Time.at(minute_time_i)
-
-          data = PT.get_nearest_minute_data(minute_time, param_source, keys, function="", param_time_i_key)
-          data.each do |time_value|
-            time_i = time_value[0]
-            time = Time.at(time_i)
-            time_javascript = "new Date(#{time.year},#{time.month-1},#{time.day},#{time.hour},#{time.min},#{time.sec})"
-            value = time_value[1]
-            time_series << [time_javascript, value]
-          end
-        end
-
-        @response.headers['Content-Type'] = 'text/html'
-        value_labels = [keys[1]]
-        haml_out = Haml.render_line_chart(param_source, value_labels, time_series)
-        return haml_out
-      end
-
-      def handle_orig
-        handle_time = Time.now
-        minute_time = PT.round_to_minute(handle_time)
-        minute_time_i = minute_time.to_i
-
-        samples = parse_int(get_param('samples')) || 15
-        skip = parse_int(get_param('skip')) || 1
-
-        param_source = get_param('source')
-        param_keys = get_param('keys', false)
-
-        if (param_source.nil? || param_keys.nil?) then
-          param_source = 'napkin.vitals'
-          keys = ['vitals.memfree_kb']
-        else
-          keys = []
-          param_keys.split(',').each do |key|
-            if (Neo.valid_segment?(key)) then
-              keys << key
-            end
-          end
-        end
-
-        minute_time_i = minute_time_i - (60 * samples * skip)
-        time_series = []
-        for i in 1..samples
-          minute_time_i += (60 * skip)
-          minute_time = Time.at(minute_time_i)
-          row = ["new Date(#{minute_time.year},#{minute_time.month-1},#{minute_time.day},#{minute_time.hour},#{minute_time.min})"]
-
-          data = PT.get_nearest_minute_data(minute_time, param_source, keys)
-          if (data[0].nil?) then
-            keys.each do |key|
-              row << nil
-            end
-          else
-            data[0].each do |value|
-              row << value
-            end
-          end
-
-          time_series << row
-        end
-
-        @response.headers['Content-Type'] = 'text/html'
-        value_labels = keys
-        haml_out = Haml.render_line_chart(param_source, value_labels, time_series)
-        return haml_out
-      end
-    end
   end
 end

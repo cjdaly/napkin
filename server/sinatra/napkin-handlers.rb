@@ -10,14 +10,12 @@
 ####
 require 'cgi'
 require 'neo4j-util'
-require 'haml-util'
 require 'kramdown-util'
 
 module Napkin
   module Handlers
     #
     Neo = Napkin::Neo4jUtil
-    Haml = Napkin::HamlUtil
     Kram = Napkin::KramdownUtil
     #
     KEY_TYPE_I_MATCH = /.+~i$/
@@ -241,8 +239,8 @@ module Napkin
 
         @response.headers['Content-Type'] = 'text/html'
         value_labels = [keys[1]]
-        haml_out = Haml.render_line_chart(param_source, value_labels, time_series)
-        return haml_out
+        html_out = Kram.render_line_chart(param_source, value_labels, time_series)
+        return html_out
       end
 
       def handle_chart_multi()
@@ -289,8 +287,8 @@ module Napkin
 
         @response.headers['Content-Type'] = 'text/html'
         value_labels = keys
-        haml_out = Haml.render_line_chart(param_source, value_labels, time_series)
-        return haml_out
+        html_out = Kram.render_line_chart(param_source, value_labels, time_series)
+        return html_out
       end
 
       def get_nearest_minute_data_helper(time, source_name, keys, function = "AVG", time_i_key = nil)

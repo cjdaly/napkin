@@ -9,7 +9,6 @@
 #   cjdaly - initial API and implementation
 ####
 require 'neo4j-util'
-require 'haml-util'
 require 'kramdown-util'
 require 'napkin-plugins'
 require 'napkin-tasks'
