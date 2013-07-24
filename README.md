@@ -2,9 +2,11 @@
 
 Napkin is an interaction platform for HTTP enabled devices.  The Napkin server offers a REST API with predefined services for storing and retrieving configuration information and collecting time series data from client devices.  A plug-in model provides extensibility in HTTP handling and periodic processing of stored data.  The Napkin server runs on [JRuby](http://jruby.org/) [Sinatra](http://www.sinatrarb.com/) and the [Neo4j](http://www.neo4j.org/) graph database.
 
-![vitals](images/pcduino-vitals-chart.jpg)
+![vitals](https://github.com/cjdaly/napkin/wiki/images/pcduino-vitals-chart.jpg)
 
 Napkin began when I discovered small, inexpensive but HTTP capable (ARM-based, "[arduino](http://en.wikipedia.org/wiki/Arduino)-ish") computers like the [Netduino Plus](http://www.netduino.com/), [.Net Gadgeteer](http://www.ghielectronics.com/catalog/category/274), [BeagleBone](http://beagleboard.org/bone), [Raspberry Pi](http://www.raspberrypi.org/), etc. and parts websites like [Sparkfun](https://www.sparkfun.com/), [Adafruit](http://adafruit.com/), etc. I built systems based on these devices to monitor and control the environment around my home (temperature, humidity, light levels, sounds, etc.) and needed a way to collect, store and process all of the data.
+
+![chatter](https://github.com/cjdaly/napkin/wiki/images/cerbee1-humidity.jpg)
 
 #### Details
 
@@ -19,8 +21,6 @@ Napkin clients use REST-style HTTP communication to access services such as:
 * [chatter](https://github.com/cjdaly/napkin/wiki/Plugin-chatter) - allows devices to post time series data
 * [vitals](https://github.com/cjdaly/napkin/wiki/Plugin-vitals) - periodically stores data about the state of the napkin server
 * new services can be implemented as plugins
-
-![chatter](images/cerbee1-humidity.jpg)
 
 Napkin client examples:
 * .Net Gadgeteer (C#)
