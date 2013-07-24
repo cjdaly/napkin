@@ -103,21 +103,23 @@ module Napkin
       end
 
       def prepare_kramdown(node_id=@segment_node_id, segment_index=@segment_index)
-        kramdown_text = kramdown_preamble(node_id, segment_index)
-        kramdown_text << kramdown_specials(node_id)
-        kramdown_text << kramdown_subordinates(node_id)
+        kramdown_text = kramdown_details(node_id, segment_index)
         kramdown_text << kramdown_properties(node_id)
+        kramdown_text << kramdown_subordinates(node_id)
+        kramdown_text << kramdown_features(node_id)
         return kramdown_text
       end
 
-      def kramdown_preamble(node_id, segment_index)
+      def kramdown_details(node_id, segment_index)
         segment = get_segment(segment_index)
         path = get_path(0, segment_index)
         sup_segment = get_segment(segment_index-1) || "nil"
         sup_path = get_path(0, segment_index-1)
 
         kramdown_text = "
-# #{segment}
+## #{segment}
+
+### Details
 
 | *Path* | #{path}
 | *Node ID* | #{node_id}
@@ -126,16 +128,17 @@ module Napkin
         return kramdown_text
       end
 
-      def kramdown_specials(node_id)
-        return "| *Specials* | ???\n"
+      def kramdown_features(node_id)
+        return ""
       end
 
       def kramdown_subordinates(node_id)
-        return "| *Subordinates* | ???\n"
+        return ""
       end
 
       def kramdown_properties(node_id)
-        kramdown_text = "| *Properties* | *key* | *type* | *value*\n"
+        kramdown_text ="\n###Properties\n\n"
+        kramdown_text << "| *key* | *type* | *value*\n"
         property_hash = Neo.get_node_properties(node_id)
         property_hash.each do |key, value|
           kramdown_text << "| | #{key} | #{value.class} | #{value}\n"
@@ -289,15 +292,17 @@ module Napkin
         sub_list = Neo::SubList.new(node_id)
         sublist_count = sub_list.get_count
 
-        kramdown_text = "| *Subordinates* | *index*\n"
+        kramdown_text ="\n###Subordinates\n\n"
+        kramdown_text << "| *latest* "
         sub_offset = 0
         while (sub_offset < 8)
           sub_index = sublist_count-sub_offset
           if (sub_index > 0)
-            kramdown_text << "| | [#{sub_index}](#{get_path}/#{sub_index})\n"
+            kramdown_text << "| [#{sub_index}](#{get_path}/#{sub_index}) "
           end
           sub_offset += 1
         end
+        kramdown_text << "\n"
 
         return kramdown_text
       end

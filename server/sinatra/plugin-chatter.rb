@@ -95,7 +95,7 @@ module Napkin
         return PT.round_to_minute(time)
       end
 
-      def kramdown_specials(node_id)
+      def kramdown_features(node_id)
         return super unless at_destination?
 
         sub_list = Neo::SubList.new(node_id)
@@ -104,14 +104,25 @@ module Napkin
 
         return super if last_sub_id.nil?
 
-        kramdown_text = "| *Specials* | *name*\n"
+        kramdown_text ="\n###Features\n\n"
+        kramdown_text << "| *name*\n"
         property_hash = Neo.get_node_properties(last_sub_id)
         property_hash.each do |key, value|
           if (value.is_a? Numeric) then
-            kramdown_text << "| | [chart property #{key}](#{get_path}/charts?offset=0&samples=120&skip=10&source=chatter.#{get_segment}&data_key=#{key}&time_i_key=chatter.handle_time~i)\n"
+            kramdown_text << "| chart #{key} "
+            kramdown_text << "| [1 min](#{get_chart_url(1, key)}) "
+            kramdown_text << "| [5 min](#{get_chart_url(5, key)}) "
+            kramdown_text << "| [10 min](#{get_chart_url(10, key)}) "
+            kramdown_text << "| [15 min](#{get_chart_url(15, key)}) "
+            kramdown_text << "| [30 min](#{get_chart_url(30, key)}) "
+            kramdown_text << "| [60 min](#{get_chart_url(60, key)})\n"
           end
         end
         return kramdown_text
+      end
+
+      def get_chart_url(skip, data_key)
+        return "#{get_path}/charts?offset=0&samples=120&skip=#{skip}&source=chatter.#{get_segment}&data_key=#{data_key}&time_i_key=chatter.handle_time~i"
       end
 
     end
