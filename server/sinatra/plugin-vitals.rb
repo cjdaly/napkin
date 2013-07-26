@@ -152,7 +152,7 @@ module Napkin
       end
 
       def get_memory_chart_url(skip)
-        return "#{get_path}//charts?offset=0&samples=120&skip=#{skip}&source=napkin.vitals&keys=vitals.memfree_kb,vitals.vmpeak_kb_neo4j,vitals.vmpeak_kb_sinatra"
+        return "#{get_path}/charts?offset=0&samples=120&skip=#{skip}&source=napkin.vitals&keys=vitals.memfree_kb,vitals.vmpeak_kb_neo4j,vitals.vmpeak_kb_sinatra"
       end
 
       def get_single_chart_url(skip, key)
