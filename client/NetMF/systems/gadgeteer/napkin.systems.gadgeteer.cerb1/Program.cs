@@ -33,7 +33,7 @@ namespace napkin.systems.gadgeteer.cerb1
     public partial class Program
     {
         public readonly string DeviceId = "cerb1";
-        public readonly string NapkinServerUri = "http://192.168.2.78:4567";
+        public readonly string NapkinServerUri = "http://192.168.2.11:4567";
         private NetworkCredential _credential;
 
         private Thread _cycleThread;

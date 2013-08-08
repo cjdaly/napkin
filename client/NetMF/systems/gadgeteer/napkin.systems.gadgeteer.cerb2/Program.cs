@@ -33,7 +33,7 @@ namespace napkin.systems.gadgeteer.cerb2
     public partial class Program
     {
         public readonly string DeviceId = "cerb2";
-        public readonly string NapkinServerUri = "http://192.168.2.78:4567";
+        public readonly string NapkinServerUri = "http://192.168.2.11:4567";
         private NetworkCredential _credential;
 
         private Thread _cycleThread;
@@ -44,8 +44,18 @@ namespace napkin.systems.gadgeteer.cerb2
 
             _credential = new NetworkCredential(DeviceId, DeviceId);
 
+            barometer.MeasurementComplete += new Barometer.MeasurementCompleteEventHandler(barometer_MeasurementComplete);
+
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
+        }
+
+        private double _temperature = 0;
+        private double _pressure = 0;
+        void barometer_MeasurementComplete(Barometer sender, Barometer.SensorData sensorData)
+        {
+            _pressure = sensorData.Pressure;
+            _temperature = sensorData.Temperature;
         }
 
         private int _cycleCount = 0;
@@ -72,6 +82,11 @@ namespace napkin.systems.gadgeteer.cerb2
 
             long memoryBytesFree = Debug.GC(false);
             sb.AppendLine("vitals.memoryBytesFree~i=" + memoryBytesFree);
+
+            barometer.RequestMeasurement();
+            Thread.Sleep(1000);
+            sb.AppendLine("sensor.barometer.temperature~f=" + _temperature.ToString());
+            sb.AppendLine("sensor.barometer.pressure~f=" + _pressure.ToString());
 
             double lightSensorPercentage = lightSensor.ReadLightSensorPercentage();
             sb.AppendLine("sensor.lightSensor.lightSensorPercentage~f=" + lightSensorPercentage.ToString());
