@@ -43,7 +43,7 @@ module Napkin
       end
 
       def get_segment(index = @segment_index)
-        return nil if ((index < 0) || (index >= @segments.length))
+        return nil if (index < 0)
         return @segments[index]
       end
 
@@ -51,8 +51,7 @@ module Napkin
         path = ""
         index = start_index
         while index <= end_index do
-          path << "/"
-          path << @segments[index]
+          path << "/#{@segments[index]}"
           index += 1
         end
         return path
@@ -86,6 +85,12 @@ module Napkin
 
     end
 
+    class NeverHandler < HandlerBase
+      def handle?
+        return false
+      end
+    end
+
     class DefaultGetHandler < HandlerBase
       def handle
         param_key = get_param('key')
@@ -111,10 +116,13 @@ module Napkin
       end
 
       def kramdown_details(node_id, segment_index)
-        segment = get_segment(segment_index)
+        segment = get_segment(segment_index) || "ROOT"
         path = get_path(0, segment_index)
-        sup_segment = get_segment(segment_index-1) || "nil"
+        sup_segment = get_segment(segment_index-1) || "ROOT"
         sup_path = get_path(0, segment_index-1)
+        if (sup_path.empty?) then
+          sup_path = "/"
+        end
 
         kramdown_text = "
 ## #{segment}
@@ -133,7 +141,17 @@ module Napkin
       end
 
       def kramdown_subordinates(node_id)
-        return ""
+        return "" unless at_destination?
+
+        sub_segments = Neo::get_sub_segments(node_id)
+
+        kramdown_text ="\n###Subordinates\n\n"
+        sub_segments.each do |segment|
+          kramdown_text << "| [#{segment}](#{get_path}/#{segment})\n"
+        end
+        kramdown_text << "\n"
+
+        return kramdown_text
       end
 
       def kramdown_properties(node_id)
@@ -149,7 +167,8 @@ module Napkin
       def kramdown_to_html(kramdown_text)
         @response.headers['Content-Type'] = 'text/html'
 
-        html_text = Kram.default_node_get_html(kramdown_text, get_segment)
+        title = get_segment || "ROOT"
+        html_text = Kram.default_node_get_html(kramdown_text, title)
         return html_text
       end
     end

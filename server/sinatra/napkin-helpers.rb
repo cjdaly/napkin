@@ -87,13 +87,18 @@ module Napkin
         segments = path.split('/')
 
         segment_node_id = Neo.pin(:root)
-        segments.each_with_index do |segment, i|
-          segment_node_id = Neo.get_sub_id(segment, segment_node_id)
-          break if segment_node_id.nil?
+        if (segments.length == 0) then
+          handler = instantiate_handler(segment_node_id, segments, -1, user)
+          if (handler.handle?) then
+            result = handler.handle
+            return result if !result.nil?
+          end
+        else
+          segments.each_with_index do |segment, i|
+            segment_node_id = Neo.get_sub_id(segment, segment_node_id)
+            break if segment_node_id.nil?
 
-          handler_class = get_handler_class(request.request_method, segment_node_id)
-          if (!handler_class.nil?) then
-            handler = handler_class.new(segment_node_id, request, response, segments, i, user)
+            handler = instantiate_handler(segment_node_id, segments, i, user)
             if (handler.handle?) then
               result = handler.handle
               return result if !result.nil?
@@ -107,6 +112,15 @@ module Napkin
 
       # TODO: some kind of 404
       return Neo.get_node_properties_text(Neo.pin(:root))
+    end
+
+    def instantiate_handler(segment_node_id, segments, segment_index, user)
+      handler_class = get_handler_class(request.request_method, segment_node_id)
+      if (handler_class.nil?) then
+        return Handlers::NeverHandler.new(segment_node_id, request, response, segments, segment_index, user)
+      else
+        return handler_class.new(segment_node_id, request, response, segments, segment_index, user)
+      end
     end
 
     def get_handler_class(method, segment_node_id)

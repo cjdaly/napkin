@@ -77,17 +77,7 @@ module Napkin
       end
     end
 
-    class Handler_Config_Get < HandlerBase
-      def handle
-        param_key = get_param('key')
-
-        if param_key.nil? then
-          return Neo.get_node_properties_text(@segment_node_id)
-        end
-
-        value = Neo.get_node_property(param_key, @segment_node_id)
-        return value.to_s
-      end
+    class Handler_Config_Get < DefaultGetHandler
     end
   end
 end

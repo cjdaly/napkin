@@ -165,6 +165,21 @@ module Napkin
       return sub_ids
     end
 
+    def Neo4jUtil.get_sub_segments(sup_node_id)
+      cypher_get_subs = {
+        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:NAPKIN_SUB]->sub RETURN sub.`napkin.segment` ORDER BY sub.`napkin.segment`',
+        "params" => {
+        "sup_node_id" => sup_node_id,
+        }
+      }
+      raw =  Neo4jUtil.post(SRC, cypher_get_subs)
+      sub_segments = []
+      raw['data'].each do |data|
+        sub_segments << data[0]
+      end
+      return sub_segments
+    end
+
     def Neo4jUtil.get_root_node_id()
       return Neo4jUtil.get_sub_id!('NAPKIN_ROOT', 0)
     end
