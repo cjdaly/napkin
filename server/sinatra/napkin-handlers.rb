@@ -159,7 +159,7 @@ module Napkin
         kramdown_text << "| *key* | *type* | *value*\n"
         property_hash = Neo.get_node_properties(node_id)
         property_hash.each do |key, value|
-          kramdown_text << "| | #{key} | #{value.class} | #{value}\n"
+          kramdown_text << "| #{key} | #{value.class} | #{value}\n"
         end
         return kramdown_text
       end
