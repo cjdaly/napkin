@@ -33,7 +33,6 @@ namespace napkin.systems.gadgeteer.cerbee1
 
             _bone2 = new ThreadedSerialDevice(Serial.COM3);
             _bone2.ReadLine += new ThreadedSerialDevice.ReadHandler(_bone2_ReadLine);
-            _bone2.WriteLine("Hello from: " + DeviceId);
 
             temperatureHumidity.MeasurementComplete += new TemperatureHumidity.MeasurementCompleteEventHandler(temperatureHumidity_MeasurementComplete);
 
@@ -41,11 +40,12 @@ namespace napkin.systems.gadgeteer.cerbee1
             _cycleThread.Start();
         }
 
+        private string _lastLine = "";
         void _bone2_ReadLine(string line)
         {
+            _lastLine = line;
             Debug.Print("line: " + line);
         }
-
 
         private double _temperature = 0;
         private double _relativeHumidity = 0;
@@ -71,9 +71,10 @@ namespace napkin.systems.gadgeteer.cerbee1
         {
             _cycleCount++;
             Debug.Print("Cycle: " + _cycleCount);
-            _bone2.WriteLine("Cycle: " + _cycleCount);
 
             StringBuilder sb = new StringBuilder();
+            sb.AppendLine("state.vitalsAndSensorsUpdated=false");
+            
             sb.AppendLine("vitals.id=" + DeviceId);
             sb.AppendLine("vitals.currentCycle~i=" + _cycleCount);
 
@@ -88,10 +89,14 @@ namespace napkin.systems.gadgeteer.cerbee1
             double lightSensorPercentage = lightSensor.ReadLightSensorPercentage();
             sb.AppendLine("sensor.lightSensor.lightSensorPercentage~f=" + lightSensorPercentage.ToString());
 
-            string chatterRequestText = sb.ToString();
-            _bone2.Write(chatterRequestText);
+            sb.AppendLine("sensor.lastLine=" + _lastLine);
 
-            Thread.Sleep(10 * 1000);
+            sb.AppendLine("state.vitalsAndSensorsUpdated=true");
+
+            string chatterText = sb.ToString();
+            _bone2.Write(chatterText);
+
+            Thread.Sleep(8 * 1000);
         }
     }
 }

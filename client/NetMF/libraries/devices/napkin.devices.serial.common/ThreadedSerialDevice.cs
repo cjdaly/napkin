@@ -24,7 +24,6 @@ namespace napkin.devices.serial.common
 
         private Thread _readThread;
         private Queue _readData;
-        private StringBuilder _readBuffer;
 
         private Thread _writeThread;
         private Queue _writeData;
@@ -41,7 +40,7 @@ namespace napkin.devices.serial.common
 
         public void WriteLine(string text)
         {
-            Write(text + "\n");
+            Write(text + "\r\n");
         }
 
         public void Write(string text)
@@ -64,7 +63,6 @@ namespace napkin.devices.serial.common
             _serialPort.Open();
 
             _readData = new Queue();
-            _readBuffer = new StringBuilder();
             _readThread = new Thread(ReadLoop);
             _readThread.Start();
 
@@ -73,66 +71,30 @@ namespace napkin.devices.serial.common
             _writeThread.Start();
         }
 
-        public virtual bool AutoFlushReads()
-        {
-            return true;
-        }
-
         public virtual bool IsNewline(char c)
         {
             return ((c == '\r') || (c == '\n'));
         }
 
-        public string Read(bool wait = false)
-        {
-            string readData = null;
-
-            do
-            {
-                Thread.Sleep(20);
-                lock (_readBuffer)
-                {
-                    if (_readBuffer.Length > 0)
-                    {
-                        readData = _readBuffer.ToString();
-                        ReadLine(readData);
-                        _readBuffer.Clear();
-                    }
-                }
-            } while (readData == null && wait);
-
-            return readData;
-        }
-
         private void ReadLoop()
         {
+            StringBuilder readBuffer = new StringBuilder();
             while (true)
             {
                 try
                 {
-                    lock (_readBuffer)
+                    int data = _serialPort.ReadByte();
+                    if (data != -1)
                     {
-                        while (_serialPort.BytesToRead > 0)
+                        char c = (char)data;
+                        if (IsNewline(c) && (readBuffer.Length > 0))
                         {
-                            int data = _serialPort.ReadByte();
-                            char c = (char)data;
-                            if (IsNewline(c))
-                            {
-                                break;
-                            }
-                            else if (data < 32)
-                            {
-                                _readBuffer.Append("[" + data.ToString() + "]");
-                            }
-                            else
-                            {
-                                _readBuffer.Append(c);
-                            }
+                            ReadLine(readBuffer.ToString());
+                            readBuffer.Clear();
                         }
-                        if ((_readBuffer.Length > 0) && AutoFlushReads())
+                        else
                         {
-                            ReadLine(_readBuffer.ToString());
-                            _readBuffer.Clear();
+                            readBuffer.Append(c);
                         }
                     }
                     Thread.Sleep(20);
