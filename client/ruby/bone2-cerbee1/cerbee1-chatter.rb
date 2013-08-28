@@ -19,6 +19,7 @@ DEVICE_ID = "cerbee1"
 DEVICE_DATA = {}
 NAPKIN_CONFIG_URL = "http://#{DEVICE_ID}:#{DEVICE_ID}@localhost:4567/config"
 NAPKIN_CHATTER_URL = "http://#{DEVICE_ID}:#{DEVICE_ID}@localhost:4567/chatter"
+START_COUNT_KEY = "napkin.systems.start_count~i"
 
 puts "Hello from #{DEVICE_ID}!"
 
@@ -34,12 +35,12 @@ def increment_start_count()
 
   # get current start_count
   device_config_url = "#{NAPKIN_CONFIG_URL}/#{DEVICE_ID}"
-  start_count_text = RestClient.get(device_config_url, {:params => {'key' => 'start_count'}})
+  start_count_text = RestClient.get(device_config_url, {:params => {'key' => START_COUNT_KEY}})
   start_count = parse_int(start_count_text) || 0
 
   # increment and put value back to server config
   start_count += 1
-  RestClient.put(device_config_url, start_count.to_s, {:params => {'key' => 'start_count'}})
+  RestClient.put(device_config_url, start_count.to_s, {:params => {'key' => START_COUNT_KEY}})
   puts "Starts: #{start_count}"
 end
 
@@ -64,7 +65,6 @@ def chatter_sensor_data(data)
 
   puts "CHATTER:\n#{chatter_text}\n"
   response = RestClient.post(NAPKIN_CHATTER_URL, chatter_text)
-  puts "RESPONSE:\n#{response}\n"
 end
 
 ###
