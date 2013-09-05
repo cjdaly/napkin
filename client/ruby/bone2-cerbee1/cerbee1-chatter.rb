@@ -63,11 +63,64 @@ def chatter_sensor_data(data)
     end
   end
 
-  puts "CHATTER:\n#{chatter_text}\n"
   response = RestClient.post(NAPKIN_CHATTER_URL, chatter_text)
 end
 
 ###
+
+LCD_CMD_PRE = "\xfe"
+LCD_CMD_CLS = "\x01"
+LCD_CMD_NL = "\xc0"
+
+def write_lcd(line1, line2)
+  File.open("/dev/ttyO2", "w") do |file|
+    file.write("#{LCD_CMD_PRE}#{LCD_CMD_CLS}")
+    file.write(line1)
+    file.write("#{LCD_CMD_PRE}#{LCD_CMD_NL}")
+    file.write(line2)
+  end
+end
+
+def clear_lcd()
+  File.open("/dev/ttyO2", "w") do |file|
+    file.write("#{LCD_CMD_PRE}#{LCD_CMD_CLS}")
+  end
+end
+
+def truncate(text, length = 16)
+  if (text.length >= length) then
+    end_position = length - 1
+    text = text[0..end_position]
+  end
+  return text
+end
+
+def refresh_lcd(data)
+  temperature = data['sensor.temperatureHumidity.temperature~f'] || 0
+  humidity = data['sensor.temperatureHumidity.relativeHumidity~f'] || 0
+  brightness = data['sensor.lightSensor.lightSensorPercentage~f'] || 0
+  line1 = truncate("temp: #{truncate(temperature)}")
+  line2 = truncate("lite: #{truncate(brightness)}")
+  write_lcd(line1, line2)
+end
+
+###
+
+IP_LINK = 'wlan0'
+IP_MATCH = /inet\s+([0-9]+\.[0-9]+)\.([0-9]+\.[0-9]+)/
+
+def get_ip_addr()
+  raw = `ip -f inet addr | grep #{IP_LINK}`
+  ip_match = IP_MATCH.match(raw)
+  ip_first = ip_match.captures[0]
+  ip_last = ip_match.captures[1]
+  return ip_first, ip_last
+end
+
+###
+
+IP_FIRST, IP_LAST = get_ip_addr()
+puts "#{IP_LINK} IP addr: http://#{IP_FIRST}.#{IP_LAST}:4567/"
 
 increment_start_count()
 
@@ -79,7 +132,9 @@ File.open("/dev/ttyO1", "r") do |file|
       key.strip! ; value.strip!
       DEVICE_DATA[key] = value
       if ((key == "state.vitalsAndSensorsUpdated") && (value == "true")) then
+        write_lcd("http://#{IP_FIRST}", ".#{IP_LAST}:4567/")
         chatter_sensor_data(DEVICE_DATA)
+        refresh_lcd(DEVICE_DATA)
       end
     end
   end
