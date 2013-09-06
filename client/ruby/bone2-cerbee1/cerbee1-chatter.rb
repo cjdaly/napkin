@@ -112,6 +112,7 @@ IP_MATCH = /inet\s+([0-9]+\.[0-9]+)\.([0-9]+\.[0-9]+)/
 def get_ip_addr()
   raw = `ip -f inet addr | grep #{IP_LINK}`
   ip_match = IP_MATCH.match(raw)
+  return nil, nil if ip_match.nil?
   ip_first = ip_match.captures[0]
   ip_last = ip_match.captures[1]
   return ip_first, ip_last
@@ -132,9 +133,17 @@ File.open("/dev/ttyO1", "r") do |file|
       key.strip! ; value.strip!
       DEVICE_DATA[key] = value
       if ((key == "state.vitalsAndSensorsUpdated") && (value == "true")) then
-        write_lcd("http://#{IP_FIRST}", ".#{IP_LAST}:4567/")
         chatter_sensor_data(DEVICE_DATA)
+
         refresh_lcd(DEVICE_DATA)
+
+        sleep 3
+        if (IP_FIRST.nil?) then
+          write_lcd("Configure Wifi!", "login to console")
+        else
+          write_lcd("http://#{IP_FIRST}", ".#{IP_LAST}:4567/")
+        end
+
       end
     end
   end
