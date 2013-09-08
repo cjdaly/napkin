@@ -91,16 +91,24 @@ def truncate(text, length = 16)
   if (text.length >= length) then
     end_position = length - 1
     text = text[0..end_position]
+  else
+    text = text.rjust(length)
   end
   return text
 end
 
 def refresh_lcd(data)
   temperature = data['sensor.temperatureHumidity.temperature~f'] || 0
+  temp = truncate(temperature.to_s, 5)
+
   humidity = data['sensor.temperatureHumidity.relativeHumidity~f'] || 0
+  humi = truncate(humidity.to_s, 5)
+
   brightness = data['sensor.lightSensor.lightSensorPercentage~f'] || 0
-  line1 = truncate("temp: #{truncate(temperature)}")
-  line2 = truncate("lite: #{truncate(brightness)}")
+  lite = truncate(brightness.to_s, 4)
+
+  line1 = "temp :humi :lite"
+  line2 = "#{temp}:#{humi}:#{lite}"
   write_lcd(line1, line2)
 end
 
@@ -128,7 +136,12 @@ increment_start_count()
 File.open("/dev/ttyO1", "r") do |file|
   while(line = file.gets)
     next if line.nil?
-    key, value = line.split('=', 2)
+    key = nil; value = nil
+    begin
+      key, value = line.split('=', 2)
+    rescue StandardError => err
+      puts "Error: #{err}\n#{err.backtrace}"
+    end
     if (!value.nil?) then
       key.strip! ; value.strip!
       DEVICE_DATA[key] = value
