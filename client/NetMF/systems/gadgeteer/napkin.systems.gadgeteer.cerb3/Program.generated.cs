@@ -21,9 +21,6 @@ namespace napkin.systems.gadgeteer.cerb3 {
         /// <summary>The LightSensor module using socket 3 of the mainboard.</summary>
         private Gadgeteer.Modules.GHIElectronics.LightSensor lightSensor;
         
-        /// <summary>The Barometer module using socket 2 of the mainboard.</summary>
-        private Gadgeteer.Modules.Seeed.Barometer barometer;
-        
         /// <summary>The LED7C module using socket 5 of the mainboard.</summary>
         private Gadgeteer.Modules.GHIElectronics.LED7C led7c;
         
@@ -54,7 +51,6 @@ namespace napkin.systems.gadgeteer.cerb3 {
         private void InitializeModules() {
             this.usbClientSP = new GTM.GHIElectronics.UsbClientSP(8);
             this.lightSensor = new GTM.GHIElectronics.LightSensor(3);
-            this.barometer = new GTM.Seeed.Barometer(2);
             this.led7c = new GTM.GHIElectronics.LED7C(5);
             this.char_Display = new GTM.GHIElectronics.Display_HD44780(7);
         }
