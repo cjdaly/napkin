@@ -27,6 +27,9 @@ namespace napkin.systems.gadgeteer.cerb3 {
         /// <summary>The Char_Display module using socket 7 of the mainboard.</summary>
         private Gadgeteer.Modules.GHIElectronics.Display_HD44780 char_Display;
         
+        /// <summary>The Barometer module using socket 2 of the mainboard.</summary>
+        private Gadgeteer.Modules.Seeed.Barometer barometer;
+        
         /// <summary>This property provides access to the Mainboard API. This is normally not necessary for an end user program.</summary>
         protected new static GHIElectronics.Gadgeteer.FEZCerberus Mainboard {
             get {
@@ -53,6 +56,7 @@ namespace napkin.systems.gadgeteer.cerb3 {
             this.lightSensor = new GTM.GHIElectronics.LightSensor(3);
             this.led7c = new GTM.GHIElectronics.LED7C(5);
             this.char_Display = new GTM.GHIElectronics.Display_HD44780(7);
+            this.barometer = new GTM.Seeed.Barometer(2);
         }
     }
 }
