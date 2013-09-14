@@ -94,7 +94,7 @@ def main_loop(do_write_lcd = false)
             if (IP_FIRST.nil?) then
               write_lcd("Configure Wifi!", "login to console")
             else
-              write_lcd("http://#{IP_FIRST}", ".#{IP_LAST}:4567/")
+              write_lcd("http://#{ip_first}", ".#{ip_last}:4567/")
             end
           end
 
