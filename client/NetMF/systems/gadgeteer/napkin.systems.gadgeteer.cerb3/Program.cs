@@ -34,6 +34,8 @@ namespace napkin.systems.gadgeteer.cerb3
 
             Debug.Print("Hello from: " + DeviceId);
 
+            temperatureHumidity.MeasurementComplete += new TemperatureHumidity.MeasurementCompleteEventHandler(temperatureHumidity_MeasurementComplete);
+
             barometer.StopContinuousMeasurements();
             barometer.MeasurementComplete += new Barometer.MeasurementCompleteEventHandler(barometer_MeasurementComplete);
 
@@ -53,6 +55,14 @@ namespace napkin.systems.gadgeteer.cerb3
 
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
+        }
+
+        private double _temperature2 = 0;
+        private double _relativeHumidity = 0;
+        void temperatureHumidity_MeasurementComplete(TemperatureHumidity sender, double temperature, double relativeHumidity)
+        {
+            _temperature2 = temperature;
+            _relativeHumidity = relativeHumidity;
         }
 
         private double _temperature = 0;
@@ -96,9 +106,15 @@ namespace napkin.systems.gadgeteer.cerb3
             sb.AppendLine("vitals.id=" + DeviceId);
             sb.AppendLine("vitals.currentCycle~i=" + _cycleCount);
 
+            _temperature2 = 0; _relativeHumidity = 0;
+            temperatureHumidity.RequestMeasurement();
+            Thread.Sleep(500);
+            sb.AppendLine("sensor.temperatureHumidity.temperature~f=" + _temperature2.ToString());
+            sb.AppendLine("sensor.temperatureHumidity.relativeHumidity~f=" + _relativeHumidity.ToString());
+
             _temperature = 0; _pressure = 0;
             barometer.RequestMeasurement();
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             sb.AppendLine("sensor.barometer.temperature~f=" + _temperature.ToString());
             sb.AppendLine("sensor.barometer.pressure~f=" + _pressure.ToString());
 
@@ -117,6 +133,14 @@ namespace napkin.systems.gadgeteer.cerb3
 
             char_Display.Clear();
             char_Display.SetCursor(0, 0);
+            char_Display.PrintString("temp:" + Chop(_temperature2.ToString()));
+            char_Display.SetCursor(1, 0);
+            char_Display.PrintString("humi:" + Chop(_relativeHumidity.ToString()));
+            led7c.SetColor(LED7C.LEDColor.Cyan);
+
+            Thread.Sleep(4 * 1000);
+            char_Display.Clear();
+            char_Display.SetCursor(0, 0);
             char_Display.PrintString("temp:" + Chop(_temperature.ToString()));
             char_Display.SetCursor(1, 0);
             char_Display.PrintString("pres:" + Chop(_pressure.ToString()));
@@ -130,7 +154,7 @@ namespace napkin.systems.gadgeteer.cerb3
             char_Display.SetCursor(1, 0);
             char_Display.PrintString("line:" + Chop(_lastLine));
 
-            Thread.Sleep(8 * 1000);
+            Thread.Sleep(3 * 1000);
         }
 
         private string Chop(string text, int max = 7)
