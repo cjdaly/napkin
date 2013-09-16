@@ -33,7 +33,7 @@ namespace napkin.systems.gadgeteer.cerb2
     public partial class Program
     {
         public readonly string DeviceId = "cerb2";
-        public readonly string NapkinServerUri = "http://192.168.2.11:4567";
+        public readonly string NapkinServerUri = "http://192.168.2.73:4567";
         private NetworkCredential _credential;
 
         private Thread _cycleThread;
@@ -45,6 +45,8 @@ namespace napkin.systems.gadgeteer.cerb2
             _credential = new NetworkCredential(DeviceId, DeviceId);
 
             barometer.MeasurementComplete += new Barometer.MeasurementCompleteEventHandler(barometer_MeasurementComplete);
+
+            gasSense.SetHeatingElement(true);
 
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
@@ -91,7 +93,8 @@ namespace napkin.systems.gadgeteer.cerb2
             double lightSensorPercentage = lightSensor.ReadLightSensorPercentage();
             sb.AppendLine("sensor.lightSensor.lightSensorPercentage~f=" + lightSensorPercentage.ToString());
 
-            Thread.Sleep(1000);
+            double gasSenseVoltage = gasSense.ReadVoltage();
+            sb.AppendLine("sensor.gasSense.MQ-3.voltage~f=" + gasSenseVoltage.ToString());
 
             string chatterRequestText = sb.ToString();
             string chatterUri = NapkinServerUri + "/chatter?format=napkin_kv";
