@@ -4,8 +4,6 @@ Napkin is an interaction platform for HTTP enabled devices.  The Napkin server o
 
 Napkin began when I discovered small, inexpensive but HTTP capable (ARM-based, "[arduino](http://en.wikipedia.org/wiki/Arduino)-ish") computers like the [Netduino Plus](http://www.netduino.com/), [.Net Gadgeteer](http://www.ghielectronics.com/catalog/category/274), [BeagleBone](http://beagleboard.org/bone), [Raspberry Pi](http://www.raspberrypi.org/), etc. and parts websites like [Sparkfun](https://www.sparkfun.com/), [Adafruit](http://adafruit.com/), etc. I built systems based on these devices to monitor and control the environment around my home (temperature, humidity, light levels, sounds, etc.) and needed a way to collect, store and process all of the data.
 
-![chatter](https://github.com/cjdaly/napkin/wiki/images/cerbee1-humidity.jpg)
-
 #### Details
 
 The Napkin server can run in (at least) these configurations:
@@ -20,8 +18,6 @@ Napkin clients use REST-style HTTP communication to access services such as:
 * [chatter](https://github.com/cjdaly/napkin/wiki/Plugin-chatter) - allows devices to post time series data
 * [vitals](https://github.com/cjdaly/napkin/wiki/Plugin-vitals) - periodically stores data about the state of the napkin server
 * new services can be implemented as plugins
-
-![vitals](https://github.com/cjdaly/napkin/wiki/images/pcduino-vitals-chart.jpg)
 
 Napkin server with serial client examples:
 * [BeagleBone Black with Fez Cerbuino Bee](https://github.com/cjdaly/napkin/wiki/Server-with-serial-client-bone2-cerbee1)
