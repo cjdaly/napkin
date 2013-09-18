@@ -23,7 +23,11 @@ Napkin clients use REST-style HTTP communication to access services such as:
 
 ![vitals](https://github.com/cjdaly/napkin/wiki/images/pcduino-vitals-chart.jpg)
 
-Napkin client examples:
+Napkin server with serial client examples:
+* [BeagleBone Black with Fez Cerbuino Bee](https://github.com/cjdaly/napkin/wiki/Server-with-serial-client-bone2-cerbee1)
+* [BeagleBone Black with Fez Cerberus](https://github.com/cjdaly/napkin/wiki/Server-with-serial-client-bone3-cerb3)
+
+Napkin REST client examples:
 * .Net Gadgeteer (C#)
   * [cerbee1](https://github.com/cjdaly/napkin/wiki/Gadgeteer-client-cerbee1)
   * [cerb1](https://github.com/cjdaly/napkin/wiki/Gadgeteer-client-cerb1)
