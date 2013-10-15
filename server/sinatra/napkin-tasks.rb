@@ -19,18 +19,21 @@ module Napkin
     #
     class TaskBase
       include ConversionUtil
-      def initialize(task_node_id, task_data, task_segment)
-        @task_node_id = task_node_id
-        @task_data = task_data
-        @task_segment = task_segment
+      def initialize(plugin)
+        @plugin = plugin
+        @task_initialized = false
+      end
+
+      def get_plugin(id = nil)
+        return @plugin.get_plugin(id)
       end
 
       def init?
-        return @task_data['napkin.tasks.task_init'].nil?
+        return @task_initialized
       end
 
       def init!
-        @task_data['napkin.tasks.task_init'] = true
+        @task_initialized = true
       end
 
       #

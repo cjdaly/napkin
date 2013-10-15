@@ -8,45 +8,17 @@
 # Contributors:
 #   cjdaly - initial API and implementation
 ####
-require 'neo4j-util'
-require 'kramdown-util'
-require 'napkin-plugins'
-require 'napkin-tasks'
-require 'napkin-handlers'
-require 'plugin-times'
 
-module Napkin
-  module Plugins
-    class Plugin_Chatter < PluginBase
-      def get_segment
-        return 'chatter'
-      end
+module Napkin::Plugins
+  class Chatter < PluginBase
+    def init
+      chatter_node_id = init_service_segment
 
-      def get_task_class_name
-        return 'Task_Chatter'
-      end
+      register_handler('post', Post_Handler)
+      attach_handler('post', 'POST', chatter_node_id)
     end
-  end
 
-  module Tasks
-    class Task_Chatter < TaskBase
-      def init
-        root_node_id = Neo.pin(:root)
-        chatter_id = Neo.get_sub_id!('chatter', root_node_id)
-        Neo.set_node_property('napkin.handlers.POST.class_name', 'Handler_Chatter_Post', chatter_id)
-      end
-
-      def todo?
-        return false
-      end
-
-      def doit
-      end
-    end
-  end
-
-  module Handlers
-    class Handler_Chatter_Post < HandlerBase
+    class Post_Handler < Napkin::Handlers::HandlerBase
       def handle
         handle_time = Time.now
 
@@ -56,7 +28,7 @@ module Napkin
         user_node_id = Neo.get_sub_id(@user, @segment_node_id)
         if (user_node_id.nil?) then
           user_node_id = Neo.get_sub_id!(@user, @segment_node_id)
-          Neo.set_node_property('napkin.handlers.GET.class_name', 'Handler_Chatter_Get', user_node_id)
+          get_plugin.attach_handler('get', 'GET', user_node_id)
         end
 
         sub_list = Neo::SubList.new(user_node_id)
@@ -77,7 +49,8 @@ module Napkin
           Neo.set_node_property(key, value, chatter_node_id) unless value.nil?
         end
 
-        minute_node_id = Napkin::Plugins::Plugin_Times.get_nearest_minute_node_id!(handle_time)
+        plugin_times = get_plugin('times')
+        minute_node_id = plugin_times.get_nearest_minute_node_id!(handle_time)
         ref_id = Neo.set_ref!(chatter_node_id, minute_node_id)
         Neo.set_ref_property('times.source', "chatter.#{@user}", ref_id)
 
@@ -85,16 +58,7 @@ module Napkin
       end
     end
 
-    class Handler_Chatter_Get < SubListGetHandler
-      PT = Napkin::Plugins::Plugin_Times
-      def get_nearest_minute_data_helper(time, source_name, keys, function = "AVG", time_i_key = nil)
-        return PT.get_nearest_minute_data(time, source_name, keys, function, time_i_key)
-      end
-
-      def round_to_minute_helper(time)
-        return PT.round_to_minute(time)
-      end
-
+    class Get_Handler < Napkin::Handlers::SubListGetHandler
       def kramdown_features(node_id)
         return super unless at_destination?
 
@@ -124,7 +88,6 @@ module Napkin
       def get_chart_url(skip, data_key)
         return "#{get_path}/charts?offset=0&samples=120&skip=#{skip}&source=chatter.#{get_segment}&data_key=#{data_key}&time_i_key=chatter.handle_time~i"
       end
-
     end
   end
 end

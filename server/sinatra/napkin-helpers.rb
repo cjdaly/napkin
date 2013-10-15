@@ -16,7 +16,7 @@ require 'napkin-pulse'
 require 'napkin-handlers'
 
 module Napkin
-  NAPKIN_VERSION = "0.2"
+  NAPKIN_VERSION = "0.3"
   #
   module Helpers
     #
@@ -45,7 +45,7 @@ module Napkin
       if (version.to_s == "") then
         Neo.set_node_property('napkin.VERSION', NAPKIN_VERSION, Neo.pin(:napkin))
       elsif (version != NAPKIN_VERSION)
-        raise "Helpers.init_neo4j - database version mismatch!"
+        raise "Helpers.init_neo4j - database/runtime version mismatch! (#{version}/#{NAPKIN_VERSION})"
       end
       puts "Napkin version: #{NAPKIN_VERSION}"
 
@@ -59,24 +59,25 @@ module Napkin
 
       # starts
       Neo.pin!(:starts, Neo.get_sub_id!('starts', Neo.pin(:napkin)))
-      Neo.pin!(:start, Neo.next_sub_id!(Neo.pin(:starts)))
+      starts_sub_list = Neo::SubList.new(Neo.pin(:starts))
+      Neo.pin!(:start, starts_sub_list.next_sub_id!)
 
       Neo.set_node_property('napkin.starts.start_time', "#{start_time}", Neo.pin(:start))
       Neo.set_node_property('napkin.starts.start_time_i', start_time.to_i, Neo.pin(:start))
 
-      start_count = Neo.get_node_property('napkin.sub_count', Neo.pin(:starts))
+      start_count = Neo.get_node_property('napkin.sublist_count', Neo.pin(:starts))
       puts "Napkin system starts: #{start_count}"
-
-      # tasks
-      Neo.pin!(:tasks, Neo.get_sub_id!('tasks', Neo.pin(:napkin)))
     end
 
     def Helpers.init_plugins()
-      Napkin::Plugins.init()
+      plugins_path = Config[:system]['napkin.config.plugins_path']
+      plugin_registry = Napkin::Plugins::PluginRegistry.new(plugins_path)
+      Config[:registry] = plugin_registry
     end
 
     def Helpers.start_pulse()
-      pulse = Napkin::Pulse::Driver.new
+      plugin_registry = Config[:registry]
+      pulse = Napkin::Pulse::Driver.new(plugin_registry)
       pulse.start()
     end
 
@@ -115,31 +116,30 @@ module Napkin
     end
 
     def instantiate_handler(segment_node_id, segments, segment_index, user)
-      handler_class = get_handler_class(request.request_method, segment_node_id)
-      if (handler_class.nil?) then
-        return Handlers::NeverHandler.new(segment_node_id, request, response, segments, segment_index, user)
-      else
-        return handler_class.new(segment_node_id, request, response, segments, segment_index, user)
+      handler_class, handler_plugin = get_handler_class_and_plugin(request.request_method, segment_node_id)
+      if (!handler_class.nil?) then
+        return handler_class.new(segment_node_id, request, response, segments, segment_index, user, handler_plugin)
       end
+
+      return Handlers::NeverHandler.new(segment_node_id, request, response, segments, segment_index, user)
     end
 
-    def get_handler_class(method, segment_node_id)
-      handler_class_name = Neo.get_node_property("napkin.handlers.#{method}.class_name", segment_node_id)
-      if (handler_class_name.nil?) then
-        return (method == "GET") ? Handlers::DefaultGetHandler : nil
+    def get_handler_class_and_plugin(method, segment_node_id)
+      handler_id = Neo.get_node_property("napkin.handlers.#{method}", segment_node_id)
+      if ((handler_id.nil?) && (method == "GET")) then
+        return Handlers::DefaultGetHandler, nil
       end
 
-      begin
-        handler_class = Napkin::Handlers.const_get(handler_class_name)
-      rescue StandardError => err
-        handler_class = nil
-      end
+      handler_id_prefix,handler_id_suffix = handler_id.split('~', 2)
 
-      if (handler_class.nil?) then
-        return (method == "GET") ? Handlers::DefaultGetHandler : nil
-      end
+      plugin_registry = Config[:registry]
+      return nil, nil if plugin_registry.nil?
 
-      return handler_class
+      handler_plugin = plugin_registry.get_plugin(handler_id_prefix)
+      return nil, nil if handler_plugin.nil?
+
+      handler_class = handler_plugin.get_handler_class(handler_id_suffix)
+      return handler_class, handler_plugin
     end
 
     class Authenticator

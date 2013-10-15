@@ -26,12 +26,6 @@ Napkin::Helpers::init_neo4j()
 
 #
 # plugins
-require 'plugin-chatter'
-require 'plugin-config'
-require 'plugin-vitals'
-require 'plugin-times'
-# require 'plugin-TEMPLATE'
-
 Napkin::Helpers::init_plugins()
 
 #

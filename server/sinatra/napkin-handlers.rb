@@ -24,7 +24,7 @@ module Napkin
     #
     class HandlerBase
       include ConversionUtil
-      def initialize(segment_node_id, request, response, segments, segment_index, user)
+      def initialize(segment_node_id, request, response, segments, segment_index, user, plugin = nil)
         @segment_node_id = segment_node_id
         @request = request
         @response = response
@@ -32,6 +32,11 @@ module Napkin
         @segment_index = segment_index
         @user = user
         @query_hash = CGI.parse(@request.query_string)
+        @plugin = plugin
+      end
+
+      def get_plugin(id = nil)
+        return @plugin.get_plugin(id)
       end
 
       def remaining_segments
@@ -209,7 +214,8 @@ module Napkin
 
       def handle_chart_single()
         handle_time = Time.now
-        minute_time = round_to_minute_helper(handle_time)
+        plugin_times = get_plugin('times')
+        minute_time = plugin_times.round_to_minute(handle_time)
         minute_time_i = minute_time.to_i
 
         offset = parse_int(get_param('offset')) || 0
@@ -233,7 +239,7 @@ module Napkin
           minute_time_i += (60 * skip)
           minute_time = Time.at(minute_time_i)
 
-          data = get_nearest_minute_data_helper(minute_time, param_source, keys, function="", param_time_i_key)
+          data = plugin_times.get_nearest_minute_data(minute_time, param_source, keys, "", param_time_i_key)
           data.each do |time_value|
             time_i = time_value[0]
             time = Time.at(time_i)
@@ -251,7 +257,8 @@ module Napkin
 
       def handle_chart_multi()
         handle_time = Time.now
-        minute_time = round_to_minute_helper(handle_time)
+        plugin_times = get_plugin('times')
+        minute_time = plugin_times.round_to_minute(handle_time)
         minute_time_i = minute_time.to_i
 
         offset = parse_int(get_param('offset')) || 0
@@ -277,7 +284,7 @@ module Napkin
           minute_time = Time.at(minute_time_i)
           row = ["new Date(#{minute_time.year},#{minute_time.month-1},#{minute_time.day},#{minute_time.hour},#{minute_time.min})"]
 
-          data = get_nearest_minute_data_helper(minute_time, param_source, keys)
+          data = plugin_times.get_nearest_minute_data(minute_time, param_source, keys)
           if (data[0].nil?) then
             keys.each do |key|
               row << nil
@@ -295,14 +302,6 @@ module Napkin
         value_labels = keys
         html_out = Kram.render_line_chart(param_source, value_labels, time_series)
         return html_out
-      end
-
-      def get_nearest_minute_data_helper(time, source_name, keys, function = "AVG", time_i_key = nil)
-        return nil
-      end
-
-      def round_to_minute_helper(time)
-        return nil
       end
 
       def kramdown_subordinates(node_id)
