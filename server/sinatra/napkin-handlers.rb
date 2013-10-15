@@ -19,11 +19,12 @@ module Napkin
     Neo = Napkin::Neo4jUtil
     Kram = Napkin::KramdownUtil
     #
-    KEY_TYPE_I_MATCH = /.+~i$/
-    KEY_TYPE_F_MATCH = /.+~f$/
-    #
     class HandlerBase
       include ConversionUtil
+      #
+      KEY_TYPE_I_MATCH = /.+~i$/
+      KEY_TYPE_F_MATCH = /.+~f$/
+      #
       def initialize(segment_node_id, request, response, segments, segment_index, user, plugin = nil)
         @segment_node_id = segment_node_id
         @request = request
