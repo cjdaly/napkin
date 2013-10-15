@@ -15,10 +15,10 @@ module Napkin::Plugins
       config_node_id = init_service_segment
 
       register_handler('get', Get_Handler)
-      attach_handler('get', 'GET', config_node_id)
+      register_handler('put', Put_Handler)
 
       register_handler('post', Post_Handler)
-      register_handler('put', Put_Handler)
+      attach_handler('post', 'POST', config_node_id)
     end
 
     class Get_Handler < Napkin::Handlers::DefaultGetHandler
