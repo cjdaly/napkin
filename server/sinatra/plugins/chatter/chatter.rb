@@ -18,7 +18,6 @@ module Napkin::Plugins
       attach_handler('post', 'POST', chatter_node_id)
 
       register_handler('get', Get_Handler)
-      attach_handler('get', 'GET', chatter_node_id)
     end
 
     class Post_Handler < Napkin::Handlers::HandlerBase
