@@ -130,6 +130,8 @@ module Napkin
         return Handlers::DefaultGetHandler, nil
       end
 
+      return nil, nil if handler_id.nil?
+      return nil, nil unless handler_id.include?('~')
       handler_id_prefix,handler_id_suffix = handler_id.split('~', 2)
 
       plugin_registry = Config[:registry]
