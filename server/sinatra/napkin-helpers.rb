@@ -70,7 +70,7 @@ module Napkin
     end
 
     def Helpers.init_plugins()
-      plugins_path = Config[:system]['napkin.config.plugins_path']
+      plugins_path = Config[:system]['napkin.config.plugins_path'] || 'plugins'
       plugin_registry = Napkin::Plugins::PluginRegistry.new(plugins_path)
       Config[:registry] = plugin_registry
     end
