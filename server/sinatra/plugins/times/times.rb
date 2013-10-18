@@ -13,10 +13,7 @@ module Napkin::Plugins
   class Times < PluginBase
     def init
       times_node_id = init_service_segment
-      times_ce_node_id = Neo.get_sub_id!('ce', times_node_id)
-
-      # TODO: is there a better caching mechanism than 'pin'?
-      Neo.pin!(:times_ce, times_ce_node_id)
+      @times_ce_node_id_cached = Neo.get_sub_id!('ce', times_node_id)
     end
 
     CREATE_MINUTE_NODE_CYPHER ='
@@ -36,7 +33,7 @@ module Napkin::Plugins
       cypher_hash = {
         "query" => CREATE_MINUTE_NODE_CYPHER,
         "params" => {
-        "times_ce_node_id" => Neo.pin(:times_ce),
+        "times_ce_node_id" => @times_ce_node_id_cached,
         "year_segment" => rounded_time.year.to_s,
         "month_segment" => rounded_time.month.to_s,
         "day_segment" => rounded_time.day.to_s,
@@ -57,11 +54,11 @@ module Napkin::Plugins
       (day)-[:NAPKIN_SUB]->
       (hour)-[:NAPKIN_SUB]->
       (minute)
-    WHERE ((year.`napkin.segment`! = {year_segment})
-      AND (month.`napkin.segment`! = {month_segment})
-      AND (day.`napkin.segment`! = {day_segment})
-      AND (hour.`napkin.segment`! = {hour_segment})
-      AND (minute.`napkin.segment`! = {minute_segment}))
+    WHERE ((year.`napkin.segment` = {year_segment})
+      AND (month.`napkin.segment` = {month_segment})
+      AND (day.`napkin.segment` = {day_segment})
+      AND (hour.`napkin.segment` = {hour_segment})
+      AND (minute.`napkin.segment` = {minute_segment}))
     RETURN ID(minute)
     '
 
@@ -71,7 +68,7 @@ module Napkin::Plugins
       cypher_hash = {
         "query" => GET_MINUTE_NODE_CYPHER,
         "params" => {
-        "times_ce_node_id" => Neo.pin(:times_ce),
+        "times_ce_node_id" => @times_ce_node_id_cached,
         "year_segment" => rounded_time.year.to_s,
         "month_segment" => rounded_time.month.to_s,
         "day_segment" => rounded_time.day.to_s,
@@ -92,12 +89,12 @@ module Napkin::Plugins
       (day)-[:NAPKIN_SUB]->
       (hour)-[:NAPKIN_SUB]->
       (minute)<-[source_ref:NAPKIN_REF]-(sources)
-    WHERE ((year.`napkin.segment`! = {year_segment})
-      AND  (month.`napkin.segment`! = {month_segment})
-      AND  (day.`napkin.segment`! = {day_segment})
-      AND  (hour.`napkin.segment`! = {hour_segment})
-      AND  (minute.`napkin.segment`! = {minute_segment})
-      AND  (source_ref.`times.source`! = {source_name}))
+    WHERE ((year.`napkin.segment` = {year_segment})
+      AND  (month.`napkin.segment` = {month_segment})
+      AND  (day.`napkin.segment` = {day_segment})
+      AND  (hour.`napkin.segment` = {hour_segment})
+      AND  (minute.`napkin.segment` = {minute_segment})
+      AND  (source_ref.`times.source` = {source_name}))
     RETURN_STATEMENT
     ORDER_BY_STATEMENT
     '
@@ -108,9 +105,9 @@ module Napkin::Plugins
       return_statement = nil
       keys.each do |key|
         if (return_statement.nil?) then
-          return_statement = "RETURN #{function}(sources.`#{key}`?)"
+          return_statement = "RETURN #{function}(sources.`#{key}`)"
         else
-          return_statement << ", #{function}(sources.`#{key}`?)"
+          return_statement << ", #{function}(sources.`#{key}`)"
         end
       end
       query_text = GET_MINUTE_DATA_CYPHER.sub(/RETURN_STATEMENT/, return_statement)
@@ -118,14 +115,14 @@ module Napkin::Plugins
       if (time_i_key.nil?) then
         order_by_statement = ""
       else
-        order_by_statement = "ORDER BY sources.`#{time_i_key}`?"
+        order_by_statement = "ORDER BY sources.`#{time_i_key}`"
       end
       query_text.sub!(/ORDER_BY_STATEMENT/, order_by_statement)
 
       cypher_hash = {
         "query" => query_text,
         "params" => {
-        "times_ce_node_id" => Neo.pin(:times_ce),
+        "times_ce_node_id" => @times_ce_node_id_cached,
         "year_segment" => rounded_time.year.to_s,
         "month_segment" => rounded_time.month.to_s,
         "day_segment" => rounded_time.day.to_s,

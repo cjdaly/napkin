@@ -70,7 +70,7 @@ module Napkin
       return nil unless Neo4jUtil.valid_segment?(key)
 
       cypher_get_node_property = {
-        "query" => "START n=node({node_id}) RETURN n.`#{key}`?",
+        "query" => "START n=node({node_id}) RETURN n.`#{key}`",
         "params" => {
         "node_id" => node_id,
         }
@@ -97,7 +97,7 @@ module Napkin
       return nil unless Neo4jUtil.valid_segment?(key)
 
       cypher_increment_counter = {
-        "query" => "START n=node({node_id}) SET n.`#{key}` = COALESCE(n.`#{key}`?, 0) + 1 RETURN n.`#{key}`",
+        "query" => "START n=node({node_id}) SET n.`#{key}` = COALESCE(n.`#{key}`, 0) + 1 RETURN n.`#{key}`",
         "params" => {
         "node_id" => node_id,
         }
@@ -140,7 +140,7 @@ module Napkin
       return nil unless Neo4jUtil.valid_segment?(sub_node_segment)
 
       cypher_get_sub = {
-        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:NAPKIN_SUB]->sub WHERE sub.`napkin.segment`! = {sub_node_segment} RETURN ID(sub)',
+        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:NAPKIN_SUB]->sub WHERE sub.`napkin.segment` = {sub_node_segment} RETURN ID(sub)',
         "params" => {
         "sup_node_id" => sup_node_id,
         "sub_node_segment" => sub_node_segment
@@ -246,9 +246,9 @@ module Napkin
       GET_SUB_CYPHER ='
       START sup=node({sup_node_id})
       MATCH sup-[:NAPKIN_SUB]->(millions)-[:NAPKIN_SUB]->(thousands)-[:NAPKIN_SUB]->(ones)
-      WHERE ((millions.`napkin.segment`! = {millions_segment})
-        AND (thousands.`napkin.segment`! = {thousands_segment})
-        AND (ones.`napkin.segment`! = {ones_segment}))
+      WHERE ((millions.`napkin.segment` = {millions_segment})
+        AND (thousands.`napkin.segment` = {thousands_segment})
+        AND (ones.`napkin.segment` = {ones_segment}))
       RETURN ID(ones)
       '
 
