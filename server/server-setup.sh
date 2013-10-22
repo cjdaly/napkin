@@ -14,7 +14,7 @@ echo
 echo "Adding java to PATH"
 case `uname -i` in
   x86*) export JAVA_HOME=~/java/jdk1.7.0_45;;
-  arm*) export JAVA_HOME=~/java/ejre1.7.0_45;;
+  arm*) export JAVA_HOME=~/java/sflt/ejre1.7.0_45;;
 esac
 export PATH=$JAVA_HOME/bin:$PATH
 echo "Java version"
