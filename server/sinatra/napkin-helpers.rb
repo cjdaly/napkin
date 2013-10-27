@@ -16,7 +16,7 @@ require 'napkin-pulse'
 require 'napkin-handlers'
 
 module Napkin
-  NAPKIN_VERSION = "0.3"
+  NAPKIN_VERSION = "0.4"
   #
   module Helpers
     #
@@ -35,6 +35,8 @@ module Napkin
 
     def Helpers.init_neo4j()
       start_time = Time.now
+
+      Neo.create_napkin_index()
 
       # create top-level nodes
       Neo.pin!(:root, Neo.get_root_node_id())

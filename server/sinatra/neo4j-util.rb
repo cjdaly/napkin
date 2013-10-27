@@ -126,7 +126,7 @@ module Napkin
       return nil unless Neo4jUtil.valid_segment?(sub_node_segment)
 
       cypher_create_unique = {
-        "query" => 'START sup=node({sup_node_id}) CREATE UNIQUE sup-[:NAPKIN_SUB]->(sub {`napkin.segment` : {sub_node_segment}}) RETURN ID(sub)',
+        "query" => 'START sup=node({sup_node_id}) CREATE UNIQUE sup-[:NAPKIN_SUB]->(sub:NAPKIN {`napkin.segment` : {sub_node_segment}}) RETURN ID(sub)',
         "params" => {
         "sup_node_id" => sup_node_id,
         "sub_node_segment" => sub_node_segment
@@ -140,7 +140,7 @@ module Napkin
       return nil unless Neo4jUtil.valid_segment?(sub_node_segment)
 
       cypher_get_sub = {
-        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:NAPKIN_SUB]->sub WHERE sub.`napkin.segment` = {sub_node_segment} RETURN ID(sub)',
+        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:NAPKIN_SUB]->(sub:NAPKIN) WHERE sub.`napkin.segment` = {sub_node_segment} RETURN ID(sub)',
         "params" => {
         "sup_node_id" => sup_node_id,
         "sub_node_segment" => sub_node_segment
@@ -152,7 +152,7 @@ module Napkin
 
     def Neo4jUtil.get_sub_ids(sup_node_id)
       cypher_get_subs = {
-        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:NAPKIN_SUB]->sub RETURN ID(sub)',
+        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:NAPKIN_SUB]->(sub:NAPKIN) RETURN ID(sub)',
         "params" => {
         "sup_node_id" => sup_node_id,
         }
@@ -167,7 +167,7 @@ module Napkin
 
     def Neo4jUtil.get_sub_segments(sup_node_id)
       cypher_get_subs = {
-        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:NAPKIN_SUB]->sub RETURN sub.`napkin.segment` ORDER BY sub.`napkin.segment`',
+        "query" => 'START sup=node({sup_node_id}) MATCH sup-[:NAPKIN_SUB]->(sub:NAPKIN) RETURN sub.`napkin.segment` ORDER BY sub.`napkin.segment`',
         "params" => {
         "sup_node_id" => sup_node_id,
         }
@@ -216,6 +216,21 @@ module Napkin
       return nil
     end
 
+    def Neo4jUtil.create_napkin_index()
+      cypher_create_index = {
+        "query" => 'CREATE INDEX ON :NAPKIN(`napkin.segment`)',
+        "params" => {
+        }
+      }
+      value = nil
+      begin
+        value = Neo4jUtil.cypher_query(cypher_create_index, true)
+      rescue StandardError => err
+        puts "TODO: create_napkin_index - index already exists"
+      end
+      return value
+    end
+
     def Neo4jUtil.cypher_query(cypher_hash, extract_single_result = false)
       raw = Neo4jUtil.post(SRC, cypher_hash)
       raw_data = raw['data']
@@ -238,14 +253,17 @@ module Napkin
       NEXT_SUB_CYPHER ='
       START sup=node({sup_node_id})
       CREATE UNIQUE sup-[:NAPKIN_SUB]->
-        (millions {`napkin.segment` : {millions_segment}})-[:NAPKIN_SUB]->
-        (thousands {`napkin.segment` : {thousands_segment}})-[:NAPKIN_SUB]->
-        (ones {`napkin.segment` : {ones_segment}, `napkin.sublist_position` : {sublist_position}})
+        (millions:NAPKIN {`napkin.segment` : {millions_segment}})-[:NAPKIN_SUB]->
+        (thousands:NAPKIN {`napkin.segment` : {thousands_segment}})-[:NAPKIN_SUB]->
+        (ones:NAPKIN {`napkin.segment` : {ones_segment}, `napkin.sublist_position` : {sublist_position}})
       RETURN ID(ones)'
 
       GET_SUB_CYPHER ='
       START sup=node({sup_node_id})
-      MATCH sup-[:NAPKIN_SUB]->(millions)-[:NAPKIN_SUB]->(thousands)-[:NAPKIN_SUB]->(ones)
+      MATCH sup-[:NAPKIN_SUB]->
+        (millions:NAPKIN)-[:NAPKIN_SUB]->
+        (thousands:NAPKIN)-[:NAPKIN_SUB]->
+        (ones:NAPKIN)
       WHERE ((millions.`napkin.segment` = {millions_segment})
         AND (thousands.`napkin.segment` = {thousands_segment})
         AND (ones.`napkin.segment` = {ones_segment}))

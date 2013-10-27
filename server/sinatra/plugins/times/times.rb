@@ -19,11 +19,11 @@ module Napkin::Plugins
     CREATE_MINUTE_NODE_CYPHER ='
     START times_ce=node({times_ce_node_id})
     CREATE UNIQUE times_ce-[:NAPKIN_SUB]->
-      (year {`napkin.segment` : {year_segment}})-[:NAPKIN_SUB]->
-      (month {`napkin.segment` : {month_segment}})-[:NAPKIN_SUB]->
-      (day {`napkin.segment` : {day_segment}})-[:NAPKIN_SUB]->
-      (hour {`napkin.segment` : {hour_segment}})-[:NAPKIN_SUB]->
-      (minute {`napkin.segment` : {minute_segment}})
+      (year:NAPKIN {`napkin.segment` : {year_segment}})-[:NAPKIN_SUB]->
+      (month:NAPKIN {`napkin.segment` : {month_segment}})-[:NAPKIN_SUB]->
+      (day:NAPKIN {`napkin.segment` : {day_segment}})-[:NAPKIN_SUB]->
+      (hour:NAPKIN {`napkin.segment` : {hour_segment}})-[:NAPKIN_SUB]->
+      (minute:NAPKIN {`napkin.segment` : {minute_segment}})
     RETURN ID(minute)
     '
 
@@ -49,11 +49,11 @@ module Napkin::Plugins
     GET_MINUTE_NODE_CYPHER ='
     START times_ce=node({times_ce_node_id})
     MATCH times_ce-[:NAPKIN_SUB]->
-      (year)-[:NAPKIN_SUB]->
-      (month)-[:NAPKIN_SUB]->
-      (day)-[:NAPKIN_SUB]->
-      (hour)-[:NAPKIN_SUB]->
-      (minute)
+      (year:NAPKIN)-[:NAPKIN_SUB]->
+      (month:NAPKIN)-[:NAPKIN_SUB]->
+      (day:NAPKIN)-[:NAPKIN_SUB]->
+      (hour:NAPKIN)-[:NAPKIN_SUB]->
+      (minute:NAPKIN)
     WHERE ((year.`napkin.segment` = {year_segment})
       AND (month.`napkin.segment` = {month_segment})
       AND (day.`napkin.segment` = {day_segment})
@@ -84,11 +84,11 @@ module Napkin::Plugins
     GET_MINUTE_DATA_CYPHER ='
     START times_ce=node({times_ce_node_id})
     MATCH times_ce-[:NAPKIN_SUB]->
-      (year)-[:NAPKIN_SUB]->
-      (month)-[:NAPKIN_SUB]->
-      (day)-[:NAPKIN_SUB]->
-      (hour)-[:NAPKIN_SUB]->
-      (minute)<-[source_ref:NAPKIN_REF]-(sources)
+      (year:NAPKIN)-[:NAPKIN_SUB]->
+      (month:NAPKIN)-[:NAPKIN_SUB]->
+      (day:NAPKIN)-[:NAPKIN_SUB]->
+      (hour:NAPKIN)-[:NAPKIN_SUB]->
+      (minute:NAPKIN)<-[source_ref:NAPKIN_REF]-(sources)
     WHERE ((year.`napkin.segment` = {year_segment})
       AND  (month.`napkin.segment` = {month_segment})
       AND  (day.`napkin.segment` = {day_segment})
