@@ -10,18 +10,24 @@
 #   cjdaly - initial API and implementation
 ####
 
-NAPKIN_SYSTEM=$1
+TIMESTAMP=`date +%Y%m%d-%H%M%S`
+
+NAPKIN_LOGS_DIR="logs"
+mkdir -p $NAPKIN_LOGS_DIR
+
+NAPKIN_LOG="$NAPKIN_LOGS_DIR/napkin-$TIMESTAMP.log"
+touch $NAPKIN_LOG
+
+rm -f napkin.log
+ln -s $NAPKIN_LOG napkin.log
 
 case `uname -i` in
   x86*) JRUBY_ARGS="";;
   arm*) JRUBY_ARGS="--server -J-Xms96M -J-Xmx96M";;
 esac
 
+NAPKIN_SYSTEM=$1
 echo "Napkin system: $NAPKIN_SYSTEM, using jruby args: $JRUBY_ARGS"
-
-NAPKIN_LOG="napkin.log"
-rm -f $NAPKIN_LOG
-touch $NAPKIN_LOG
 
 jruby $JRUBY_ARGS napkin.rb config-$NAPKIN_SYSTEM.json 1>> $NAPKIN_LOG 2>&1 &
 NAPKIN_PID=$!
