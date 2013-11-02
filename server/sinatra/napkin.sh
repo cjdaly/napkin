@@ -20,7 +20,7 @@ esac
 echo "Napkin system: $NAPKIN_SYSTEM, using jruby args: $JRUBY_ARGS"
 
 NAPKIN_LOG="napkin.log"
-rm $NAPKIN_LOG
+rm -f $NAPKIN_LOG
 touch $NAPKIN_LOG
 
 jruby $JRUBY_ARGS napkin.rb config-$NAPKIN_SYSTEM.json 1>> $NAPKIN_LOG 2>&1 &
