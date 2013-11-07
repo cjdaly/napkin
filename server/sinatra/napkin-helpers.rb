@@ -16,7 +16,7 @@ require 'napkin-pulse'
 require 'napkin-handlers'
 
 module Napkin
-  NAPKIN_VERSION = "0.4"
+  NAPKIN_VERSION = "0.4.1" # 0.4.x for adopting Neo4j 2.0
   #
   module Helpers
     #

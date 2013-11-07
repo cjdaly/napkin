@@ -180,8 +180,19 @@ module Napkin
       return sub_segments
     end
 
-    def Neo4jUtil.get_root_node_id()
-      return Neo4jUtil.get_sub_id!('NAPKIN_ROOT', 0)
+    def Neo4jUtil.get_root_node_id(napkin_root_segment = "NAPKIN_ROOT//")
+
+      cypher_create_root_node = {
+        "query" => "MERGE (root:NAPKIN {`napkin.segment` : {napkin_root_segment}}) RETURN ID(root)",
+        "params" => {
+        "napkin_root_segment" => napkin_root_segment
+        }
+      }
+      root_node_id = Neo4jUtil.cypher_query(cypher_create_root_node, true)
+
+      puts "Napkin root node ID: #{root_node_id}"
+
+      return root_node_id
     end
 
     CREATE_UNIQUE_REF_CYPHER ='
