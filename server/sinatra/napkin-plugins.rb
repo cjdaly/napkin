@@ -82,8 +82,16 @@ module Napkin
     end
 
     class PluginRegistry
-      def initialize(plugins_path)
+      def initialize(plugins_path, system_plugins_path)
         @plugins = {}
+
+        init_plugins_dir(plugins_path)
+        init_plugins_dir(system_plugins_path)
+      end
+
+      def init_plugins_dir(plugins_path)
+        return if plugins_path.nil?
+        return unless Dir.exists?(plugins_path)
 
         Dir.foreach(plugins_path) do |plugin_id|
           next if (plugin_id == '.') or (plugin_id == '..')

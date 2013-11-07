@@ -29,7 +29,7 @@ esac
 NAPKIN_SYSTEM=$1
 echo "Napkin system: $NAPKIN_SYSTEM, using jruby args: $JRUBY_ARGS"
 
-jruby $JRUBY_ARGS napkin.rb config-$NAPKIN_SYSTEM.json 1>> $NAPKIN_LOG 2>&1 &
+jruby $JRUBY_ARGS napkin.rb systems/$NAPKIN_SYSTEM/config.json 1>> $NAPKIN_LOG 2>&1 &
 NAPKIN_PID=$!
 
 echo "Napkin process: $NAPKIN_PID" >> $NAPKIN_LOG
