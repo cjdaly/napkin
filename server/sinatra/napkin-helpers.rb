@@ -37,6 +37,7 @@ module Napkin
       start_time = Time.now
 
       Neo.create_napkin_index()
+      Neo.create_napkin_root_constraint()
 
       # create top-level nodes
       Neo.pin!(:root, Neo.get_root_node_id())

@@ -183,7 +183,7 @@ module Napkin
     def Neo4jUtil.get_root_node_id(napkin_root_segment = "NAPKIN_ROOT//")
 
       cypher_create_root_node = {
-        "query" => "MERGE (root:NAPKIN {`napkin.segment` : {napkin_root_segment}}) RETURN ID(root)",
+        "query" => "MERGE (root:NAPKIN {`napkin.ROOT_NODE` : true}) RETURN ID(root)",
         "params" => {
         "napkin_root_segment" => napkin_root_segment
         }
@@ -238,6 +238,21 @@ module Napkin
         value = Neo4jUtil.cypher_query(cypher_create_index, true)
       rescue StandardError => err
         puts "TODO: create_napkin_index - index already exists"
+      end
+      return value
+    end
+
+    def Neo4jUtil.create_napkin_root_constraint()
+      cypher_create_root_constraint = {
+        "query" => 'CREATE CONSTRAINT ON (root:NAPKIN) ASSERT root.`napkin.ROOT_NODE` IS UNIQUE',
+        "params" => {
+        }
+      }
+      value = nil
+      begin
+        value = Neo4jUtil.cypher_query(cypher_create_root_constraint, true)
+      rescue StandardError => err
+        puts "TODO: create_napkin_root_constraint - constraint already exists"
       end
       return value
     end
