@@ -23,7 +23,7 @@ java -version
 # add Neo4j to $PATH
 echo
 echo "Adding neo4j to PATH"
-export NEO4J_HOME=~/neo4j/neo4j-community-2.0.0-M06
+export NEO4J_HOME=~/neo4j/neo4j-community-2.0.0-RC1
 export PATH=$NEO4J_HOME/bin:$PATH
 echo "Neo4j status"
 neo4j status
