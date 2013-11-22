@@ -16,7 +16,7 @@ require 'napkin-pulse'
 require 'napkin-handlers'
 
 module Napkin
-  NAPKIN_VERSION = "0.3"
+  NAPKIN_VERSION = "0.4.1" # 0.4.x for adopting Neo4j 2.0
   #
   module Helpers
     #
@@ -35,6 +35,9 @@ module Napkin
 
     def Helpers.init_neo4j()
       start_time = Time.now
+
+      Neo.create_napkin_index()
+      Neo.create_napkin_root_constraint()
 
       # create top-level nodes
       Neo.pin!(:root, Neo.get_root_node_id())
@@ -71,7 +74,9 @@ module Napkin
 
     def Helpers.init_plugins()
       plugins_path = Config[:system]['napkin.config.plugins_path'] || 'plugins'
-      plugin_registry = Napkin::Plugins::PluginRegistry.new(plugins_path)
+      system_name = Config[:system]['napkin.config.system_name']
+      system_plugins_path = "systems/#{system_name}/plugins"
+      plugin_registry = Napkin::Plugins::PluginRegistry.new(plugins_path, system_plugins_path)
       Config[:registry] = plugin_registry
     end
 
