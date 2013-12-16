@@ -23,7 +23,7 @@ java -version
 # add Neo4j to $PATH
 echo
 echo "Adding neo4j to PATH"
-export NEO4J_HOME=~/neo4j/neo4j-community-2.0.0-RC1
+export NEO4J_HOME=~/neo4j/neo4j-community-2.0.0
 export PATH=$NEO4J_HOME/bin:$PATH
 echo "Neo4j status"
 neo4j status
@@ -31,9 +31,9 @@ neo4j status
 # add JRuby to $PATH
 echo
 echo "Adding jruby to PATH"
-export JRUBY_HOME=~/jruby/jruby-1.7.5
+export JRUBY_HOME=~/jruby/jruby-1.7.9
 export PATH=$JRUBY_HOME/bin:$PATH
-echo "JRuby version (wait for it...)"
+echo "JRuby version"
 jruby -v
 
 echo
