@@ -1,4 +1,4 @@
 {
   "napkin.config.system_name" : "ubuntu-x86",
-  "napkin.config.Neo4J_db_path" : "~/neo4j/neo4j-community-1.9.1/data/graph.db"
+  "napkin.config.Neo4J_db_path" : "~/neo4j/neo4j-community-2.0.0/data/graph.db"
 }

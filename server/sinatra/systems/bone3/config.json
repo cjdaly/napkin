@@ -1,4 +1,4 @@
 {
   "napkin.config.system_name" : "bone3",
-  "napkin.config.Neo4J_db_path" : "~/neo4j/neo4j-community-2.0.0-M06/data/graph.db"
+  "napkin.config.Neo4J_db_path" : "~/neo4j/neo4j-community-2.0.0/data/graph.db"
 }
