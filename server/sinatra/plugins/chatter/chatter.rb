@@ -27,34 +27,34 @@ module Napkin::Plugins
         param_format = get_param('format')
         return nil unless (param_format.nil? || param_format == 'napkin_kv')
 
-        user_node_id = Neo.get_sub_id(@user, @segment_node_id)
+        user_node_id = neo.get_sub_id(@user, @segment_node_id)
         if (user_node_id.nil?) then
-          user_node_id = Neo.get_sub_id!(@user, @segment_node_id)
+          user_node_id = neo.get_sub_id!(@user, @segment_node_id)
           get_plugin.attach_handler('get', 'GET', user_node_id)
         end
 
-        sub_list = Neo::SubList.new(user_node_id)
+        sub_list = Napkin::Neo4j::SubList.new(user_node_id, neo)
         chatter_node_id = sub_list.next_sub_id!
 
-        Neo.set_node_property('chatter.handle_time~i', handle_time.to_i, chatter_node_id)
+        neo.set_node_property('chatter.handle_time~i', handle_time.to_i, chatter_node_id)
 
         body_text = get_body_text
         body_text.lines do |line|
           key, value = line.split('=', 2)
           key.strip! ; value.strip!
-          next unless Neo.valid_segment?(key)
+          next unless neo.valid_segment?(key)
           if (KEY_TYPE_I_MATCH.match(key) != nil) then
             value = parse_int(value)
           elsif (KEY_TYPE_F_MATCH.match(key) != nil) then
             value = parse_float(value)
           end
-          Neo.set_node_property(key, value, chatter_node_id) unless value.nil?
+          neo.set_node_property(key, value, chatter_node_id) unless value.nil?
         end
 
         plugin_times = get_plugin('times')
         minute_node_id = plugin_times.get_nearest_minute_node_id!(handle_time)
-        ref_id = Neo.set_ref!(chatter_node_id, minute_node_id)
-        Neo.set_ref_property('times.source', "chatter.#{@user}", ref_id)
+        ref_id = neo.set_ref!(chatter_node_id, minute_node_id)
+        neo.set_ref_property('times.source', "chatter.#{@user}", ref_id)
 
         return "OK"
       end
@@ -64,7 +64,7 @@ module Napkin::Plugins
       def kramdown_features(node_id)
         return super unless at_destination?
 
-        sub_list = Neo::SubList.new(node_id)
+        sub_list = Napkin::Neo4j::SubList.new(node_id, neo)
         sublist_count = sub_list.get_count
         last_sub_id = sub_list.get_sub_id(sublist_count)
 
@@ -72,7 +72,7 @@ module Napkin::Plugins
 
         kramdown_text ="\n###Features\n\n"
         kramdown_text << "| *name*\n"
-        property_hash = Neo.get_node_properties(last_sub_id)
+        property_hash = neo.get_node_properties(last_sub_id)
         property_hash.each do |key, value|
           if (value.is_a? Numeric) then
             kramdown_text << "| chart #{key} "

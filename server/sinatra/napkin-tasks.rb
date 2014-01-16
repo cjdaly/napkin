@@ -8,15 +8,12 @@
 # Contributors:
 #   cjdaly - initial API and implementation
 ####
-require 'neo4j-util'
+require 'napkin-neo4j'
 require 'napkin-handlers'
 require 'napkin-util'
 
 module Napkin
   module Tasks
-    #
-    Neo = Napkin::Neo4jUtil
-    #
     class TaskBase
       include ConversionUtil
       def initialize(plugin)
@@ -26,6 +23,10 @@ module Napkin
 
       def get_plugin(id = nil)
         return @plugin.get_plugin(id)
+      end
+
+      def neo
+        return @plugin.neo
       end
 
       def init?

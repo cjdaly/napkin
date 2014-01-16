@@ -32,7 +32,7 @@ module Napkin::Plugins
         param_sub = get_param('sub')
         return nil if param_sub.nil?
 
-        sub_node_id = Neo.get_sub_id!(param_sub, @segment_node_id)
+        sub_node_id = neo.get_sub_id!(param_sub, @segment_node_id)
         get_plugin.attach_handler('post', 'POST', sub_node_id)
         get_plugin.attach_handler('put', 'PUT', sub_node_id)
         get_plugin.attach_handler('get', 'GET', sub_node_id)
@@ -54,7 +54,7 @@ module Napkin::Plugins
           value = parse_float(value)
         end
 
-        Neo.set_node_property(param_key, value, @segment_node_id) unless value.nil?
+        neo.set_node_property(param_key, value, @segment_node_id) unless value.nil?
 
         return "OK"
       end

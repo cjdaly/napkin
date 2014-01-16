@@ -13,7 +13,7 @@ module Napkin::Plugins
   class Times < PluginBase
     def init
       times_node_id = init_service_segment
-      @times_ce_node_id_cached = Neo.get_sub_id!('ce', times_node_id)
+      @times_ce_node_id_cached = neo.get_sub_id!('ce', times_node_id)
     end
 
     CREATE_MINUTE_NODE_CYPHER ='
@@ -42,7 +42,7 @@ module Napkin::Plugins
         }
       }
 
-      minute_node_id = Neo.cypher_query(cypher_hash, true)
+      minute_node_id = neo.cypher_query(cypher_hash, true)
       return minute_node_id
     end
 
@@ -77,7 +77,7 @@ module Napkin::Plugins
         }
       }
 
-      minute_node_id = Neo.cypher_query(cypher_hash, true)
+      minute_node_id = neo.cypher_query(cypher_hash, true)
       return minute_node_id
     end
 
@@ -132,7 +132,7 @@ module Napkin::Plugins
         }
       }
 
-      minute_data = Neo.cypher_query(cypher_hash, false)
+      minute_data = neo.cypher_query(cypher_hash, false)
       return minute_data
     end
 

@@ -26,10 +26,10 @@ case `uname -i` in
   arm*) JRUBY_ARGS="--server -J-Xms96M -J-Xmx96M";;
 esac
 
-NAPKIN_SYSTEM=$1
-echo "Napkin system: $NAPKIN_SYSTEM, using jruby args: $JRUBY_ARGS"
+NAPKIN_SYSTEM_DIR=$1
+echo "Napkin system dir: $NAPKIN_SYSTEM_DIR, using jruby args: $JRUBY_ARGS"
 
-jruby $JRUBY_ARGS napkin.rb systems/$NAPKIN_SYSTEM/config.json 1>> $NAPKIN_LOG 2>&1 &
+jruby $JRUBY_ARGS napkin.rb $NAPKIN_SYSTEM_DIR/config.json 1>> $NAPKIN_LOG 2>&1 &
 NAPKIN_PID=$!
 
 echo "Napkin process: $NAPKIN_PID" >> $NAPKIN_LOG

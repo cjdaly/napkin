@@ -8,7 +8,6 @@
 # Contributors:
 #   cjdaly - initial API and implementation
 ####
-require 'rubygems'
 require 'sinatra'
 
 # on pcduino:
@@ -21,16 +20,7 @@ set :bind, '0.0.0.0'
 require 'napkin-helpers'
 
 helpers Napkin::Helpers
-Napkin::Helpers::init_system_config()
-Napkin::Helpers::init_neo4j()
-
-#
-# plugins
-Napkin::Helpers::init_plugins()
-
-#
-# pulse
-Napkin::Helpers::start_pulse()
+Napkin::Helpers::init_core_driver()
 
 user = nil
 use Rack::Auth::Basic, "authenticate" do |username, password|

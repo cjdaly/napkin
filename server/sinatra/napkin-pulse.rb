@@ -8,18 +8,20 @@
 # Contributors:
 #   cjdaly - initial API and implementation
 ####
-require 'neo4j-util'
+require 'napkin-neo4j'
 require 'napkin-handlers'
 require 'napkin-tasks'
 
 module Napkin
   module Pulse
-    #
-    Neo = Napkin::Neo4jUtil
-    #
     class Driver
-      def initialize(plugin_registry)
-        @plugin_registry = plugin_registry
+      def initialize(napkin_driver)
+        @napkin_driver = napkin_driver
+        @plugin_registry = napkin_driver.plugin_registry
+      end
+
+      def neo
+        return @plugin_registry.neo
       end
 
       def start()
@@ -27,17 +29,17 @@ module Napkin
         @thread = Thread.new do
           begin
             puts "Pulse thread started..."
-            start_node_id = Neo.pin(:start)
-            Neo.set_node_property('napkin.pulses.first_pulse_time_i', Time.now.to_i, start_node_id)
-            pulse_count = Neo4jUtil.increment_counter('napkin.pulses.pulse_count', start_node_id)
+            start_node_id = neo.pin(:start)
+            neo.set_node_property('napkin.pulses.first_pulse_time_i', Time.now.to_i, start_node_id)
+            pulse_count = neo.increment_counter('napkin.pulses.pulse_count', start_node_id)
             puts "Pulse thread initialized (#{pulse_count})..."
 
             tasks = @plugin_registry.create_tasks
 
             while (@enabled)
               sleep 5
-              Neo.set_node_property('napkin.pulses.last_pulse_time_i', Time.now.to_i, start_node_id)
-              pulse_count = Neo4jUtil.increment_counter('napkin.pulses.pulse_count', start_node_id)
+              neo.set_node_property('napkin.pulses.last_pulse_time_i', Time.now.to_i, start_node_id)
+              pulse_count = neo.increment_counter('napkin.pulses.pulse_count', start_node_id)
               puts "Pulse thread - new pulse (#{pulse_count})..."
 
               tasks.each do |task|

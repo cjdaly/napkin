@@ -9,20 +9,21 @@
 #   cjdaly - initial API and implementation
 ####
 require 'json'
-require 'neo4j-util'
+require 'napkin-neo4j'
 require 'napkin-tasks'
 
 module Napkin
   module Plugins
-    #
-    Neo = Napkin::Neo4jUtil
-    #
     class PluginBase
       def initialize(config_hash, plugin_registry)
         @config = config_hash
         @plugin_registry = plugin_registry
         @handlers = {}
         @tasks = {}
+      end
+
+      def neo
+        @plugin_registry.neo
       end
 
       def get_plugin(id)
@@ -39,7 +40,7 @@ module Napkin
       end
 
       def attach_handler(handler_name, method, node_id)
-        Neo.set_node_property("napkin.handlers.#{method}", "#{get_id}~#{handler_name}", node_id)
+        neo.set_node_property("napkin.handlers.#{method}", "#{get_id}~#{handler_name}", node_id)
       end
 
       def get_handler_class(handler_name)
@@ -75,18 +76,26 @@ module Napkin
       end
 
       def init_service_segment(sup_node_id = nil)
-        sup_node_id = Neo.pin(:root) if sup_node_id.nil?
-        service_node_id = Neo.get_sub_id!(get_segment, sup_node_id)
+        sup_node_id = neo.pin(:root) if sup_node_id.nil?
+        service_node_id = neo.get_sub_id!(get_segment, sup_node_id)
         return service_node_id
+      end
+
+      def fini
       end
     end
 
     class PluginRegistry
-      def initialize(plugins_path, system_plugins_path)
+      def initialize(napkin_driver, plugins_path, system_plugins_path)
+        @napkin_driver = napkin_driver
         @plugins = {}
 
         init_plugins_dir(plugins_path)
         init_plugins_dir(system_plugins_path)
+      end
+
+      def neo
+        return @napkin_driver.neo4j_connector.neo
       end
 
       def init_plugins_dir(plugins_path)
@@ -162,6 +171,13 @@ module Napkin
         end
         return plugin_class
       end
+
+      def fini_plugins()
+      end
+
+      def fini_plugin()
+      end
+
     end
 
   end

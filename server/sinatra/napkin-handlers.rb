@@ -9,14 +9,13 @@
 #   cjdaly - initial API and implementation
 ####
 require 'cgi'
-require 'neo4j-util'
 require 'kramdown-util'
 require 'napkin-util'
+require 'napkin-neo4j'
 
 module Napkin
   module Handlers
     #
-    Neo = Napkin::Neo4jUtil
     Kram = Napkin::KramdownUtil
     #
     class HandlerBase
@@ -25,7 +24,8 @@ module Napkin
       KEY_TYPE_I_MATCH = /.+~i$/
       KEY_TYPE_F_MATCH = /.+~f$/
       #
-      def initialize(segment_node_id, request, response, segments, segment_index, user, plugin = nil)
+      def initialize(neo, segment_node_id, request, response, segments, segment_index, user, plugin = nil)
+        @neo = neo
         @segment_node_id = segment_node_id
         @request = request
         @response = response
@@ -34,6 +34,10 @@ module Napkin
         @user = user
         @query_hash = CGI.parse(@request.query_string)
         @plugin = plugin
+      end
+
+      def neo
+        return @neo
       end
 
       def get_plugin(id = nil)
@@ -67,7 +71,7 @@ module Napkin
         param = @query_hash[key].first
         return nil if param.to_s.empty?
         if (validate_as_segment) then
-          return nil unless Neo.valid_segment?(param)
+          return nil unless neo.valid_segment?(param)
         end
         return param
       end
@@ -91,12 +95,6 @@ module Napkin
 
     end
 
-    class NeverHandler < HandlerBase
-      def handle?
-        return false
-      end
-    end
-
     class DefaultGetHandler < HandlerBase
       def handle
         param_key = get_param('key')
@@ -109,7 +107,7 @@ module Napkin
       end
 
       def handle_property_get(param_key, node_id)
-        value = Neo.get_node_property(param_key, node_id)
+        value = neo.get_node_property(param_key, node_id)
         return value.to_s
       end
 
@@ -149,7 +147,7 @@ module Napkin
       def kramdown_subordinates(node_id)
         return "" unless at_destination?
 
-        sub_segments = Neo::get_sub_segments(node_id)
+        sub_segments = neo.get_sub_segments(node_id)
 
         kramdown_text ="\n###Subordinates\n\n"
         sub_segments.each do |segment|
@@ -163,7 +161,7 @@ module Napkin
       def kramdown_properties(node_id)
         kramdown_text ="\n###Properties\n\n"
         kramdown_text << "| *key* | *type* | *value*\n"
-        property_hash = Neo.get_node_properties(node_id)
+        property_hash = neo.get_node_properties(node_id)
         property_hash.each do |key, value|
           kramdown_text << "| #{key} | #{value.class} | #{value}\n"
         end
@@ -190,7 +188,7 @@ module Napkin
         sub_segment = get_segment(@segment_index+1)
         return handle_special_segment(sub_segment) if parse_int(sub_segment).nil?
 
-        sub_list = Neo::SubList.new(@segment_node_id)
+        sub_list = Napkin::Neo4j::SubList.new(@segment_node_id, neo)
         sub_node_id = sub_list.get_sub_id(sub_segment)
         return super if sub_node_id.nil?
 
@@ -273,7 +271,7 @@ module Napkin
 
         keys = []
         param_keys.split(',').each do |key|
-          if (Neo.valid_segment?(key)) then
+          if (neo.valid_segment?(key)) then
             keys << key
           end
         end
@@ -308,7 +306,7 @@ module Napkin
       def kramdown_subordinates(node_id)
         return super unless at_destination?
 
-        sub_list = Neo::SubList.new(node_id)
+        sub_list = Napkin::Neo4j::SubList.new(node_id, neo)
         sublist_count = sub_list.get_count
 
         kramdown_text ="\n###Subordinates\n\n"
