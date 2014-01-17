@@ -63,15 +63,16 @@ module Napkin
           puts "Neo4jConnector - starting neo4j (this may take a while)..."
           neo4j_startup_text = `neo4j start`
           puts "#{neo4j_startup_text}"
-
-          sleep 3 # give Neo4j a little more time to warm up
           raise "Neo4j did not start!" unless neo4j_running?
         end
+
         @neo = Neo.new(self)
         @neo4j_connection = true
 
         start_time = Time.now
 
+        #
+        neo.check_cypher_service()
         neo.create_napkin_index()
         neo.create_napkin_root_constraint()
 
@@ -292,19 +293,32 @@ module Napkin
       # root node stuff
       #
 
+      def check_cypher_service()
+        cypher_check = false
+        while(!cypher_check) do
+          begin
+            cypher_timestamp = {
+              "query" => 'RETURN timestamp()',
+              "params" => {
+              }
+            }
+            value = cypher_query(cypher_timestamp, true)
+            puts "Neo4jConnector - Neo4j cypher service ready (#{value})"
+            cypher_check = true
+          rescue StandardError => err
+            puts "Neo4jConnector - Neo4j cypher service warming up..."
+            sleep 1
+          end
+        end
+      end
+
       def create_napkin_index()
         cypher_create_index = {
           "query" => 'CREATE INDEX ON :NAPKIN(`napkin.segment`)',
           "params" => {
           }
         }
-        value = nil
-        begin
-          value = cypher_query(cypher_create_index, true)
-        rescue StandardError => err
-          puts "TODO: create_napkin_index - index already exists"
-        end
-        return value
+        return cypher_query(cypher_create_index, true)
       end
 
       def create_napkin_root_constraint()
@@ -313,13 +327,7 @@ module Napkin
           "params" => {
           }
         }
-        value = nil
-        begin
-          value = cypher_query(cypher_create_root_constraint, true)
-        rescue StandardError => err
-          puts "TODO: create_napkin_root_constraint - constraint already exists"
-        end
-        return value
+        return cypher_query(cypher_create_root_constraint, true)
       end
 
       def get_root_node_id(napkin_root_segment = "NAPKIN_ROOT//")
