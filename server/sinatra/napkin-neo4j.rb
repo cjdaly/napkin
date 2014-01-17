@@ -56,13 +56,25 @@ module Napkin
         return neo4j_running.to_s.empty?
       end
 
+      def disconnect!
+        @neo4j_connection = false
+        if (neo4j_running?) then
+          puts "Neo4jConnector - stopping Neo4j (this may take a while)..."
+          neo4j_stop_text = `neo4j stop`
+          puts "#{neo4j_stop_text}"
+          raise "Neo4j did not stop!" unless !neo4j_running?
+        else
+          puts "Neo4jConnector - stopping Neo4j ... already stopped"
+        end
+      end
+
       def init_neo()
         if (neo4j_running?) then
           puts "Neo4jConnector - discovered Neo4j already running"
         else
-          puts "Neo4jConnector - starting neo4j (this may take a while)..."
-          neo4j_startup_text = `neo4j start`
-          puts "#{neo4j_startup_text}"
+          puts "Neo4jConnector - starting Neo4j (this may take a while)..."
+          neo4j_start_text = `neo4j start`
+          puts "#{neo4j_start_text}"
           raise "Neo4j did not start!" unless neo4j_running?
         end
 

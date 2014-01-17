@@ -25,6 +25,7 @@ module Napkin
       end
 
       def start()
+        @finished = false
         @enabled = true
         @thread = Thread.new do
           begin
@@ -50,7 +51,17 @@ module Napkin
           rescue StandardError => err
             puts "Error in Pulse thread: #{err}\n#{err.backtrace}"
           end
+          @finished = true
         end
+      end
+
+      def stop()
+        @enabled = false
+        while(!@finished) do
+          puts "Pulse driver - waiting for pulse thread to stop..."
+          sleep 1
+        end
+        puts "Pulse driver - stopped"
       end
 
       def pulse_task(task)

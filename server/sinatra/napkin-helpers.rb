@@ -26,7 +26,7 @@ module Napkin
       # start driver
       napkin_driver = Napkin::Core::Driver.new(system_config_hash)
       Napkin_Driver << napkin_driver
-      napkin_driver.startup()
+      napkin_driver.start()
     end
 
     def handle_request(path, user)
@@ -35,7 +35,7 @@ module Napkin
         content_type 'text/plain'
 
         napkin_driver = Napkin_Driver[0]
-        if (!napkin_driver.ready_to_handle?) then
+        if (!napkin_driver.running?) then
           status 503
           return "Napkin service not available!"
         end

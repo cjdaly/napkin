@@ -22,8 +22,12 @@ module Napkin
         @tasks = {}
       end
 
+      def napkin_driver
+        return @plugin_registry.napkin_driver
+      end
+
       def neo
-        @plugin_registry.neo
+        return @plugin_registry.neo
       end
 
       def get_plugin(id)
@@ -92,6 +96,10 @@ module Napkin
 
         init_plugins_dir(plugins_path)
         init_plugins_dir(system_plugins_path)
+      end
+
+      def napkin_driver
+        return @napkin_driver
       end
 
       def neo
@@ -173,9 +181,10 @@ module Napkin
       end
 
       def fini_plugins()
-      end
-
-      def fini_plugin()
+        @plugins.values.each do |plugin|
+          puts "Finalizing plugin: #{plugin.get_id}"
+          plugin.fini
+        end
       end
 
     end

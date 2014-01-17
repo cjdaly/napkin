@@ -110,6 +110,14 @@ module Napkin::Plugins
         vmpeak_kb_neo4j_i = parse_int(vmpeak_kb_neo4j)
         neo.set_node_property('vitals.vmpeak_kb_neo4j', vmpeak_kb_neo4j_i, vitals_node_id)
 
+        # check limit and restart if exceeded
+        neo4j_vmpeak_limit = napkin_driver.system_config['napkin.config.Neo4J_VmPeak_limit_kb']
+        if (!neo4j_vmpeak_limit.nil?) then
+          if (vmpeak_kb_neo4j_i > neo4j_vmpeak_limit) then
+            napkin_driver.restart("Vitals_Task: Neo4j VmPeak usage exceeded: #{vmpeak_kb_neo4j_i} / #{neo4j_vmpeak_limit}")
+          end
+        end
+
         # VmPeak for Sinatra
         vmpeak_kb_sinatra_raw = `cat /proc/#{@sinatra_pid}/status | grep VmPeak`
         vmpeak_kb_sinatra = VMPEAK_CAPTURE.match(vmpeak_kb_sinatra_raw).captures[0]
@@ -137,6 +145,10 @@ module Napkin::Plugins
           neo.set_node_property('vitals.neo4j_db_usage_kb', neo4j_db_du_kb, vitals_node_id)
         end
 
+        # check memory usage within bounds
+        neo4j_process_limit = napkin_driver.system_config['napkin.config.Neo4J_process_limit_kb']
+
+        # connect to time index
         plugin_times = get_plugin('times')
         minute_node_id = plugin_times.get_nearest_minute_node_id!(vitals_check_time)
         ref_id = neo.set_ref!(vitals_node_id, minute_node_id)

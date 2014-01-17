@@ -19,6 +19,7 @@ module Napkin
       def initialize(system_config)
         @system_config = system_config
 
+        # TODO: @mode usage not thread safe
         @mode = :init
 
         @neo4j_connector = nil
@@ -42,7 +43,7 @@ module Napkin
         return @pulse_driver
       end
 
-      def startup()
+      def start()
         @continue = true
         @thread = Thread.new do
           begin
@@ -55,37 +56,24 @@ module Napkin
                 puts "Napkin driver thread initialized..."
               when :start
                 puts "Napkin driver thread starting..."
-                # neo4j
-                puts "Napkin driver thread - initializing Neo4j connection"
-                @neo4j_connector = Napkin::Neo4j::Connector.new(self)
-                @neo4j_connector.init_neo()
-
-                # plugins
-                puts "Napkin driver thread - initializing plugin registry"
-                plugins_path = @system_config['napkin.config.plugins_path'] || 'plugins'
-                system_name = @system_config['napkin.config.system_name']
-                system_plugins_path = "systems/#{system_name}/plugins"
-                @plugin_registry = Napkin::Plugins::PluginRegistry.new(self, plugins_path, system_plugins_path)
-
-                # pulse
-                puts "Napkin driver thread - starting pulse"
-                @pulse_driver = Napkin::Pulse::Driver.new(self)
-                @pulse_driver.start()
-
+                startup_napkin
                 @mode = :run
                 puts "Napkin driver thread started"
-
               when :run
                 # puts "Napkin driver thread running..."
               when :restart
                 puts "Napkin driver thread restarting..."
+                shutdown_napkin
+                @mode = :start
               when :stop
                 puts "Napkin driver thread stopping..."
+                shutdown_napkin
+                @continue = false
               else
                 puts "Napkin driver thread - unknown mode: #{@mode}"
               end
 
-              sleep 5
+              sleep 2
               # puts "Napkin driver thread looping..."
             end
             puts "Napkin driver thread stopped..."
@@ -95,13 +83,57 @@ module Napkin
         end
       end
 
-      def ready_to_handle?
+      def startup_napkin
+        # neo4j
+        puts "Napkin driver thread - initializing Neo4j connection"
+        @neo4j_connector = Napkin::Neo4j::Connector.new(self)
+        @neo4j_connector.init_neo()
+
+        # plugins
+        puts "Napkin driver thread - initializing plugin registry"
+        plugins_path = @system_config['napkin.config.plugins_path'] || 'plugins'
+        system_name = @system_config['napkin.config.system_name']
+        system_plugins_path = "systems/#{system_name}/plugins"
+        @plugin_registry = Napkin::Plugins::PluginRegistry.new(self, plugins_path, system_plugins_path)
+
+        # pulse
+        puts "Napkin driver thread - starting pulse"
+        @pulse_driver = Napkin::Pulse::Driver.new(self)
+        @pulse_driver.start()
+      end
+
+      def shutdown_napkin
+        # pulse
+        puts "Napkin driver thread - stopping pulse"
+        @pulse_driver.stop
+
+        # plugins
+        puts "Napkin driver thread - finalizing plugin registry"
+        @plugin_registry.fini_plugins
+
+        # neo4j
+        puts "Napkin driver thread - disconnect Neo4j"
+        @neo4j_connector.disconnect!
+
+        @neo4j_connector = nil
+        @plugin_registry = nil
+        @pulse_driver = nil
+      end
+
+      def running?
         return @mode == :run
       end
 
-      def shutdown(message)
-        puts "Napkin shutdown: #{message}"
-        @continue = false
+      def restart(message)
+        raise "Napkin driver thread - restart only when running!" unless @mode == :run
+        puts "Napkin driver thread - restart: #{message}"
+        @mode = :restart
+      end
+
+      def stop(message)
+        raise "Napkin driver thread - stop only when running!" unless @mode == :run
+        puts "Napkin driver thread - stop: #{message}"
+        @mode = :stop
       end
 
     end

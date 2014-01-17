@@ -25,6 +25,10 @@ module Napkin
         return @plugin.get_plugin(id)
       end
 
+      def napkin_driver
+        return @plugin.napkin_driver
+      end
+
       def neo
         return @plugin.neo
       end
