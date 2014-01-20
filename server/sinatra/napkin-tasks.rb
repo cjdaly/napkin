@@ -82,13 +82,13 @@ module Napkin
         @finished = false
         @enabled = true
         @thread = Thread.new do
-          begin
-            while(@enabled) do
+          while(@enabled) do
+            begin
               cycle
-              sleep 0
+            rescue StandardError => err
+              puts "Error in active task thread: #{err}\n#{err.backtrace}"
             end
-          rescue StandardError => err
-            puts "Error in Napkin driver thread: #{err}\n#{err.backtrace}"
+            sleep 0
           end
           @finished = true
         end

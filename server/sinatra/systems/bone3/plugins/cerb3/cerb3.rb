@@ -41,23 +41,7 @@ module Napkin::Plugins
       end
 
       def cycle
-        line = @sensor_uart.gets
-        if (!line.nil? && line.include?('=')) then
-          key, value = line.split('=', 2)
-          key.strip! ; value.strip!
-          if (@sensor_data.nil?) then
-            if ((key == "state.vitalsAndSensorsUpdated") && (value == "false")) then
-              @sensor_data = {}
-            end
-          else
-            if ((key == "state.vitalsAndSensorsUpdated") && (value == "true")) then
-              chatter_sensor_data(@sensor_data, DEVICE_ID, CHATTER_KEY_PREFIXES)
-              @sensor_data = nil
-            else
-              @sensor_data[key] = value
-            end
-          end
-        end
+        process_sensor_data(@sensor_uart, @sensor_data)
       end
 
     end
