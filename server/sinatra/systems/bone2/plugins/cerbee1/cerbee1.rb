@@ -30,7 +30,7 @@ module Napkin::Plugins
       def init
         puts "In Cerbee1.SensorData_Task.init() !!!"
         @sensor_uart = File.open("/dev/ttyO1", "r")
-        @sensor_data = nil
+        @sensor_data = {}
         increment_start_count(DEVICE_ID)
       end
 

@@ -90,8 +90,10 @@ module Napkin
             end
           else
             if ((key == "state.vitalsAndSensorsUpdated") && (value == "true")) then
-              chatter_sensor_data(sensor_data, DEVICE_ID, CHATTER_KEY_PREFIXES)
-              sensor_data = nil
+              if (sensor_data["state.vitalsAndSensorsUpdated"] == "false") then
+                chatter_sensor_data(sensor_data, DEVICE_ID, CHATTER_KEY_PREFIXES)
+              end
+              sensor_data.clear
             else
               sensor_data[key] = value
             end
