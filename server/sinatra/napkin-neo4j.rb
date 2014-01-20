@@ -394,7 +394,7 @@ RETURN ID(r)
     end
 
     class SubList
-      include Napkin::ConversionUtil
+      include Napkin::Util::Conversion
       def initialize(sup_node_id, neo)
         @sup_node_id = sup_node_id
         @neo = neo

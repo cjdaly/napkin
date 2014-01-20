@@ -19,7 +19,7 @@ module Napkin
     Kram = Napkin::KramdownUtil
     #
     class HandlerBase
-      include ConversionUtil
+      include Napkin::Util::Conversion
       #
       KEY_TYPE_I_MATCH = /.+~i$/
       KEY_TYPE_F_MATCH = /.+~f$/

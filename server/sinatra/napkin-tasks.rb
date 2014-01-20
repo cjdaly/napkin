@@ -15,7 +15,7 @@ require 'napkin-util'
 module Napkin
   module Tasks
     class TaskBase
-      include ConversionUtil
+      include Napkin::Util::Conversion
       def initialize(plugin)
         @plugin = plugin
         @task_initialized = false
