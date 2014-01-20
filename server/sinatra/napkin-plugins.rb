@@ -130,20 +130,6 @@ module Napkin
         return @plugins.values
       end
 
-      def create_tasks()
-        tasks = []
-        @plugins.values.each do |plugin|
-          plugin.get_task_classes.each do |task_class|
-            begin
-              tasks << task_class.new(plugin)
-            rescue StandardError => err
-              puts "Error initializing task #{task_class}: #{err}\n#{err.backtrace}"
-            end
-          end
-        end
-        return tasks
-      end
-
       def init_plugin(plugin_id, plugin_dir)
         plugin_class_file = "#{plugin_dir}/#{plugin_id}.rb"
         return nil unless File.exists?(plugin_class_file)
@@ -156,7 +142,9 @@ module Napkin
             plugin_config_hash = JSON.parse(File.read(plugin_config_file))
           end
 
+          # TODO: load instead of require?
           require(plugin_class_file)
+
           plugin_class =  get_plugin_class(plugin_id)
           return nil if plugin_class.nil?
 

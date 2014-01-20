@@ -35,7 +35,7 @@ module Napkin
             pulse_count = neo.increment_counter('napkin.pulses.pulse_count', start_node_id)
             puts "Pulse thread initialized (#{pulse_count})..."
 
-            tasks = @plugin_registry.create_tasks
+            create_tasks()
 
             while (@enabled)
               sleep 5
@@ -43,7 +43,7 @@ module Napkin
               pulse_count = neo.increment_counter('napkin.pulses.pulse_count', start_node_id)
               puts "Pulse thread - new pulse (#{pulse_count})..."
 
-              tasks.each do |task|
+              @tasks.each do |task|
                 pulse_task(task)
               end
             end
@@ -61,7 +61,32 @@ module Napkin
           puts "Pulse driver - waiting for pulse thread to stop..."
           sleep 1
         end
-        puts "Pulse driver - stopped"
+        puts "Pulse driver - pulse thread stopped"
+
+        @tasks.each do |task|
+          begin
+            puts "Pulse driver - finalizing task: #{task.class}"
+            task.fini
+            task.fini!
+            puts "Pulse driver - finalized task: #{task.class}"
+          rescue StandardError => err
+            puts "Error finalizing task #{task.class}: #{err}\n#{err.backtrace}"
+          end
+        end
+      end
+
+      def create_tasks()
+        @tasks = []
+        plugins = @plugin_registry.get_plugins
+        plugins.each do |plugin|
+          plugin.get_task_classes.each do |task_class|
+            begin
+              @tasks << task_class.new(plugin)
+            rescue StandardError => err
+              puts "Error initializing task #{task_class}: #{err}\n#{err.backtrace}"
+            end
+          end
+        end
       end
 
       def pulse_task(task)

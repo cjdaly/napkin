@@ -19,6 +19,7 @@ module Napkin
       def initialize(plugin)
         @plugin = plugin
         @task_initialized = false
+        @task_finalized = false
       end
 
       def get_plugin(id = nil)
@@ -41,6 +42,18 @@ module Napkin
         @task_initialized = true
       end
 
+      def fini!
+        @task_finalized = true
+      end
+
+      def fini?
+        return @task_finalized
+      end
+
+      def active?
+        return false
+      end
+
       #
       # override below in subclass
       #
@@ -55,7 +68,50 @@ module Napkin
       def doit
       end
 
+      def fini
+      end
+
     end
+
+    class ActiveTaskBase < TaskBase
+      def active?
+        return true
+      end
+
+      def init!
+        @finished = false
+        @enabled = true
+        @thread = Thread.new do
+          begin
+            while(@enabled) do
+              cycle
+              sleep 1
+            end
+          rescue StandardError => err
+            puts "Error in Napkin driver thread: #{err}\n#{err.backtrace}"
+          end
+          @finished = true
+        end
+        super
+      end
+
+      def fini!
+        @enabled = false
+        while(!@finished)
+          sleep 1
+        end
+        super
+      end
+
+      #
+      # override below in subclass
+      #
+
+      def cycle
+      end
+
+    end
+
   end
 
 end
