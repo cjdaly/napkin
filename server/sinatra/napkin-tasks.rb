@@ -85,7 +85,7 @@ module Napkin
           begin
             while(@enabled) do
               cycle
-              sleep 1
+              sleep 0
             end
           rescue StandardError => err
             puts "Error in Napkin driver thread: #{err}\n#{err.backtrace}"
