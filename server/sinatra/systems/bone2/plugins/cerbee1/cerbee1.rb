@@ -40,7 +40,7 @@ module Napkin::Plugins
       end
 
       def cycle
-        process_sensor_data(@sensor_uart, @sensor_data)
+        process_sensor_data(@sensor_uart, @sensor_data, DEVICE_ID, CHATTER_KEY_PREFIXES)
       end
 
     end

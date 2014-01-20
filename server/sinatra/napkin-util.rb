@@ -79,7 +79,7 @@ module Napkin
         end
       end
 
-      def process_sensor_data(sensor_uart, sensor_data)
+      def process_sensor_data(sensor_uart, sensor_data, device_id, key_prefix_filter)
         line = sensor_uart.gets
         if (!line.nil? && line.include?('=')) then
           key, value = line.split('=', 2)
@@ -91,7 +91,7 @@ module Napkin
           else
             if ((key == "state.vitalsAndSensorsUpdated") && (value == "true")) then
               if (sensor_data["state.vitalsAndSensorsUpdated"] == "false") then
-                chatter_sensor_data(sensor_data, DEVICE_ID, CHATTER_KEY_PREFIXES)
+                chatter_sensor_data(sensor_data, device_id, key_prefix_filter)
               end
               sensor_data.clear
             else
