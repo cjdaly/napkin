@@ -61,6 +61,11 @@ module Napkin
                 puts "Napkin driver thread started"
               when :run
                 # puts "Napkin driver thread running..."
+                #
+                if (!File.exist?("napkin.PID")) then
+                  puts "Napkin driver thread detected napkin.PID file removed; stopping..."
+                  @mode = :stop
+                end
               when :restart
                 puts "Napkin driver thread restarting..."
                 shutdown_napkin
@@ -73,13 +78,18 @@ module Napkin
                 puts "Napkin driver thread - unknown mode: #{@mode}"
               end
 
-              sleep 2
+              sleep 1
               # puts "Napkin driver thread looping..."
             end
             puts "Napkin driver thread stopped..."
           rescue StandardError => err
             puts "Error in Napkin driver thread: #{err}\n#{err.backtrace}"
           end
+
+          # insanity wolf?
+          napkin_pid = Process.pid
+          puts "Napkin driver thread - killing Napkin process: #{napkin_pid}"
+          `kill #{napkin_pid}`
         end
       end
 
