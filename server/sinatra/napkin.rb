@@ -16,7 +16,9 @@ require 'sinatra'
 set :bind, '0.0.0.0'
 
 #
-# helpers
+NAPKIN_VERSION = "0.4.1"
+
+#
 require 'napkin-helpers'
 
 helpers Napkin::Helpers

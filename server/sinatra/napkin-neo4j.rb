@@ -16,9 +16,6 @@ require 'napkin-util'
 module Napkin
   module Neo4j
     class Connector
-      #
-      NAPKIN_VERSION = "0.4.1" # 0.4.x for adopting Neo4j 2.0
-      #
       def initialize(napkin_driver)
         @napkin_driver = napkin_driver
         @neo = nil
