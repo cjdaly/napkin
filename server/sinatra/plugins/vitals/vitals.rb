@@ -44,7 +44,8 @@ module Napkin::Plugins
         kramdown_text << "| [30 min](#{get_memory_chart_url(30)}) "
         kramdown_text << "| [60 min](#{get_memory_chart_url(60)})\n"
 
-        kramdown_text << chart_table_helper("Neo4j DB disk usage", "vitals.neo4j_db_usage_kb")
+        kramdown_text << chart_table_helper("disk usage", "vitals.neo4j_db_usage_kb")
+        kramdown_text << chart_table_helper("disk available", "vitals.neo4j_db_available_kb")
         kramdown_text << chart_table_helper("load average", "vitals.loadavg_1_min")
         return kramdown_text
       end
@@ -136,13 +137,19 @@ module Napkin::Plugins
         loadavg_1_min = parse_float(loadavg_split[0])
         neo.set_node_property('vitals.loadavg_1_min', loadavg_1_min, vitals_node_id)
 
-        # database disk usage
+        # database disk usage and availability
         neo4j_db_path = neo.get_node_property('napkin.config.Neo4J_db_path', neo.pin(:napkin))
         if (!neo4j_db_path.to_s.empty?) then
+          # database disk usage
           neo4j_db_du = `du -sk #{neo4j_db_path}`
           neo4j_db_du_kb_text = DB_USAGE_CAPTURE.match(neo4j_db_du).captures[0]
           neo4j_db_du_kb = parse_int(neo4j_db_du_kb_text)
           neo.set_node_property('vitals.neo4j_db_usage_kb', neo4j_db_du_kb, vitals_node_id)
+
+          # disk available
+          neo4j_db_df_kb_text = `df -Pk #{neo4j_db_path} | tail -1 | awk '{print $4}'`
+          neo4j_db_df_kb=parse_int(neo4j_db_df_kb_text)
+          neo.set_node_property('vitals.neo4j_db_available_kb', neo4j_db_df_kb, vitals_node_id)
         end
 
         # check memory usage within bounds
