@@ -12,7 +12,7 @@
 # add Java to $PATH
 echo
 echo "Adding java to PATH"
-case `uname -i` in
+case `uname -m` in
   x86*) export JAVA_HOME=~/java/jdk1.7.0_45;;
   arm*) export JAVA_HOME=~/java/sflt/ejre1.7.0_45;;
 esac
