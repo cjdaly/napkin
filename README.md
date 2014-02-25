@@ -8,8 +8,9 @@ Napkin began when I discovered small, inexpensive but HTTP capable (ARM-based, "
 
 The Napkin server can run in (at least) these configurations:
 * [Ubuntu (x86) 12.04](https://github.com/cjdaly/napkin/wiki/Server-on-Ubuntu-x86)
-* [BeagleBone Black (running Ubuntu 13.04)](https://github.com/cjdaly/napkin/wiki/Server-on-BeagleBone-black)
+* [Radxa Rock (running Linaro Ubuntu 13.06 server)](https://github.com/cjdaly/napkin/wiki/Server-Radxa-Rock)
 * [Cubieboard2 (running Linaro Ubuntu 13.06 server)](https://github.com/cjdaly/napkin/wiki/Server-on-Cubieboard-A20)
+* [BeagleBone Black (running Ubuntu 13.04)](https://github.com/cjdaly/napkin/wiki/Server-on-BeagleBone-black)
 * _not updated recently_: [Cubieboard (running Ubuntu 13.01)](https://github.com/cjdaly/napkin/wiki/Server-on-Cubieboard), [pcDuino (running Ubuntu 12.04)](https://github.com/cjdaly/napkin/wiki/Server-on-pcduino)
 
 Napkin clients use REST-style HTTP communication to access services such as:
