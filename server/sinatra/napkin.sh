@@ -19,30 +19,32 @@ case "$1" in
     NAPKIN_PID=`cat $NAPKIN_PID_FILE`
     echo "Napkin process $NAPKIN_PID already running."
   elif [ -f "$2/config.json" ]; then
+    NAPKIN_SYSTEM_DIR=$2
+    echo "Napkin system dir: $NAPKIN_SYSTEM_DIR"
+    
+    # log setup
     NAPKIN_LOGS_DIR="logs"
     mkdir -p $NAPKIN_LOGS_DIR
-
     NAPKIN_LOG="$NAPKIN_LOGS_DIR/napkin-$TIMESTAMP.log"
     touch $NAPKIN_LOG
-
     rm -f napkin.log
     ln -s $NAPKIN_LOG napkin.log
 
-    case `uname -i` in
-      x86*) JRUBY_ARGS="";;
-      arm*) JRUBY_ARGS="--server -J-Xms96M -J-Xmx96M";;
-    esac
-  
-    echo "starting $2"
-    NAPKIN_SYSTEM_DIR=$2
-    echo "Napkin system dir: $NAPKIN_SYSTEM_DIR, using jruby args: $JRUBY_ARGS"
+    # default configuration environment variables
+    JRUBY_ARGS=""
+    
+    # system-specific configuration overrides
+    if [ -f "$NAPKIN_SYSTEM_DIR/config.sh" ]; then
+      source "$NAPKIN_SYSTEM_DIR/config.sh"
+    fi
     
     jruby $JRUBY_ARGS napkin.rb $NAPKIN_SYSTEM_DIR/config.json 1>> $NAPKIN_LOG 2>&1 &
     NAPKIN_PID=$!
     
     echo "Napkin process: $NAPKIN_PID" >> $NAPKIN_LOG
     echo "$NAPKIN_PID" > $NAPKIN_PID_FILE
-    echo "Napkin process: $NAPKIN_PID, log: $NAPKIN_LOG"
+    echo "Napkin process: $NAPKIN_PID"
+    echo "Napkin log: ./napkin.log -> $NAPKIN_LOG"
   else
     echo "Napkin system configuration file not found at $2/config.json"
   fi
