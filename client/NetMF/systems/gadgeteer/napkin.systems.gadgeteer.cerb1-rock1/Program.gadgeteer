@@ -37,8 +37,8 @@
           <moduleHasSocketUses Id="f48367a8-a30b-4b4d-86ef-8df698339951">
             <socketUse Id="19a84f16-074e-4d04-bec5-f9a8caffd216" label="XY">
               <socket>
-                <socketUseReferencesSocket Id="f7ccd3a2-2397-418c-9ccb-1b17f286ac63">
-                  <socketMoniker Id="5ebbd925-46d3-4ff8-bd23-a49663b096bb" />
+                <socketUseReferencesSocket Id="2fdc0e15-cd01-4459-8f3c-fd4eb06d2fac">
+                  <socketMoniker Id="19d4f12f-d446-4156-af97-97190452cbe0" />
                 </socketUseReferencesSocket>
               </socket>
             </socketUse>
@@ -82,8 +82,8 @@
           <moduleHasSocketUses Id="9768ad72-3125-44c6-89e8-62e140af329e">
             <socketUse Id="853afd11-bbad-4c9e-aceb-498489a411e9" label="I">
               <socket>
-                <socketUseReferencesSocket Id="e5e6495a-c60f-42ae-82e6-7a2cd1d11043">
-                  <socketMoniker Id="db386e81-78ef-4af1-86ae-ad7ae0d979ee" />
+                <socketUseReferencesSocket Id="224d89c0-3f66-49c0-b366-d2af49af685b">
+                  <socketMoniker Id="5ebbd925-46d3-4ff8-bd23-a49663b096bb" />
                 </socketUseReferencesSocket>
               </socket>
             </socketUse>

@@ -136,6 +136,8 @@ namespace napkin.systems.gadgeteer.cerb1_rock1
             string chatterText = sb.ToString();
             _rock1.Write(chatterText);
 
+            Debug.Print(chatterText);
+
             Thread.Sleep(1 * 1000);
             led7c.SetColor(LED7C.LEDColor.Green);
             Thread.Sleep(5 * 1000);
