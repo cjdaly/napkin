@@ -76,5 +76,50 @@
         </socketUses>
       </module>
     </gadgeteerModelHasGadgeteerHardware>
+    <gadgeteerModelHasGadgeteerHardware Id="35c94b6a-626b-42d6-aea0-e16df653278d">
+      <module Id="43369be8-d64c-4c12-acc4-a1a080a41304" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;Barometer&quot; Manufacturer=&quot;Seeed&quot; Description=&quot;A Barometer module&quot; Type=&quot;Gadgeteer.Modules.Seeed.Barometer&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\Seeed\Seeed .NET Gadgeteer SDK\Modules\Barometer\Resources\Image.jpg&quot; BoardWidth=&quot;17.2&quot; BoardHeight=&quot;32.2&quot; MinimumGadgeteerCoreVersion=&quot;2.42.500&quot; HelpUrl=&quot;&quot; UniqueId=&quot;e40c9af9-3ed5-4c39-b3a5-4aa0795711c0&quot; InstanceName=&quot;barometer&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;Power /&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.Seeed.Barometer&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;90&quot; Left=&quot;8.6&quot; Top=&quot;27.7&quot; TypesLabel=&quot;I&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;I&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;3&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;true&quot;&gt;8&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;true&quot;&gt;9&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="barometer" moduleType="Gadgeteer.Modules.Seeed.Barometer" moduleDefinitionId="e40c9af9-3ed5-4c39-b3a5-4aa0795711c0">
+        <socketUses>
+          <moduleHasSocketUses Id="9768ad72-3125-44c6-89e8-62e140af329e">
+            <socketUse Id="853afd11-bbad-4c9e-aceb-498489a411e9" label="I">
+              <socket>
+                <socketUseReferencesSocket Id="e5e6495a-c60f-42ae-82e6-7a2cd1d11043">
+                  <socketMoniker Id="db386e81-78ef-4af1-86ae-ad7ae0d979ee" />
+                </socketUseReferencesSocket>
+              </socket>
+            </socketUse>
+          </moduleHasSocketUses>
+        </socketUses>
+      </module>
+    </gadgeteerModelHasGadgeteerHardware>
+    <gadgeteerModelHasGadgeteerHardware Id="83893876-7f68-4652-a07b-2ceff44c8fd8">
+      <module Id="9124d852-2268-427c-b200-63f3fdfe5dc8" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;TemperatureHumidity&quot; Manufacturer=&quot;Seeed&quot; Description=&quot;A TemperatureHumidity module&quot; Type=&quot;Gadgeteer.Modules.Seeed.TemperatureHumidity&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\Seeed\Seeed .NET Gadgeteer SDK\Modules\TemperatureHumidity\Resources\Image.jpg&quot; BoardWidth=&quot;17.2&quot; BoardHeight=&quot;32.2&quot; MinimumGadgeteerCoreVersion=&quot;2.42.500&quot; HelpUrl=&quot;&quot; UniqueId=&quot;2c99d498-b374-4a23-9cf7-8e8cc0cc13d0&quot; InstanceName=&quot;temperatureHumidity&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;Power /&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.Seeed.TemperatureHumidity&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;90&quot; Left=&quot;8.6&quot; Top=&quot;27.7&quot; TypesLabel=&quot;XY&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;X&lt;/Type&gt;&#xD;&#xA;        &lt;Type&gt;Y&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;3&lt;/Pin&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;4&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="temperatureHumidity" moduleType="Gadgeteer.Modules.Seeed.TemperatureHumidity" moduleDefinitionId="2c99d498-b374-4a23-9cf7-8e8cc0cc13d0">
+        <socketUses>
+          <moduleHasSocketUses Id="fa2398f5-bfdf-4cb1-b9f7-509cce4f4098">
+            <socketUse Id="8b7b51f3-59ab-4796-8c9f-9da21a977d83" label="XY">
+              <socket>
+                <socketUseReferencesSocket Id="22a6a502-0dac-4509-8132-3e6fa802c026">
+                  <socketMoniker Id="6444a9d6-4c37-48d8-86d4-3ef564ba0722" />
+                </socketUseReferencesSocket>
+              </socket>
+            </socketUse>
+          </moduleHasSocketUses>
+        </socketUses>
+      </module>
+    </gadgeteerModelHasGadgeteerHardware>
+    <gadgeteerModelHasGadgeteerHardware Id="4f343bf0-5a62-4761-bded-111b8a01e467">
+      <module Id="fc26859e-3d7c-473e-812f-aa7fba4bbce4" cachedDefinition="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;&#xD;&#xA;&lt;ModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; Name=&quot;LightSensor&quot; Manufacturer=&quot;GHI Electronics&quot; Description=&quot;A LightSensor module&quot; Type=&quot;Gadgeteer.Modules.GHIElectronics.LightSensor&quot; HardwareVersion=&quot;1.0&quot; Image=&quot;C:\Program Files (x86)\GHI Electronics\GHI .NET Gadgeteer SDK\Modules\LightSensor\Resources\Image.jpg&quot; BoardWidth=&quot;17&quot; BoardHeight=&quot;22&quot; MinimumGadgeteerCoreVersion=&quot;2.42.500&quot; HelpUrl=&quot;http://www.ghielectronics.com/catalog/product/336&quot; UniqueId=&quot;34649e82-781e-4ba5-87f3-fd21722e3ab7&quot; InstanceName=&quot;lightSensor&quot; ModuleSuppliesPower=&quot;false&quot;&gt;&#xD;&#xA;  &lt;Power&gt;&#xD;&#xA;    &lt;PowerRequirements Voltage=&quot;3.3&quot;&gt;&#xD;&#xA;      &lt;TypicalCurrent&gt;0.001&lt;/TypicalCurrent&gt;&#xD;&#xA;      &lt;MaximumCurrent&gt;0.001&lt;/MaximumCurrent&gt;&#xD;&#xA;    &lt;/PowerRequirements&gt;&#xD;&#xA;    &lt;PowerRequirements Voltage=&quot;5&quot;&gt;&#xD;&#xA;      &lt;TypicalCurrent&gt;0&lt;/TypicalCurrent&gt;&#xD;&#xA;      &lt;MaximumCurrent&gt;0&lt;/MaximumCurrent&gt;&#xD;&#xA;    &lt;/PowerRequirements&gt;&#xD;&#xA;  &lt;/Power&gt;&#xD;&#xA;  &lt;ProvidedSockets /&gt;&#xD;&#xA;  &lt;Assemblies&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.2&quot; Name=&quot;GTM.GHIElectronics.LightSensor&quot; /&gt;&#xD;&#xA;    &lt;Assembly MFVersion=&quot;4.3&quot; Name=&quot;GTM.GHIElectronics.LightSensor&quot; /&gt;&#xD;&#xA;  &lt;/Assemblies&gt;&#xD;&#xA;  &lt;LibrariesProvided /&gt;&#xD;&#xA;  &lt;Sockets&gt;&#xD;&#xA;    &lt;Socket Orientation=&quot;90&quot; Left=&quot;7.5&quot; Top=&quot;17.3&quot; TypesLabel=&quot;A&quot; ConstructorOrder=&quot;1&quot; Optional=&quot;false&quot;&gt;&#xD;&#xA;      &lt;Types&gt;&#xD;&#xA;        &lt;Type&gt;A&lt;/Type&gt;&#xD;&#xA;      &lt;/Types&gt;&#xD;&#xA;      &lt;Pins&gt;&#xD;&#xA;        &lt;Pin Shared=&quot;false&quot;&gt;3&lt;/Pin&gt;&#xD;&#xA;      &lt;/Pins&gt;&#xD;&#xA;    &lt;/Socket&gt;&#xD;&#xA;  &lt;/Sockets&gt;&#xD;&#xA;  &lt;ExtraLibrariesRequired /&gt;&#xD;&#xA;&lt;/ModuleDefinition&gt;" name="lightSensor" moduleType="Gadgeteer.Modules.GHIElectronics.LightSensor" moduleDefinitionId="34649e82-781e-4ba5-87f3-fd21722e3ab7">
+        <socketUses>
+          <moduleHasSocketUses Id="30a72233-5677-4303-a297-2af307bb261e">
+            <socketUse Id="b999d333-6c07-4cf9-98bf-97a8b9f0db4f" label="A">
+              <socket>
+                <socketUseReferencesSocket Id="46150292-8f2d-4ea2-b626-90ee8eb8666a">
+                  <socketMoniker Id="e70369d1-b03f-41eb-9a2a-757cb24ae8ca" />
+                </socketUseReferencesSocket>
+              </socket>
+            </socketUse>
+          </moduleHasSocketUses>
+        </socketUses>
+      </module>
+    </gadgeteerModelHasGadgeteerHardware>
   </gadgeteerHardware>
 </gadgeteerModel>
