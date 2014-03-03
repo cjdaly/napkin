@@ -12,24 +12,21 @@
 module Napkin::Plugins
   class Lcd_2x16 < PluginBase
     def init
-      # service_node_id = init_service_segment
       register_task('lcd-update', LcdUpdate_Task)
-      puts "In Lcd_2x16.init() !!!"
     end
 
     class LcdUpdate_Task < Napkin::Tasks::TaskBase
       include Napkin::Util::Client
       LCD_UART_DEVICE = "/dev/ttyS3"
       def init
-        puts "In Cerb3.SensorData_Task.init() !!!"
         @count = 0
       end
 
-      def fini
-        puts "In Cerb3.SensorData_Task.fini() !!!"
+      def todo?
+        return true
       end
 
-      def cycle
+      def doit
         @count += 1
         clear_lcd()
         write_lcd("hello world", "count: #{@count}")
