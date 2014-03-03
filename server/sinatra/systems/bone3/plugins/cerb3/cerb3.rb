@@ -19,7 +19,6 @@ module Napkin::Plugins
       "sensor.barometer."
     ]
 
-    #
     def init
       # service_node_id = init_service_segment
       register_task('cerb3_sensor_data', SensorData_Task)

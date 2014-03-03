@@ -10,15 +10,14 @@
 ####
 
 module Napkin::Plugins
-  DEVICE_ID = "cerbee1"
-  CHATTER_KEY_PREFIXES = [
-    "vitals.",
-    "sensor.temperatureHumidity.",
-    "sensor.lightSensor."
-  ]
-
-  #
   class Cerbee1 < PluginBase
+    DEVICE_ID = "cerbee1"
+    CHATTER_KEY_PREFIXES = [
+      "vitals.",
+      "sensor.temperatureHumidity.",
+      "sensor.lightSensor."
+    ]
+
     def init
       # service_node_id = init_service_segment
       register_task('cerbee1_sensor_data', SensorData_Task)
