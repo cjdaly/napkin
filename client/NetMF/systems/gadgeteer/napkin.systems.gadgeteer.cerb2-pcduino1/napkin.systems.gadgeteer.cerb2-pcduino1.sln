@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "napkin.systems.gadgeteer.cerb2-pcduino1", "napkin.systems.gadgeteer.cerb2-pcduino1.csproj", "{17F73B7F-F587-4F12-AE75-75E7289C8D95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "napkin.devices.serial.common", "..\..\..\libraries\devices\napkin.devices.serial.common\napkin.devices.serial.common.csproj", "{DD9E17B2-9F7F-4BD4-87C9-B8CE5BDBBFB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{17F73B7F-F587-4F12-AE75-75E7289C8D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17F73B7F-F587-4F12-AE75-75E7289C8D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17F73B7F-F587-4F12-AE75-75E7289C8D95}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{17F73B7F-F587-4F12-AE75-75E7289C8D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17F73B7F-F587-4F12-AE75-75E7289C8D95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17F73B7F-F587-4F12-AE75-75E7289C8D95}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{DD9E17B2-9F7F-4BD4-87C9-B8CE5BDBBFB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD9E17B2-9F7F-4BD4-87C9-B8CE5BDBBFB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD9E17B2-9F7F-4BD4-87C9-B8CE5BDBBFB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD9E17B2-9F7F-4BD4-87C9-B8CE5BDBBFB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
