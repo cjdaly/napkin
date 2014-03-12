@@ -6,22 +6,20 @@ Napkin began when I discovered small, inexpensive but HTTP capable (ARM-based, "
 
 #### Details
 
-The Napkin server can run in (at least) these configurations:
-* [Ubuntu (x86) 12.04](https://github.com/cjdaly/napkin/wiki/Server-on-Ubuntu-x86)
-* [Radxa Rock (running Linaro Ubuntu 13.06 server)](https://github.com/cjdaly/napkin/wiki/Server-on-Radxa-Rock)
-* [Cubieboard2 (running Linaro Ubuntu 13.06 server)](https://github.com/cjdaly/napkin/wiki/Server-on-Cubieboard-A20)
-* [BeagleBone Black (running Ubuntu 13.04)](https://github.com/cjdaly/napkin/wiki/Server-on-BeagleBone-black)
-* _not updated recently_: [Cubieboard (running Ubuntu 13.01)](https://github.com/cjdaly/napkin/wiki/Server-on-Cubieboard), [pcDuino (running Ubuntu 12.04)](https://github.com/cjdaly/napkin/wiki/Server-on-pcduino)
+Napkin server examples (based on various flavors of Ubuntu Linux):
+* [Radxa Rock](https://github.com/cjdaly/napkin/wiki/Server-on-Radxa-Rock)
+* [pcDuino](https://github.com/cjdaly/napkin/wiki/Server-on-pcduino)
+* [Cubieboard2](https://github.com/cjdaly/napkin/wiki/Server-on-Cubieboard-A20) (old: [Cubieboard1](https://github.com/cjdaly/napkin/wiki/Server-on-Cubieboard))
+* [BeagleBone Black](https://github.com/cjdaly/napkin/wiki/Server-on-BeagleBone-black)
+  * [with Fez Cerbuino Bee](https://github.com/cjdaly/napkin/wiki/Server-with-serial-client-bone2-cerbee1)
+  * [with Fez Cerberus](https://github.com/cjdaly/napkin/wiki/Server-with-serial-client-bone3-cerb3)
+* [x86 architecture virtual machine](https://github.com/cjdaly/napkin/wiki/Server-on-Ubuntu-x86)
 
 Napkin clients use REST-style HTTP communication to access services such as:
 * [config](https://github.com/cjdaly/napkin/wiki/Plugin-config) - allows devices to store and retrieve hierarchical configuration data
 * [chatter](https://github.com/cjdaly/napkin/wiki/Plugin-chatter) - allows devices to post time series data
 * [vitals](https://github.com/cjdaly/napkin/wiki/Plugin-vitals) - periodically stores data about the state of the napkin server
 * new services can be implemented as plugins
-
-Napkin server with serial client examples:
-* [BeagleBone Black with Fez Cerbuino Bee](https://github.com/cjdaly/napkin/wiki/Server-with-serial-client-bone2-cerbee1)
-* [BeagleBone Black with Fez Cerberus](https://github.com/cjdaly/napkin/wiki/Server-with-serial-client-bone3-cerb3)
 
 Napkin REST client examples:
 * .Net Gadgeteer (C#)
