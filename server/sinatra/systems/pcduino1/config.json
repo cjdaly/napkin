@@ -1,0 +1,5 @@
+{
+  "napkin.config.system_name" : "pcduino1",
+  "napkin.config.Neo4J_db_path" : "/media/sd/napkin-neo4j-db",
+  "napkin.config.Neo4J_VmPeak_limit_kb" : 375000
+}
