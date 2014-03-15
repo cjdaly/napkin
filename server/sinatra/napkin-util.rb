@@ -80,7 +80,12 @@ module Napkin
       end
 
       def process_sensor_data(sensor_uart, sensor_data, device_id, key_prefix_filter)
-        line = sensor_uart.gets
+        begin
+          line = sensor_uart.gets
+        rescue StandardError => err
+          line = nil
+        end
+
         if (!line.nil? && line.include?('=')) then
           key, value = line.split('=', 2)
           key.strip! ; value.strip!
