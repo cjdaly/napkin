@@ -10,22 +10,21 @@
 ####
 
 module Napkin::Plugins
-  class Cerb2 < PluginBase
-    DEVICE_ID = "cerb2"
+  class Xadow1 < PluginBase
+    DEVICE_ID = "xadow1"
     CHATTER_KEY_PREFIXES = [
       "vitals.",
-      "sensor.gasSense.",
       "sensor.barometer."
     ]
 
     def init
-      register_task('cerb2_sensor_data', SensorData_Task)
+      register_task('xadow1_sensor_data', SensorData_Task)
     end
 
     class SensorData_Task < Napkin::Tasks::ActiveTaskBase
       include Napkin::Util::Client
       def init
-        @sensor_uart = File.open("/dev/ttyS1", "r")
+        @sensor_uart = File.open("/dev/ttyO1", "r")
         @sensor_data = {}
         increment_start_count(DEVICE_ID)
       end

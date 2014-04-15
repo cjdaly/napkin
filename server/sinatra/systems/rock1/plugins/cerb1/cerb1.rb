@@ -20,22 +20,18 @@ module Napkin::Plugins
     ]
 
     def init
-      # service_node_id = init_service_segment
       register_task('cerb1_sensor_data', SensorData_Task)
-      puts "In Cerb1.init() !!!"
     end
 
     class SensorData_Task < Napkin::Tasks::ActiveTaskBase
       include Napkin::Util::Client
       def init
-        puts "In Cerb1.SensorData_Task.init() !!!"
         @sensor_uart = File.open("/dev/ttyS0", "r")
         @sensor_data = {}
         increment_start_count(DEVICE_ID)
       end
 
       def fini
-        puts "In Cerb1.SensorData_Task.fini() !!!"
         @sensor_uart.close
       end
 
