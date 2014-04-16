@@ -1,10 +1,6 @@
 Napkin is a collection of Internet of Things projects.
 
-### Napkin Server
-
-The Napkin server runs on [JRuby](http://jruby.org/) [Sinatra](http://www.sinatrarb.com/) and the [Neo4j](http://www.neo4j.org/) graph database.  Napkin has predefined plugins for storing and retrieving configuration information and collecting time series data from client IoT devices.  New plugins can be added to customize HTTP handling, for periodic processing of stored data, and to utilize system-specific hardware.
-
-### IoT System Examples
+### IoT Systems
 
 * [Radxa Rock](https://github.com/cjdaly/napkin/wiki/Server-on-Radxa-Rock)
 * [pcDuino](https://github.com/cjdaly/napkin/wiki/Server-on-pcduino)
@@ -13,6 +9,10 @@ The Napkin server runs on [JRuby](http://jruby.org/) [Sinatra](http://www.sinatr
   * [with Fez Cerbuino Bee](https://github.com/cjdaly/napkin/wiki/Server-with-serial-client-bone2-cerbee1)
   * [with Fez Cerberus](https://github.com/cjdaly/napkin/wiki/Server-with-serial-client-bone3-cerb3)
 * [x86 architecture virtual machine](https://github.com/cjdaly/napkin/wiki/Server-on-Ubuntu-x86)
+
+### Napkin Server
+
+The Napkin server runs on [JRuby](http://jruby.org/) [Sinatra](http://www.sinatrarb.com/) and the [Neo4j](http://www.neo4j.org/) graph database.  Napkin has predefined plugins for storing and retrieving configuration information and collecting time series data from client IoT devices.  New plugins can be added to customize HTTP handling, for periodic processing of stored data, and to utilize system-specific hardware.
 
 ### Napkin Client API
 
