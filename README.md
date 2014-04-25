@@ -1,6 +1,6 @@
-Napkin is a collection of Internet of Things projects.
+Napkin is a collection of Internet of Things (IoT) projects.
 
-### IoT Systems
+### Napkin Reference Things
 
 * [Radxa Rock](https://github.com/cjdaly/napkin/wiki/Server-on-Radxa-Rock)
 * [pcDuino](https://github.com/cjdaly/napkin/wiki/Server-on-pcduino)
@@ -12,7 +12,7 @@ Napkin is a collection of Internet of Things projects.
 
 ### Napkin Server
 
-The Napkin server runs on [JRuby](http://jruby.org/) [Sinatra](http://www.sinatrarb.com/) and the [Neo4j](http://www.neo4j.org/) graph database.  Napkin includes plugins for storing and retrieving configuration information and collecting time series data from client IoT devices.  New plugins can be added to customize HTTP handling, for periodic processing of stored data, and to utilize system-specific hardware.
+The Napkin server runs on [JRuby](http://jruby.org/) [Sinatra](http://www.sinatrarb.com/) and the [Neo4j](http://www.neo4j.org/) graph database.  Core plugins handle storing and retrieving configuration information and collecting time series data from client IoT devices.  New plugins can be added to customize HTTP handling, for periodic processing of stored data, and to utilize system-specific resources.
 
 ### Napkin Client API
 
