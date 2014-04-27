@@ -14,6 +14,8 @@ module Napkin::Plugins
     DEVICE_ID = "cerb2"
     CHATTER_KEY_PREFIXES = [
       "vitals.",
+      "sensor.temperatureHumidity.",
+      "sensor.lightSensor.",
       "sensor.gasSense.",
       "sensor.barometer."
     ]
