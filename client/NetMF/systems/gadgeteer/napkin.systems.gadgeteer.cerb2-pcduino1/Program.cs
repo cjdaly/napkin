@@ -22,7 +22,6 @@ namespace napkin.systems.gadgeteer.cerb2_pcduino1
 {
     public partial class Program
     {
-
         public readonly string DeviceId = "cerb2";
 
         private Thread _cycleThread;
@@ -30,7 +29,6 @@ namespace napkin.systems.gadgeteer.cerb2_pcduino1
 
         void ProgramStarted()
         {
-            led7c.SetColor(LED7C.LEDColor.Yellow);
             Thread.Sleep(1000);
 
             Debug.Print("Hello from: " + DeviceId);
@@ -38,20 +36,25 @@ namespace napkin.systems.gadgeteer.cerb2_pcduino1
             _pcduino1 = new ThreadedSerialDevice(Serial.COM3);
             _pcduino1.ReadLine += new ThreadedSerialDevice.ReadHandler(_pcduino1_ReadLine);
 
+            temperatureHumidity.MeasurementComplete += new TemperatureHumidity.MeasurementCompleteEventHandler(temperatureHumidity_MeasurementComplete);
+
             barometer.StopContinuousMeasurements();
             barometer.MeasurementComplete += new Barometer.MeasurementCompleteEventHandler(barometer_MeasurementComplete);
 
             gasSense.SetHeatingElement(true);
 
-            button.ButtonPressed += new Button.ButtonEventHandler(button_ButtonPressed);
-            button.ButtonReleased += new Button.ButtonEventHandler(button_ButtonReleased);
-
-            led7c.SetColor(LED7C.LEDColor.Green);
             Thread.Sleep(1000);
 
             _cycleThread = new Thread(CycleDriver);
             _cycleThread.Start();
+        }
 
+        private double _temperature2 = 0;
+        private double _relativeHumidity = 0;
+        void temperatureHumidity_MeasurementComplete(TemperatureHumidity sender, double temperature, double relativeHumidity)
+        {
+            _temperature2 = temperature;
+            _relativeHumidity = relativeHumidity;
         }
 
         private double _temperature = 0;
@@ -60,16 +63,6 @@ namespace napkin.systems.gadgeteer.cerb2_pcduino1
         {
             _pressure = sensorData.Pressure;
             _temperature = sensorData.Temperature;
-        }
-
-        void button_ButtonPressed(Button sender, Button.ButtonState state)
-        {
-            button.TurnLEDOn();
-        }
-
-        void button_ButtonReleased(Button sender, Button.ButtonState state)
-        {
-            button.TurnLEDOff();
         }
 
         private string _lastLine = "";
@@ -91,8 +84,6 @@ namespace napkin.systems.gadgeteer.cerb2_pcduino1
             }
         }
 
-        // private double _lightSensorPercentage;
-
         private void RefreshLcd(string line1, string line2 = "")
         {
             char_Display.Clear();
@@ -104,7 +95,6 @@ namespace napkin.systems.gadgeteer.cerb2_pcduino1
 
         private void Cycle()
         {
-            led7c.SetColor(LED7C.LEDColor.Blue);
             _cycleCount++;
             Debug.Print("Cycle: " + _cycleCount);
 
@@ -116,8 +106,12 @@ namespace napkin.systems.gadgeteer.cerb2_pcduino1
             sb.AppendLine("vitals.id=" + DeviceId);
             sb.AppendLine("vitals.currentCycle~i=" + _cycleCount);
 
-            //_lightSensorPercentage = lightSensor.ReadLightSensorPercentage();
-            //sb.AppendLine("sensor.lightSensor.lightSensorPercentage~f=" + _lightSensorPercentage.ToString());
+            _temperature2 = 0; _relativeHumidity = 0;
+            temperatureHumidity.RequestMeasurement();
+            Thread.Sleep(500);
+            sb.AppendLine("sensor.temperatureHumidity.temperature~f=" + _temperature2.ToString());
+            sb.AppendLine("sensor.temperatureHumidity.relativeHumidity~f=" + _relativeHumidity.ToString());
+            RefreshLcd("t:" + _temperature2, "h:" + _relativeHumidity);
 
             _temperature = 0; _pressure = 0;
             barometer.RequestMeasurement();
@@ -130,10 +124,13 @@ namespace napkin.systems.gadgeteer.cerb2_pcduino1
             double gasSenseVoltage = gasSense.ReadVoltage();
             sb.AppendLine("sensor.gasSense.MQ-3.voltage~f=" + gasSenseVoltage.ToString());
 
+            double lightSensorPercentage = lightSensor.ReadLightSensorPercentage();
+            sb.AppendLine("sensor.lightSensor.lightSensorPercentage~f=" + lightSensorPercentage.ToString());
+
+            RefreshLcd("g:" + gasSenseVoltage, "l:" + lightSensorPercentage);
+
             long memoryBytesFree = Debug.GC(false);
             sb.AppendLine("vitals.memoryBytesFree~i=" + memoryBytesFree);
-
-            RefreshLcd("g:" + gasSenseVoltage, "b:" + memoryBytesFree);
 
             sb.AppendLine("sensor.lastLine=" + _lastLine);
             sb.AppendLine("state.vitalsAndSensorsUpdated=true");
@@ -142,9 +139,6 @@ namespace napkin.systems.gadgeteer.cerb2_pcduino1
             _pcduino1.Write(chatterText);
 
             Debug.Print(chatterText);
-
-            Thread.Sleep(1000);
-            led7c.SetColor(LED7C.LEDColor.Green);
             Thread.Sleep(3000);
         }
     }
