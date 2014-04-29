@@ -1,0 +1,33 @@
+#######################################
+# Syntax Coloring Map For Xadow
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+xadow	KEYWORD1
+xadowDfs	KEYWORD1
+Xadow	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+init	KEYWORD2
+cout	KEYWORD2
+getBatVol	KEYWORD2
+getChrgState	KEYWORD2
+wakeUp	KEYWORD2
+pwrDown	KEYWORD2
+greenLed	KEYWORD2
+redLed	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+endl	LITERAL1
+LEDON	LITERAL1
+LEDOFF	LITERAL1
+LEDCHG	LITERAL1
+NOCHARGE	LITERAL1
+CHARGING	LITERAL1
+CHARGDONE	LITERAL1
