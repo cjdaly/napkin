@@ -91,7 +91,6 @@ namespace napkin.systems.gadgeteer.cerb3
             bool exit = false;
             while (!exit)
             {
-                Thread.Sleep(5000);
                 Cycle();
             }
         }
@@ -102,7 +101,7 @@ namespace napkin.systems.gadgeteer.cerb3
             led7c.SetColor(LED7C.LEDColor.Blue);
             _cycleCount++;
             Debug.Print("sensor cycle: " + _cycleCount);
-            UpdateDisplay("sensor cycle: " + _cycleCount);
+            UpdateDisplay("sensor cycle", _cycleCount.ToString());
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("state.vitalsAndSensorsUpdated=false");
@@ -137,19 +136,19 @@ namespace napkin.systems.gadgeteer.cerb3
 
             led7c.SetColor(LED7C.LEDColor.Green);
 
-            UpdateDisplay("temperature 1", _temperatureF.ToString("g4") + "F / " + _temperature.ToString("g4") + "C");
+            UpdateDisplay("temperature 1", _temperatureF.ToString("n2") + "F / " + _temperature.ToString("n2") + "C");
             Thread.Sleep(2 * 1000);
 
-            UpdateDisplay("temperature 2", _temperature2F.ToString("g4") + "F / " + _temperature2.ToString("g4") + "C");
+            UpdateDisplay("temperature 2", _temperature2F.ToString("n2") + "F / " + _temperature2.ToString("n2") + "C");
             Thread.Sleep(2 * 1000);
 
-            UpdateDisplay("humidity", _relativeHumidity.ToString("g4") + "%");
+            UpdateDisplay("humidity", _relativeHumidity.ToString("n2") + "%");
             Thread.Sleep(2 * 1000);
 
-            UpdateDisplay("barometer", _pressure.ToString("g4") + " hPa");
+            UpdateDisplay("barometer", _pressure.ToString("n2") + " hPa");
             Thread.Sleep(2 * 1000);
 
-            UpdateDisplay("lightness", _lightSensorPercentage.ToString("g4") + "%");
+            UpdateDisplay("lightness", _lightSensorPercentage.ToString("n2") + "%");
             Thread.Sleep(2 * 1000);
 
         }
