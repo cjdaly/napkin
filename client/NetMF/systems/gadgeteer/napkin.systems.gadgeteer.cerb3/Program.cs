@@ -58,19 +58,23 @@ namespace napkin.systems.gadgeteer.cerb3
         }
 
         private double _temperature2 = 0;
+        private double _temperature2F = 0;
         private double _relativeHumidity = 0;
         void temperatureHumidity_MeasurementComplete(TemperatureHumidity sender, double temperature, double relativeHumidity)
         {
             _temperature2 = temperature;
+            _temperature2F = _temperature2 * 1.8 + 32.0;
             _relativeHumidity = relativeHumidity;
         }
 
         private double _temperature = 0;
+        private double _temperatureF = 0;
         private double _pressure = 0;
         void barometer_MeasurementComplete(Barometer sender, Barometer.SensorData sensorData)
         {
             _pressure = sensorData.Pressure;
             _temperature = sensorData.Temperature;
+            _temperatureF = _temperature * 1.8 + 32.0;
         }
 
         private string _lastLine = "";
@@ -95,10 +99,10 @@ namespace napkin.systems.gadgeteer.cerb3
         private double _lightSensorPercentage;
         private void Cycle()
         {
-            _cycleCount++;
-            Debug.Print("Cycle: " + _cycleCount);
-
             led7c.SetColor(LED7C.LEDColor.Blue);
+            _cycleCount++;
+            Debug.Print("sensor cycle: " + _cycleCount);
+            UpdateDisplay("sensor cycle: " + _cycleCount);
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("state.vitalsAndSensorsUpdated=false");
@@ -131,37 +135,39 @@ namespace napkin.systems.gadgeteer.cerb3
             string chatterText = sb.ToString();
             _bone3.Write(chatterText);
 
-            char_Display.Clear();
-            char_Display.SetCursor(0, 0);
-            char_Display.PrintString("temp:" + Chop(_temperature2.ToString()));
-            char_Display.SetCursor(1, 0);
-            char_Display.PrintString("humi:" + Chop(_relativeHumidity.ToString()));
-            led7c.SetColor(LED7C.LEDColor.Cyan);
-
-            Thread.Sleep(4 * 1000);
-            char_Display.Clear();
-            char_Display.SetCursor(0, 0);
-            char_Display.PrintString("temp:" + Chop(_temperature.ToString()));
-            char_Display.SetCursor(1, 0);
-            char_Display.PrintString("pres:" + Chop(_pressure.ToString()));
-
             led7c.SetColor(LED7C.LEDColor.Green);
 
-            Thread.Sleep(4 * 1000);
-            char_Display.Clear();
-            char_Display.SetCursor(0, 0);
-            char_Display.PrintString("lite:" + Chop(_lightSensorPercentage.ToString()));
-            char_Display.SetCursor(1, 0);
-            char_Display.PrintString("line:" + Chop(_lastLine));
+            UpdateDisplay("temperature 1", _temperatureF.ToString("g4") + "F / " + _temperature.ToString("g4") + "C");
+            Thread.Sleep(2 * 1000);
 
-            Thread.Sleep(3 * 1000);
+            UpdateDisplay("temperature 2", _temperature2F.ToString("g4") + "F / " + _temperature2.ToString("g4") + "C");
+            Thread.Sleep(2 * 1000);
+
+            UpdateDisplay("humidity", _relativeHumidity.ToString("g4") + "%");
+            Thread.Sleep(2 * 1000);
+
+            UpdateDisplay("barometer", _pressure.ToString("g4") + " hPa");
+            Thread.Sleep(2 * 1000);
+
+            UpdateDisplay("lightness", _lightSensorPercentage.ToString("g4") + "%");
+            Thread.Sleep(2 * 1000);
+
         }
 
-        private string Chop(string text, int max = 7)
+        private void UpdateDisplay(string line1, string line2 = "")
+        {
+            char_Display.Clear();
+            char_Display.SetCursor(0, 0);
+            char_Display.PrintString(Chop(line1));
+            char_Display.SetCursor(1, 0);
+            char_Display.PrintString(Chop(line2));
+        }
+
+        private string Chop(string text, int max = 16)
         {
             if (text.Length > max)
             {
-                text = text.Substring(0, 7);
+                text = text.Substring(0, max);
             }
             return text;
         }
