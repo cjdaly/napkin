@@ -2,12 +2,13 @@ Napkin is a collection of Internet of Things (IoT) projects.
 
 ### Napkin Reference Things
 
-* [Radxa Rock](https://github.com/cjdaly/napkin/wiki/Server-on-Radxa-Rock)
-* [pcDuino](https://github.com/cjdaly/napkin/wiki/Server-on-pcduino)
-* [Cubieboard2](https://github.com/cjdaly/napkin/wiki/Server-on-Cubieboard-A20) (out-of-date: [Cubieboard1](https://github.com/cjdaly/napkin/wiki/Server-on-Cubieboard))
+* [Radxa Rock with Fez Cerberus](https://github.com/cjdaly/napkin/wiki/Server-on-Radxa-Rock)
+* [pcDuino with Fez Cerberus](https://github.com/cjdaly/napkin/wiki/Server-on-pcduino)
 * [BeagleBone Black](https://github.com/cjdaly/napkin/wiki/Server-on-BeagleBone-black)
+  * [with Arduino Xadow](https://github.com/cjdaly/napkin/wiki/Server-on-Embest-BBB-with-Xadow)
   * [with Fez Cerbuino Bee](https://github.com/cjdaly/napkin/wiki/Server-with-serial-client-bone2-cerbee1)
   * [with Fez Cerberus](https://github.com/cjdaly/napkin/wiki/Server-with-serial-client-bone3-cerb3)
+* [Cubieboard2](https://github.com/cjdaly/napkin/wiki/Server-on-Cubieboard-A20) (out-of-date: [Cubieboard1](https://github.com/cjdaly/napkin/wiki/Server-on-Cubieboard))
 * [x86 architecture virtual machine](https://github.com/cjdaly/napkin/wiki/Server-on-Ubuntu-x86)
 
 ### Napkin Server
