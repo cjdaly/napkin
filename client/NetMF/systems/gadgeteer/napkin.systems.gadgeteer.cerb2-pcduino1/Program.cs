@@ -141,7 +141,7 @@ namespace napkin.systems.gadgeteer.cerb2_pcduino1
             UpdateDisplay("barometer", _pressure.ToString("n2") + " hPa");
             Thread.Sleep(2 * 1000);
 
-            UpdateDisplay("MQ-3 air sensor", gasSenseVoltage.ToString("n2") + "%");
+            UpdateDisplay("MQ-3 air sensor", gasSenseVoltage.ToString("n2") + " / 3.3 V");
             Thread.Sleep(2 * 1000);
 
             UpdateDisplay("lightness", lightSensorPercentage.ToString("n2") + "%");
