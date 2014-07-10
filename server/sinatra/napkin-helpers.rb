@@ -19,12 +19,14 @@ module Napkin
     def Helpers.init_core_driver()
       # initialize system config
       system_config_file = ARGV[0].to_s
+      system_dir = File.dirname(system_config_file)
+      
       raise "Specify system configuration file!" unless File.exist?(system_config_file)
       system_config_hash = JSON.parse(File.read(system_config_file))
       puts "Napkin system name: #{system_config_hash['napkin.config.system_name']}"
 
       # start driver
-      napkin_driver = Napkin::Core::Driver.new(system_config_hash)
+      napkin_driver = Napkin::Core::Driver.new(system_config_hash, system_dir)
       Napkin_Driver << napkin_driver
       napkin_driver.start()
     end

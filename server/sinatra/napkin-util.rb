@@ -59,7 +59,6 @@ module Napkin
         # increment and put value back to server config
         start_count += 1
         RestClient.put(device_config_url, start_count.to_s, {:params => {'key' => START_COUNT_KEY}})
-        puts "#{device_id} starts: #{start_count}"
       end
 
       def chatter_sensor_data(data, device_id, key_prefix_filter)

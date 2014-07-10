@@ -31,7 +31,7 @@ module Napkin::Plugins
       def doit
         @doit_count += 1
         puts "In Test_Task.doit() !!!  doit_count: #{@doit_count}"
-        if (@doit_count == 9) then
+        if (@doit_count == 1000) then
           napkin_driver.restart("Test_Task: initiating system restart!!!")
         end
       end

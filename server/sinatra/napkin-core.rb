@@ -16,8 +16,9 @@ require 'napkin-pulse'
 module Napkin
   module Core
     class Driver
-      def initialize(system_config)
+      def initialize(system_config, system_dir)
         @system_config = system_config
+        @system_dir = system_dir
 
         # TODO: @mode usage not thread safe
         @mode = :init
@@ -29,6 +30,10 @@ module Napkin
 
       def system_config
         return @system_config
+      end
+      
+      def system_dir
+        return @system_dir
       end
 
       def neo4j_connector
@@ -103,7 +108,7 @@ module Napkin
         puts "Napkin driver thread - initializing plugin registry"
         plugins_path = @system_config['napkin.config.plugins_path'] || 'plugins'
         system_name = @system_config['napkin.config.system_name']
-        system_plugins_path = "systems/#{system_name}/plugins"
+        system_plugins_path = "#{@system_dir}/plugins"
         @plugin_registry = Napkin::Plugins::PluginRegistry.new(self, plugins_path, system_plugins_path)
 
         # pulse
