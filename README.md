@@ -2,6 +2,8 @@ Napkin is a collection of Internet of Things (IoT) projects.
 
 ### Napkin Reference Things
 
+Most of these Things combine a small form factor Linux machine with a less powerful Gadgeteer or Arduino system that drives sensors, lights, buttons, display, etc.
+
 * [Radxa Rock with Fez Cerberus](https://github.com/cjdaly/napkin/wiki/Server-on-Radxa-Rock)
 * [pcDuino with Fez Cerberus](https://github.com/cjdaly/napkin/wiki/Server-on-pcduino)
 * [BeagleBone Black](https://github.com/cjdaly/napkin/wiki/Server-on-BeagleBone-black)
