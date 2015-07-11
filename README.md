@@ -1,5 +1,9 @@
 Napkin is a collection of Internet of Things (IoT) projects.
 
+## Update 11-July-2015
+
+I have stopped development on the napkin project to refocus on a new IoT platform with similar features, but based on Java rather than JRuby.  To pivot from napkin, [fold](https://github.com/cjdaly/fold).
+
 ### Napkin Reference Things
 
 Most of these Things combine a small form factor Linux machine with a less powerful Gadgeteer or Arduino system that drives sensors, lights, buttons, display, etc.
